@@ -1,8 +1,45 @@
 # Compiled class file
 *.class
 
-# Log file
+# Log files
 *.log
+
+# IntelliJ IDEA files
+.idea/
+
+# Gradle files
+.gradle/
+build/
+
+# Eclipse files
+.classpath
+.project
+.settings/
+
+# Maven files
+target/
+
+# macOS files
+.DS_Store
+
+# Windows files
+Thumbs.db
+
+# Compiled Java bytecode
+bin/
+
+# User-specific IDE settings
+*.iml
+*.ipr
+*.iws
+*.idea/
+
+# Javadocs
+docs/
+
+# Gradle Wrapper files
+gradle/wrapper/gradle-wrapper.jar
+gradle/wrapper/gradle-wrapper.properties
 
 # BlueJ files
 *.ctxt
