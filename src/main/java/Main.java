@@ -1,5 +1,7 @@
-import Models.Product;
+import models.Product;
 import lombok.extern.slf4j.Slf4j;
+import service.ProductScraper;
+import java.util.List;
 
 @Slf4j
 public class Main {
@@ -7,13 +9,16 @@ public class Main {
     public static void main(String[] args) {
         log.info("Bienvenido al Comparador de Precios!");
 
-        Product product = new Product();
-        product.setName("Cocina");
-        product.setPrice(200000.0);
-        product.setStore("Mi Store");
-        product.setPostUrl("https://www.google.com/");
-        product.setImgUrl("https://google.com/search?q=cocina");
+        ProductScraper productScraper = new ProductScraper();
+        List<Product> productList = productScraper.scrapeProducts("boca");
 
-        log.info(product.toString());
+        for (Product product : productList) {
+            System.out.println("Nombre: " + product.getName());
+            System.out.println("Precio: $" + product.getPrice());
+            System.out.println("Tienda: " + product.getStore());
+            System.out.println("URL del producto: " + product.getPostUrl());
+            System.out.println("URL de la imagen: " + product.getImgUrl());
+            System.out.println();
+        }
     }
 }
