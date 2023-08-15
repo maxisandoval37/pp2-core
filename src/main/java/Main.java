@@ -10,7 +10,7 @@ public class Main {
         log.info("Bienvenido al Comparador de Precios!");
 
         ProductScraper productScraper = new ProductScraper();
-        List<Product> productList = productScraper.scrapeProducts("boca");
+        List<Product> productList = productScraper.scrapeProducts("plancha");
 
         for (Product product : productList) {
             System.out.println("Nombre: " + product.getName());
