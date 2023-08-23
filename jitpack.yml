@@ -1,1 +1,21 @@
-jdk: openjdk11
+java:
+  version: 11
+
+before_install:
+  - sdk install java 11.0.10-open
+  - sdk use java 11.0.10-open
+  - chmod +x gradlew
+
+install:
+  - ./gradlew assemble
+
+script:
+  - ./gradlew check
+
+branches:
+  only:
+    - main  # Cambia esto según la rama que deseas construir
+
+notifications:
+  email:
+    on_failure: always
