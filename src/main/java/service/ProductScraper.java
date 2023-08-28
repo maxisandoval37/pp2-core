@@ -1,6 +1,7 @@
 package service;
 
 import models.Product;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -69,7 +70,9 @@ public class ProductScraper {
         List<Product> productList = new ArrayList<>();
 
         try {
-            Document documentHtml = Jsoup.connect(storeUrl).get();
+            Connection connection = Jsoup.connect(storeUrl);
+            connection.header("Content-Type", "text/html; charset=UTF-8");
+            Document documentHtml = connection.get();
             Elements articleElements = documentHtml.select("article.sc-ef269aa1-2.FmCUT");
 
             for (Element articleElement : articleElements) {
@@ -81,7 +84,7 @@ public class ProductScraper {
 
                 try{
                     if (normalizeString(name).contains(productName)){
-                        Product product = new Product(name, price, extractDomainName(storeUrl),productUrl, imageUrl);
+                        Product product = new Product((name), price, extractDomainName(storeUrl),productUrl, imageUrl);
                         productList.add(product);
                     }
                 }
