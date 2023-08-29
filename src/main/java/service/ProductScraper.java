@@ -87,12 +87,11 @@ public class ProductScraper {
                 String name = articleElement.select("span.sc-6321a7c8-0.jKvHol").text();
                 Float price = convertPriceStrToFloat(articleElement.select("div.sc-854e1b3a-0.kfAWhD span.sc-ad64037f-0.ixxpWu").text());
                 Element link = articleElement.select("a").first();
-                String productUrl = shopFravega.getShopUrlDomain() + link.attr("href");//TODO extraer base url
+                String productUrl = shopFravega.getShopUrlDomain() + link.attr("href");
                 String imageUrl = articleElement.select("img[src]").attr("src");
 
                 try{
                     if (normalizeString(name).contains(productName)){
-
                         Product product = new Product((name), price, productUrl, imageUrl);
                         productList.add(product);
                     }
