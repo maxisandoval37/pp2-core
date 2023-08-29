@@ -23,7 +23,6 @@ public class Main {
         for (Product product : productList) {
             System.out.println("Nombre: " + product.getName());
             System.out.println("Precio: $" + product.getPrice());
-            //System.out.println("Tienda: " + product.getStore());
             System.out.println("URL del producto: " + product.getPostUrl());
             System.out.println("URL de la imagen: " + product.getImgUrl());
             System.out.println();
