@@ -7,7 +7,15 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
-        log.info("Bienvenido al Comparador de Precios!");
+        log.info(" _______           _______  _______ _________ _        _______ _________ _______  _______ ");
+        log.info("(  ____ \\|\\     /||(  ___  )(  ____ )\\__   __/( (    /||(  ___  )\\__   __/(  ___  )(  ____ )");
+        log.info("| (    \\/| )   ( || (   ) || (    )|   ) (   |  \\  ( || (   ) |   ) (   | (   ) || (    )|");
+        log.info("| (_____ | (___) || |   | || (____)|   | |   |   \\ | || (___) |   | |   | |   | || (____)|");
+        log.info("(_____  )|  ___  || |   | ||  _____)   | |   | (\\ \\) ||  ___  |   | |   | |   | ||     __)");
+        log.info("      ) || (   ) || |   | || (         | |   | | \\   || (   ) |   | |   | |   | || (\\ (   ");
+        log.info("/\\____) || )   ( || (___) || )      ___) (___| )  \\  || )   ( |   | |   | (___) || ) \\ \\__");
+        log.info("\\_______)|/     \\|(_______)|/       \\_______/|/    )_)|/     \\|   )_(   (_______)|/   \\__/");
+        log.info("                                                      ");
 
         ProductScraper productScraper = new ProductScraper();
         List<Product> productList = productScraper.scrapeProducts("plancha a vapor");
@@ -15,7 +23,7 @@ public class Main {
         for (Product product : productList) {
             System.out.println("Nombre: " + product.getName());
             System.out.println("Precio: $" + product.getPrice());
-            System.out.println("Tienda: " + product.getStore());
+            //System.out.println("Tienda: " + product.getStore());
             System.out.println("URL del producto: " + product.getPostUrl());
             System.out.println("URL de la imagen: " + product.getImgUrl());
             System.out.println();
