@@ -1,6 +1,7 @@
 package service;
 
 import models.Product;
+import models.Shop;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -24,20 +25,26 @@ public class ProductScraper {
     public List<Product> scrapeProducts(String productName) {
         List<Product> allProductList = new ArrayList<>();
 
-        allProductList.addAll(scrapeStoreProductsByName(productName));
+        allProductList.addAll(scrapeStoreProductsByName(productName).getProductList());
+        //allProductList.addAll(scrapeStoreProductsByName(productName).getProductList());
 
         return allProductList;
     }
 
-    private List<Product> scrapeStoreProductsByName(String productName) {
-        String storeUrl = "https://www.fravega.com/l/?keyword="+normalizeBlanks(productName,"+")+"&sorting=LOWEST_SALE_PRICE&page=";
+    private Shop scrapeStoreProductsByName(String productName) {
+        Shop shopFravega = new Shop();
+        String shopUrl = "https://www.fravega.com/l/?keyword="+normalizeBlanks(productName,"+")+"&sorting=LOWEST_SALE_PRICE&page=";
+        shopFravega.setStoreName(extractDomainName(shopUrl));
+        shopFravega.setShopUrlDomain("https://www.fravega.com/");
+
         int totalPages = 4;//TODO Obtener de la pagina por medio de un selector css
 
         List<Callable<List<Product>>> tasks = new ArrayList<>();
 
         for (int pageNum = 1; pageNum <= totalPages; pageNum++) {//Recorremos cada una de las paginas de la tienda
             final int currentPage = pageNum;
-            tasks.add(() -> scrapeProductsFromPage(storeUrl + currentPage, productName));
+            shopFravega.setShopUrlSearch(shopUrl + currentPage);
+            tasks.add(() -> scrapeProductsFromPage(shopFravega, productName));
         }
 
         ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
@@ -47,7 +54,7 @@ public class ProductScraper {
             futures = executorService.invokeAll(tasks);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            return Collections.emptyList();
+            return null;
         } finally {
             executorService.shutdown();
         }
@@ -62,15 +69,16 @@ public class ProductScraper {
         }
 
         log.info("Total de productos obtenidos de la tienda: " + productList.size());
-        //TODO arreglar respuestas (nombres prod) con caracteres invalidos
-        return productList;
+
+        shopFravega.setProductList(productList);
+        return shopFravega;
     }
 
-    private List<Product> scrapeProductsFromPage(String storeUrl, String productName) {
+    private List<Product> scrapeProductsFromPage(Shop shopFravega, String productName) {
         List<Product> productList = new ArrayList<>();
 
         try {
-            Connection connection = Jsoup.connect(storeUrl);
+            Connection connection = Jsoup.connect(shopFravega.getShopUrlSearch());
             connection.header("Content-Type", "text/html; charset=UTF-8");
             Document documentHtml = connection.get();
             Elements articleElements = documentHtml.select("article.sc-ef269aa1-2.FmCUT");
@@ -79,12 +87,13 @@ public class ProductScraper {
                 String name = articleElement.select("span.sc-6321a7c8-0.jKvHol").text();
                 Float price = convertPriceStrToFloat(articleElement.select("div.sc-854e1b3a-0.kfAWhD span.sc-ad64037f-0.ixxpWu").text());
                 Element link = articleElement.select("a").first();
-                String productUrl = "https://www.fravega.com" + link.attr("href");//TODO extraer base url
+                String productUrl = shopFravega.getShopUrlDomain() + link.attr("href");//TODO extraer base url
                 String imageUrl = articleElement.select("img[src]").attr("src");
 
                 try{
                     if (normalizeString(name).contains(productName)){
-                        Product product = new Product((name), price, extractDomainName(storeUrl),productUrl, imageUrl);
+
+                        Product product = new Product((name), price, productUrl, imageUrl);
                         productList.add(product);
                     }
                 }

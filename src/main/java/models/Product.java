@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 public class Product {
     private String name;
     private Float price;
-    private String store;
     private String postUrl;
     private String imgUrl;
 }
