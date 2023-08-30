@@ -1,6 +1,7 @@
 package service;
 
 import models.Product;
+import models.ProductPresentation;
 import models.Shop;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -10,6 +11,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -20,12 +22,13 @@ import static utils.PriceUtils.*;
 import static utils.StringUtils.*;
 
 @Slf4j
-public class ProductScraper {
+public class ProductSearcher {
     public List<Product> scrapeProducts(String productName) {
         List<Product> allProductList = new ArrayList<>();
 
-        allProductList.addAll(scrapeStoreProductsByName(productName).getProductList());
-        //allProductList.addAll(scrapeStoreProductsByName(productName).getProductList());
+        allProductList.addAll(Objects.requireNonNull(scrapeStoreProductsByName(productName)).getProductList());
+        allProductList.addAll(new ArrayList<>());//Shop2...
+        allProductList.addAll(new ArrayList<>());//Shop3...
 
         return allProductList;
     }
@@ -34,7 +37,7 @@ public class ProductScraper {
         Shop shopFravega = new Shop();
         String shopUrlSearch = "https://www.fravega.com/l/?keyword="+normalizeBlanks(productName,"+")+"&sorting=LOWEST_SALE_PRICE&page=";
         shopFravega.setStoreName(extractDomainName(shopUrlSearch));
-        shopFravega.setShopUrlDomain("https://www.fravega.com/");
+        shopFravega.setShopUrlDomain("https://www.fravega.com");
 
         List<Callable<List<Product>>> tasks = new ArrayList<>();
 
@@ -65,6 +68,7 @@ public class ProductScraper {
             try {
                 productList.addAll(future.get());
             } catch (Exception e) {
+                Thread.currentThread().interrupt();
                 e.printStackTrace();
             }
         }
@@ -88,11 +92,12 @@ public class ProductScraper {
                 String name = articleElement.select("span.sc-6321a7c8-0.jKvHol").text();
                 Float price = convertPriceStrToFloat(articleElement.select("div.sc-854e1b3a-0.kfAWhD span.sc-ad64037f-0.ixxpWu").text());
                 Element link = articleElement.select("a").first();
-                String productUrl = shopFravega.getShopUrlDomain() + link.attr("href");
+                String productUrl = link != null ? shopFravega.getShopUrlDomain() + link.attr("href") : "";
                 String imageUrl = articleElement.select("img[src]").attr("src");
 
                 if (normalizeString(name).contains(productName)){
-                    Product product = new Product((name), price, productUrl, imageUrl);
+                    ProductPresentation productPresentation = new ProductPresentation(price, imageUrl);
+                    Product product = new Product(name, productUrl, productPresentation);
                     productList.add(product);
                 }
             }

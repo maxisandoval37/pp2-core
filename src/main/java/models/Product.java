@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class Product {
     private String name;
-    private Float price;
     private String postUrl;
-    private String imgUrl;
+    private ProductPresentation productPresentation;
 }
