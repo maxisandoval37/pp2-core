@@ -1,3 +1,5 @@
+package main;
+
 import models.Product;
 import lombok.extern.slf4j.Slf4j;
 import service.ProductSearcher;
@@ -21,14 +23,16 @@ public class Main {
         log.info("");
 
         ProductSearcher productSearcher = new ProductSearcher();
-        List<Product> productList = productSearcher.scrapeProducts("plancha a vapor");
+        List<Product> productList = productSearcher.scrapeProducts("Webcam");
 
         for (Product product : productList) {
             log.info("Nombre: " + product.getName());
             log.info("Precio: $" + product.getProductPresentation().getPrice());
             log.info("URL del producto: " + product.getPostUrl());
             log.info("URL de la imagen: " + product.getProductPresentation().getProductImageUrl());
-            log.info("                         ------------");
+            log.info("                            ------------");
         }
+
+        log.info("\n                                             ***Productos totales obtenidos: "+productList.size()+"***");
     }
 }
