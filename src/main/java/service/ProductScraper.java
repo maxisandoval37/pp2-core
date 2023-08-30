@@ -9,7 +9,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -33,18 +32,20 @@ public class ProductScraper {
 
     private Shop scrapeStoreProductsByName(String productName) {
         Shop shopFravega = new Shop();
-        String shopUrl = "https://www.fravega.com/l/?keyword="+normalizeBlanks(productName,"+")+"&sorting=LOWEST_SALE_PRICE&page=";
-        shopFravega.setStoreName(extractDomainName(shopUrl));
+        String shopUrlSearch = "https://www.fravega.com/l/?keyword="+normalizeBlanks(productName,"+")+"&sorting=LOWEST_SALE_PRICE&page=";
+        shopFravega.setStoreName(extractDomainName(shopUrlSearch));
         shopFravega.setShopUrlDomain("https://www.fravega.com/");
-
-        int totalPages = 4;//TODO Obtener de la pagina por medio de un selector css
 
         List<Callable<List<Product>>> tasks = new ArrayList<>();
 
-        for (int pageNum = 1; pageNum <= totalPages; pageNum++) {//Recorremos cada una de las paginas de la tienda
-            final int currentPage = pageNum;
-            shopFravega.setShopUrlSearch(shopUrl + currentPage);
-            tasks.add(() -> scrapeProductsFromPage(shopFravega, productName));
+        for (int pageNum = 1; pageNum <= 99; pageNum++) {//Recorremos cada una de las paginas de la tienda
+            shopFravega.setShopUrlSearch(shopUrlSearch + pageNum);
+            List<Product> products = scrapeProductsFromPage(shopFravega, productName);
+            if (products.isEmpty()) {
+                break;//Si llego al final de las paginas, salimos
+            }
+
+            tasks.add(() -> products);
         }
 
         ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
@@ -90,14 +91,9 @@ public class ProductScraper {
                 String productUrl = shopFravega.getShopUrlDomain() + link.attr("href");
                 String imageUrl = articleElement.select("img[src]").attr("src");
 
-                try{
-                    if (normalizeString(name).contains(productName)){
-                        Product product = new Product((name), price, productUrl, imageUrl);
-                        productList.add(product);
-                    }
-                }
-                catch (Exception e){
-                    log.error("scrapeProducts: Levanto info que no corresponde a un producto valido");
+                if (normalizeString(name).contains(productName)){
+                    Product product = new Product((name), price, productUrl, imageUrl);
+                    productList.add(product);
                 }
             }
         } catch (IOException e) {
