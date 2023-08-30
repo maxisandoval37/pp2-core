@@ -18,6 +18,8 @@ public class ProductSearcher {
         allProductList.addAll(Objects.requireNonNull(fravegaDataExtractor.scrapeStoreProductsByName(productName)).getProductList());
         allProductList.addAll(Objects.requireNonNull(garbarinoDataExtractor.scrapeStoreProductsByName(productName)).getProductList());
 
+        allProductList.sort(Comparator.comparing(product -> product.getProductPresentation().getPrice()));
+
         return allProductList;
     }
 
