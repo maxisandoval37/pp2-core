@@ -86,7 +86,7 @@ public class FravegaDataExtractor {
                 String productUrl = link != null ? shop.getShopUrlDomain() + link.attr("href") : "";
                 String imageUrl = articleElement.select("img[src]").attr("src");
 
-                if (normalizeString(name).contains(productName)){
+                if (normalizeString(name).contains(normalizeString(productName))) {
                     ProductPresentation productPresentation = new ProductPresentation(price, imageUrl);
                     Product product = new Product(name, productUrl, productPresentation);
                     productList.add(product);
