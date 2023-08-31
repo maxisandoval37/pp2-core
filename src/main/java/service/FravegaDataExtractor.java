@@ -26,19 +26,21 @@ public class FravegaDataExtractor {
 
     public Shop scrapeStoreProductsByName(String productName) {
         Shop shop = new Shop();
-        String shopUrlSearch = "https://www.fravega.com/l/?keyword="+normalizeBlanks(productName,"+")+"&sorting=LOWEST_SALE_PRICE&page=";
+        String shopUrlSearch = "https://www.fravega.com/l/?keyword=" + productName.replace(" ","+") +
+                "&sorting=LOWEST_SALE_PRICE&page=";
         shop.setStoreName(extractDomainName(shopUrlSearch));
         shop.setShopUrlDomain("https://www.fravega.com");
 
         List<Callable<List<Product>>> tasks = new ArrayList<>();
-
-        for (int pageNum = 1; pageNum <= 99; pageNum++) {//Recorremos cada una de las paginas de la tienda
+        int pageNum = 1;
+        Boolean productsExists = true;
+        //Recorremos cada una de las paginas de la tienda
+        while(productsExists) {
             shop.setShopUrlSearch(shopUrlSearch + pageNum);
             List<Product> products = scrapeProductsFromPage(shop, productName);
-            if (products.isEmpty()) {
-                break;//Si llego al final de las paginas, salimos
-            }
-
+            pageNum++;
+            //Si llego al final de las paginas, salimos
+            productsExists &= !products.isEmpty();
             tasks.add(() -> products);
         }
 
