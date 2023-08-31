@@ -4,11 +4,12 @@ import models.Product;
 import lombok.extern.slf4j.Slf4j;
 import service.ProductSearcher;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @Slf4j
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
 
         log.info("");
         log.info(" _______           _______  _______ _________ _        _______ _________ _______  _______ ");
