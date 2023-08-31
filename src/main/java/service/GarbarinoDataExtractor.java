@@ -28,7 +28,9 @@ public class GarbarinoDataExtractor {
 
     public Shop scrapeStoreProductsByName(String productName) {
         Shop shop = new Shop();
-        shop.setShopUrlSearch("https://www.garbarino.com/shop/sort-by-price-low-to-high?search="+normalizeBlanks(productName,"%20"));
+        shop.setShopUrlSearch("https://www.garbarino.com/shop/sort-by-price-low-to-high?search=" +
+                productName.replace(" ", "%20")
+        );
         shop.setShopUrlDomain("https://www.garbarino.com");
         shop.setStoreName(extractDomainName(shop.getShopUrlDomain()));
 
