@@ -12,7 +12,7 @@ public class Main {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
 
         log.info("");
-        log.info(" _______           _______  _______ _________ _        _______ _________ _______  _______ ");
+        log.info("\u001B[31m _______           _______  _______ _________ _        _______ _________ _______  _______ ");
         log.info("(  ____ \\|\\     /||(  ___  )(  ____ )\\__   __/( (    /||(  ___  )\\__   __/(  ___  )(  ____ )");
         log.info("| (    \\/| )   ( || (   ) || (    )|   ) (   |  \\  ( || (   ) |   ) (   | (   ) || (    )|");
         log.info("| (_____ | (___) || |   | || (____)|   | |   |   \\ | || (___) |   | |   | |   | || (____)|");
@@ -20,8 +20,9 @@ public class Main {
         log.info("      ) || (   ) || |   | || (         | |   | | \\   || (   ) |   | |   | |   | || (\\ (   ");
         log.info("/\\____) || )   ( || (___) || )      ___) (___| )  \\  || )   ( |   | |   | (___) || ) \\ \\__");
         log.info("\\_______)|/     \\|(_______)|/       \\_______/|/    )_)|/     \\|   )_(   (_______)|/   \\__/");
-        log.info("                                                      ");
+        log.info("\u001B[0m                                                      ");
         log.info("");
+
 
         ProductSearcher productSearcher = new ProductSearcher();
         List<Product> productList = productSearcher.scrapeProducts("Webcam");
