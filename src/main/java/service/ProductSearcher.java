@@ -35,7 +35,12 @@ public class ProductSearcher extends Observable {
 
         allProductList.sort(Comparator.comparing(product -> product.getProductPresentation().getPrice()));
 
+        this.sendProductList(allProductList);
         return allProductList;
     }
 
+    public void sendProductList(List<Product> productList) {
+        setChanged();
+        notifyObservers(productList);
+    }
 }
