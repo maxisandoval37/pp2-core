@@ -11,21 +11,24 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ProductSearcher {
 
-    FravegaDataExtractor fravegaDataExtractor;
-    GarbarinoDataExtractor garbarinoDataExtractor;
+    private final Set<DataExtractor> dataExtractors;
+
+    public ProductSearcher() {
+        this.dataExtractors = new HashSet<>();
+        dataExtractors.add(new FravegaDataExtractor());
+        dataExtractors.add(new GarbarinoDataExtractor());
+    }
+
     public List<Product> scrapeProducts(String productName) throws InterruptedException, ExecutionException {
         List<Product> allProductList = new ArrayList<>();
 
-        fravegaDataExtractor = new FravegaDataExtractor();
-        garbarinoDataExtractor = new GarbarinoDataExtractor();
+        ExecutorService executorService = Executors.newFixedThreadPool(dataExtractors.size());
 
-        ExecutorService executorService = Executors.newFixedThreadPool(2); // cant. hilos (1 por tienda (shop))
-
-        Future<List<Product>> fravegaProductListF = executorService.submit(() -> fravegaDataExtractor.scrapeStoreProductsByName(productName).getProductList());
-        Future<List<Product>> garbarinoProductListF = executorService.submit(() -> garbarinoDataExtractor.scrapeStoreProductsByName(productName).getProductList());
-
-        allProductList.addAll(fravegaProductListF.get());
-        allProductList.addAll(garbarinoProductListF.get());
+        for (DataExtractor dataExtractor : dataExtractors) {
+            Future<List<Product>> productListF = executorService.submit(
+                () -> dataExtractor.scrapeStoreProductsByName(productName).getProductList());
+            allProductList.addAll(productListF.get());
+        }
 
         executorService.shutdown();
 

@@ -18,12 +18,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import static utils.DomainUtils.extractDomainName;
 import static utils.PriceUtils.convertPriceStrToFloat;
-import static utils.StringUtils.normalizeBlanks;
 import static utils.StringUtils.normalizeString;
 
 @Slf4j
-public class FravegaDataExtractor {
+public class FravegaDataExtractor implements DataExtractor {
 
+    @Override
     public Shop scrapeStoreProductsByName(String productName) {
         Shop shop = new Shop();
         String shopUrlSearch = "https://www.fravega.com/l/?keyword=" + productName.replace(" ","+") +
@@ -33,7 +33,7 @@ public class FravegaDataExtractor {
 
         List<Callable<List<Product>>> tasks = new ArrayList<>();
         int pageNum = 1;
-        Boolean productsExists = true;
+        boolean productsExists = true;
         //Recorremos cada una de las paginas de la tienda
         while(productsExists) {
             shop.setShopUrlSearch(shopUrlSearch + pageNum);
@@ -62,7 +62,7 @@ public class FravegaDataExtractor {
                 productList.addAll(future.get());
             } catch (Exception e) {
                 Thread.currentThread().interrupt();
-                e.printStackTrace();
+                log.warn(e.getMessage());
             }
         }
 
@@ -95,7 +95,7 @@ public class FravegaDataExtractor {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.warn(e.getMessage());
         }
 
         return productList;
