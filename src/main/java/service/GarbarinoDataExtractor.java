@@ -20,15 +20,17 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import static utils.DomainUtils.extractDomainName;
 import static utils.PriceUtils.convertPriceStrToFloat;
-import static utils.StringUtils.normalizeBlanks;
 import static utils.StringUtils.normalizeString;
 
 @Slf4j
-public class GarbarinoDataExtractor {
+public class GarbarinoDataExtractor implements DataExtractor {
 
+    @Override
     public Shop scrapeStoreProductsByName(String productName) {
         Shop shop = new Shop();
-        shop.setShopUrlSearch("https://www.garbarino.com/shop/sort-by-price-low-to-high?search="+normalizeBlanks(productName,"%20"));
+        shop.setShopUrlSearch("https://www.garbarino.com/shop/sort-by-price-low-to-high?search=" +
+                productName.replace(" ", "%20")
+        );
         shop.setShopUrlDomain("https://www.garbarino.com");
         shop.setStoreName(extractDomainName(shop.getShopUrlDomain()));
 
@@ -55,7 +57,7 @@ public class GarbarinoDataExtractor {
                 productList.addAll(future.get());
             } catch (Exception e) {
                 Thread.currentThread().interrupt();
-                e.printStackTrace();
+                log.warn(e.getMessage());
             }
         }
 
@@ -77,7 +79,7 @@ public class GarbarinoDataExtractor {
             for (Element articleElement : articleElements) {
                 String name = articleElement.select("div[data-v-584255dc] a.card-anchor.header div[data-v-584255dc] div.font-1").text();
 
-                if (!name.equals("")){
+                if (!name.isEmpty()){
                     Float price = convertPriceStrToFloat(articleElement.select("div[data-v-584255dc] div.product-card-center-aligned-vertical__price span[data-v-9251c388]:last-child").text());
                     Element linkImg = articleElement.select("a").first();
                     String productUrl = (linkImg != null) ? (shop.getShopUrlDomain() + linkImg.attr("href")) : "";
@@ -92,7 +94,7 @@ public class GarbarinoDataExtractor {
 
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.warn(e.getMessage());
         }
 
         return new ArrayList<>(productSet);
