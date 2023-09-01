@@ -8,8 +8,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import lombok.extern.slf4j.Slf4j;
 
+@SuppressWarnings("deprecation")
 @Slf4j
-public class ProductSearcher {
+public class ProductSearcher extends Observable {
 
     private final Set<DataExtractor> dataExtractors;
 
