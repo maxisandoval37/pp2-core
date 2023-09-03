@@ -1,5 +1,8 @@
 package service;
 
+import extensions.FravegaShop;
+import extensions.GarbarinoShop;
+import interfaces.Shop;
 import models.Product;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -12,22 +15,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ProductSearcher extends Observable {
 
-    private final Set<DataExtractor> dataExtractors;
+    private final Set<Shop> shops;
 
     public ProductSearcher() {
-        this.dataExtractors = new HashSet<>();
-        dataExtractors.add(new FravegaDataExtractor());
-        dataExtractors.add(new GarbarinoDataExtractor());
+        this.shops = new HashSet<>();
+        shops.add(new FravegaShop());
+        shops.add(new GarbarinoShop());
     }
 
-    public List<Product> scrapeProducts(String productName) throws InterruptedException, ExecutionException {
+    public List<Product> products(String productName) throws InterruptedException, ExecutionException {
         List<Product> allProductList = new ArrayList<>();
 
-        ExecutorService executorService = Executors.newFixedThreadPool(dataExtractors.size());
+        ExecutorService executorService = Executors.newFixedThreadPool(shops.size());
 
-        for (DataExtractor dataExtractor : dataExtractors) {
+        for (Shop shop : shops) {
             Future<List<Product>> productListF = executorService.submit(
-                () -> dataExtractor.scrapeStoreProductsByName(productName).getProductList());
+                () -> shop.products(productName));
             allProductList.addAll(productListF.get());
         }
 
@@ -39,7 +42,7 @@ public class ProductSearcher extends Observable {
         return allProductList;
     }
 
-    public void sendProductList(List<Product> productList) {
+    private void sendProductList(List<Product> productList) {
         setChanged();
         notifyObservers(productList);
     }
