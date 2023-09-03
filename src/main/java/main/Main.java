@@ -25,7 +25,7 @@ public class Main {
 
 
         ProductSearcher productSearcher = new ProductSearcher();
-        List<Product> productList = productSearcher.scrapeProducts("Webcam");
+        List<Product> productList = productSearcher.products("Webcam");
 
         for (Product product : productList) {
             log.info("Nombre: " + product.getName());
