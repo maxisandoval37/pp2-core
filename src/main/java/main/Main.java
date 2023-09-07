@@ -1,15 +1,12 @@
 package main;
 
-import models.Product;
 import lombok.extern.slf4j.Slf4j;
-import service.ProductSearcher;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @Slf4j
 public class Main {
 
-    public static void main(String[] args) throws ExecutionException, InterruptedException {
+    public static void main(String[] args) {
 
         log.info("");
         log.info("\u001B[31m _______           _______  _______ _________ _        _______ _________ _______  _______ ");
@@ -24,17 +21,8 @@ public class Main {
         log.info("");
 
 
-        ProductSearcher productSearcher = new ProductSearcher();
-        List<Product> productList = productSearcher.scrapeProducts("Webcam");
+        ShopInitializer shopInitializer = new ShopInitializer();
 
-        for (Product product : productList) {
-            log.info("Nombre: " + product.getName());
-            log.info("Precio: $" + product.getProductPresentation().getPrice());
-            log.info("URL del producto: " + product.getPostUrl());
-            log.info("URL de la imagen: " + product.getProductPresentation().getProductImageUrl());
-            log.info("                            ------------");
-        }
-
-        log.info("\n                                             ***Productos totales obtenidos: "+productList.size()+"***");
+        shopInitializer.init("Webcam");
     }
 }
