@@ -1,6 +1,8 @@
 package domain;
 
+import java.util.Set;
+
 public interface ShopFactory {
 
-    Shop create(String productName);
+    Set<Shop> create(String productName);
 }
