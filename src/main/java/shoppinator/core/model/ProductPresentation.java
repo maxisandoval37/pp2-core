@@ -1,4 +1,4 @@
-package models;
+package shoppinator.core.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
