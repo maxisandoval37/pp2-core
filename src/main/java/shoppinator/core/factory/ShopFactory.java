@@ -1,7 +1,7 @@
 package shoppinator.core.factory;
 
 import shoppinator.core.ShopProxy;
-import shoppinator.core.ShopScrapper;
+import shoppinator.core.ShopScraper;
 import java.util.HashSet;
 import java.util.Set;
 import shoppinator.core.interfaces.Scrapper;
@@ -16,8 +16,8 @@ public class ShopFactory {
         Set<Shop> shops = new HashSet<>();
 
         for (Scrapper scrapper : scrappers) {
-            ShopScrapper shopScrapper = new ShopScrapper(scrapper);
-            shops.add(new ShopProxy(shopScrapper));
+            ShopScraper shopScraper = new ShopScraper(scrapper);
+            shops.add(new ShopProxy(shopScraper));
         }
 
         return shops;
