@@ -1,5 +1,10 @@
 package service.discovery;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Collection;
+import java.util.Collections;
 import shoppinator.core.interfaces.Scrapper;
 import java.io.File;
 import java.util.HashSet;
@@ -27,10 +32,18 @@ public class ScrapperDiscoverer {
             }
             if (!f.getName().endsWith(".class")) continue;
 
-            String className = f.getName().substring(0, f.getName().lastIndexOf(".class"));
-            String fullyQualifiedClassName = FullyQualifiedNameFinder.find(className, path);
-
-            Class<?> cls = Class.forName(fullyQualifiedClassName);
+            Class<?> cls = null;
+            try
+            {
+                String fileName = f.getName().substring(0, f.getName().lastIndexOf("."));
+                URL[] urls = { new File(path).toURI().toURL() };
+                ClassLoader urlClassLoader = new URLClassLoader(urls);
+                cls = urlClassLoader.loadClass(fileName);
+            }
+            catch (ClassNotFoundException | MalformedURLException e)
+            {
+                log.error(e.getMessage());
+            }
 
             if (!cls.isAssignableFrom(cls)) {
                 throw new RuntimeException();
@@ -43,7 +56,6 @@ public class ScrapperDiscoverer {
             } catch (InstantiationException e) {
                 log.error(cls.getName() + " is not an implementation of Scrapper");
             }
-
         }
 
         return result;

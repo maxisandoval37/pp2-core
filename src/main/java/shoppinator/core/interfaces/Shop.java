@@ -6,14 +6,15 @@ import lombok.Getter;
 import shoppinator.core.model.Product;
 
 @Getter
+@SuppressWarnings("deprecation")
 public abstract class Shop extends Observable {
 
     List<Product> products;
 
     public abstract List<Product> search(String productName);
 
-    public void addProduct(Product product) {
-        products.add(product);
+    protected void addProducts(List<Product> newProducts) {
+        products.addAll(newProducts);
         this.sendNotification();
     }
 

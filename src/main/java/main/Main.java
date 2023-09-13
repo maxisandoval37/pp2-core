@@ -1,7 +1,6 @@
 package main;
 
 import shoppinator.core.factory.ShopFactory;
-import shoppinator.core.factory.ShoppinatorFactory;
 import service.discovery.ScrapperDiscoverer;
 import lombok.extern.slf4j.Slf4j;
 import shoppinator.core.Shoppinator;
@@ -9,17 +8,11 @@ import shoppinator.core.Shoppinator;
 @Slf4j
 public class Main {
 
-    static Shoppinator shoppinator;
-
     public static void main(String[] args) {
 
         logAsciiArt();
 
-        ScrapperDiscoverer scrapperDiscoverer = new ScrapperDiscoverer();
-        ShopFactory shopFactory = new ShopFactory();
-        ShoppinatorFactory shoppinatorFactory = new ShoppinatorFactory(scrapperDiscoverer, shopFactory);
-
-        shoppinator = shoppinatorFactory.create("src/main/java/main/");
+        Shoppinator shoppinator = new Shoppinator("plugins/");
     }
 
     public static void logAsciiArt() {

@@ -6,20 +6,21 @@ import shoppinator.core.interfaces.Shop;
 import java.util.List;
 import shoppinator.core.model.Product;
 
-public class ShopScrapper extends Shop {
+public class ShopScraper extends Shop {
 
-    private Scrapper scrapper;
+    private Scrapper scraper;
     private ProductFactory productFactory;
 
-    public ShopScrapper(Scrapper scrapper) {
-        this.searchFeaturedProducts();
+    public ShopScraper(Scrapper scraper) {
+        this.scraper = scraper;
+        this.productFactory = new ProductFactory();
 
-        this.scrapper = scrapper;
+        this.searchFeaturedProducts();
     }
 
     @Override
     public List<Product> search(String productName) {
-        String scrapedProduct = scrapper.scrap(productName);
+        String scrapedProduct = scraper.scrap(productName);
         List<Product> products = productFactory.create(scrapedProduct);
 
         this.addProducts(products);
@@ -27,7 +28,7 @@ public class ShopScrapper extends Shop {
     }
 
     private List<Product> searchFeaturedProducts() {
-        String featuredProducts = this.scrapper.scrapFeatured();
+        String featuredProducts = this.scraper.scrapFeatured();
         return productFactory.create(featuredProducts);
     }
 }
