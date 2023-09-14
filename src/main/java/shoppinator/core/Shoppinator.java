@@ -23,7 +23,7 @@ public class Shoppinator {
         this.shopFactory = new ShopFactory();
         this.scrapperDiscoverer = new ScrapperDiscoverer();
 
-        Set<Scrapper> scrappers = scrapperDiscoverer.discover("src/dist/lib/plugins/");
+        Set<Scrapper> scrappers = scrapperDiscoverer.discover(path);
         this.shops = shopFactory.create(scrappers);
     }
 
