@@ -20,6 +20,6 @@ public abstract class Shop extends Observable {
 
     public void sendNotification() {
         setChanged();
-        super.notifyObservers();
+        super.notifyObservers(this.products);
     }
 }
