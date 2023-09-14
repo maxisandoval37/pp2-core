@@ -1,0 +1,120 @@
+package acceptance;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import shoppinator.core.ShopProxy;
+import shoppinator.core.ShopScraper;
+import shoppinator.core.Shoppinator;
+import shoppinator.core.interfaces.Scrapper;
+import shoppinator.core.model.Product;
+import shoppinator.core.interfaces.Shop;
+import java.util.List;
+import org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class UserStory1Test {
+
+    private Shoppinator shoppinator;
+    private Scrapper scrapper;
+    private ShopScraper shopScrapper;
+    private Shop shopF;
+    private Shop shopM;
+    private Shop shopC;
+    private Product productA;
+    private Product productB;
+
+    @BeforeEach
+    public void setUp() {
+        // Configurar las instancias necesarias para las pruebas
+        // Por ejemplo, configurar instancias de Shop que representen tiendas en línea (F y M)
+        // También, configurar instancias de Product con precios (F.a y M.a)
+        // Configurar el Shoppinator con las tiendas y productos simulados
+        // shoppinator = new Shoppinator("ruta_del_directorio_de_scrappers");
+
+        String path = "src/test/resources/";
+        shoppinator = new Shoppinator(path);
+        scrapper = null; // sin constructor?
+        shopScrapper = new ShopScraper(scrapper);
+        shopF = new ShopProxy(shopScrapper);
+        shopM = new ShopProxy(shopScrapper);
+        shopC = new ShopProxy(null);
+        productA = new Product();
+        productB = new Product();
+
+    }
+
+    @Test
+    public void testComparePrices() {
+
+        Scrapper newScrapper = Mockito.mock(Scrapper.class);
+        String result = "test";
+        Mockito.when(newScrapper.scrap("test")).thenReturn(result);
+
+        // Realizar una búsqueda de productos con el nombre "a"
+        List<Product> products = shoppinator.search("Plancha");
+
+        // Verificar que la lista de productos no esté vacía
+        assertFalse(products.isEmpty());
+
+        // Verificar que la lista de productos contiene los productos simulados (F.a y M.a)
+        assertTrue(products.contains(F.a));
+        assertTrue(products.contains(M.a));
+
+        // Verificar que el precio de F.a sea menor o igual al precio de M.a
+        assertTrue(F.a.getPrice() <= M.a.getPrice());
+    }
+
+    @Test
+    public void testEmptySearchCA2() {
+        // Realizar una búsqueda de productos sin especificar un nombre de producto
+        List<Product> products = shoppinator.search("");
+
+        // Verificar que la lista de productos esté vacía
+        assertTrue(products.isEmpty());
+
+        // Verificar que la cantidad de productos sea igual a la cantidad especificada en C
+        assertEquals(products.size(), shopC.size());
+    }
+
+    @Test
+    public void testProductNotFoundCA3() {
+        // Realizar una búsqueda de un producto que no está en el conjunto supply
+        List<Product> products = shoppinator.search("e");
+
+        // Verificar que la lista de productos esté vacía
+        assertTrue(products.isEmpty());
+
+        // Verificar que la cantidad de productos sea igual a la cantidad especificada en C
+        assertEquals(products.size(), shopC.size());
+    }
+
+    @Test
+    public void testCoreInitializationCA4() {
+        // Inicializar el Shoppinator con un directorio de scrappers simulado
+        Shoppinator shoppinator = new Shoppinator("path_to_directory");
+
+        // Realizar una búsqueda de productos después de la inicialización
+        List<Product> products = shoppinator.search("a");
+
+        // Verificar que la lista de productos no esté vacía, lo que indica que se han agregado productos destacados
+        assertTrue(!products.isEmpty());
+    }
+
+    @Test
+    public void testFailedConnectionOnCoreInitializationCA5() {
+        // Configurar el directorio de scrappers para que cause un fallo de conexión
+        String path = "plugins/";
+
+        // Intentar inicializar el Shoppinator y atrapar la excepción de fallo de conexión
+        //assertThrows(FailedConnectionException.class, () -> {
+        //   Shoppinator shoppinator = new Shoppinator(path);
+        //});
+
+        // Verificar que no se hayan agregado productos destacados a la lista de productos de las tiendas
+        List<Product> products = shoppinator.search("a");
+        assertTrue(products.isEmpty());
+    }
+
+}
