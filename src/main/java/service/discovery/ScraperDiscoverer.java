@@ -13,24 +13,24 @@ import java.util.jar.JarFile;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import shoppinator.core.interfaces.Scrapper;
+import shoppinator.core.interfaces.Scraper;
 
 @Slf4j
 @NoArgsConstructor
-public class ScrapperDiscoverer {
+public class ScraperDiscoverer {
 
     @SneakyThrows
-    public Set<Scrapper> discover(String path) {
+    public Set<Scraper> discover(String path) {
         return this.findClasses(path);
     }
 
-    public Set<Scrapper> findClasses(String path) {
-        Set<Scrapper> scrapers = new HashSet<>();
+    public Set<Scraper> findClasses(String path) {
+        Set<Scraper> scrapers = new HashSet<>();
         findClassesInPath(new File(path), scrapers);
         return scrapers;
     }
 
-    private void findClassesInPath(File path, Set<Scrapper> scrapers) {
+    private void findClassesInPath(File path, Set<Scraper> scrapers) {
         if (!path.exists()) {
             return;
         }
@@ -47,8 +47,8 @@ public class ScrapperDiscoverer {
         }
     }
 
-    private Set<Scrapper> findScrapersInJar(File jarFile) {
-        Set<Scrapper> scrapers = new HashSet<>();
+    private Set<Scraper> findScrapersInJar(File jarFile) {
+        Set<Scraper> scrapers = new HashSet<>();
 
         try (JarFile jar = new JarFile(jarFile)) {
             Enumeration<JarEntry> entries = jar.entries();
@@ -66,11 +66,11 @@ public class ScrapperDiscoverer {
         return scrapers;
     }
 
-    private void instantiateClassFromJar(File jarFile, JarEntry entry, Set<Scrapper> scrapers) {
+    private void instantiateClassFromJar(File jarFile, JarEntry entry, Set<Scraper> scrapers) {
         try {
             Class<?> cls = loadClassFromJar(jarFile, entry.getName());
-            if (cls != null && Scrapper.class.isAssignableFrom(cls)) {
-                scrapers.add((Scrapper) cls.getDeclaredConstructor().newInstance());
+            if (cls != null && Scraper.class.isAssignableFrom(cls)) {
+                scrapers.add((Scraper) cls.getDeclaredConstructor().newInstance());
             }
         } catch (InstantiationException | NoSuchMethodException | InvocationTargetException |
                  IllegalAccessException e) {

@@ -1,7 +1,6 @@
 package shoppinator.core.interfaces;
 
-public interface Scrapper {
+public interface Scraper {
 
     String scrap(String productName);
-    String scrapFeatured();
 }

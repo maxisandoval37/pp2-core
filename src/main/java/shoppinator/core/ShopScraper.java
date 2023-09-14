@@ -1,17 +1,17 @@
 package shoppinator.core;
 
 import shoppinator.core.factory.ProductFactory;
-import shoppinator.core.interfaces.Scrapper;
+import shoppinator.core.interfaces.Scraper;
 import shoppinator.core.interfaces.Shop;
 import java.util.List;
 import shoppinator.core.model.Product;
 
 public class ShopScraper extends Shop {
 
-    private Scrapper scraper;
+    private Scraper scraper;
     private ProductFactory productFactory;
 
-    public ShopScraper(Scrapper scraper) {
+    public ShopScraper(Scraper scraper) {
         this.scraper = scraper;
         this.productFactory = new ProductFactory();
 
@@ -28,7 +28,7 @@ public class ShopScraper extends Shop {
     }
 
     private List<Product> searchFeaturedProducts() {
-        String featuredProducts = this.scraper.scrapFeatured();
+        String featuredProducts = this.scraper.scrap("featured");
         return productFactory.create(featuredProducts);
     }
 }

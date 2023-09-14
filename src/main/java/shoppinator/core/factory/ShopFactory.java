@@ -1,23 +1,20 @@
 package shoppinator.core.factory;
 
-import shoppinator.core.ShopProxy;
+import lombok.NoArgsConstructor;
 import shoppinator.core.ShopScraper;
 import java.util.HashSet;
 import java.util.Set;
-import shoppinator.core.interfaces.Scrapper;
+import shoppinator.core.interfaces.Scraper;
 import shoppinator.core.interfaces.Shop;
 
+@NoArgsConstructor
 public class ShopFactory {
 
-    public ShopFactory() {
-    }
-
-    public Set<Shop> create(Set<Scrapper> scrappers) {
+    public Set<Shop> create(Set<Scraper> scrapers) {
         Set<Shop> shops = new HashSet<>();
 
-        for (Scrapper scrapper : scrappers) {
-            ShopScraper shopScraper = new ShopScraper(scrapper);
-            shops.add(new ShopProxy(shopScraper));
+        for (Scraper scraper : scrapers) {
+            shops.add(new ShopScraper(scraper));
         }
 
         return shops;

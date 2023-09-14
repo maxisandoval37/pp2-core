@@ -3,9 +3,9 @@ package shoppinator.core;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
-import service.discovery.ScrapperDiscoverer;
+import service.discovery.ScraperDiscoverer;
 import shoppinator.core.factory.ShopFactory;
-import shoppinator.core.interfaces.Scrapper;
+import shoppinator.core.interfaces.Scraper;
 import shoppinator.core.interfaces.Shop;
 import java.util.Set;
 import shoppinator.core.model.Product;
@@ -14,7 +14,7 @@ public class Shoppinator {
 
     @Getter
     Set<Shop> shops;
-    ScrapperDiscoverer scrapperDiscoverer;
+    ScraperDiscoverer scraperDiscoverer;
     ShopFactory shopFactory;
 
     public Shoppinator(String path) {
@@ -23,10 +23,10 @@ public class Shoppinator {
 
     private void init(String path) {
         this.shopFactory = new ShopFactory();
-        this.scrapperDiscoverer = new ScrapperDiscoverer();
+        this.scraperDiscoverer = new ScraperDiscoverer();
 
-        Set<Scrapper> scrappers = scrapperDiscoverer.discover(path);
-        this.shops = shopFactory.create(scrappers);
+        Set<Scraper> scrapers = scraperDiscoverer.discover(path);
+        this.shops = shopFactory.create(scrapers);
     }
 
     public List<Product> search(String productName) {
