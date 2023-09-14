@@ -2,6 +2,7 @@ package shoppinator.core;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
 import service.discovery.ScrapperDiscoverer;
 import shoppinator.core.factory.ShopFactory;
 import shoppinator.core.interfaces.Scrapper;
@@ -11,6 +12,7 @@ import shoppinator.core.model.Product;
 
 public class Shoppinator {
 
+    @Getter
     Set<Shop> shops;
     ScrapperDiscoverer scrapperDiscoverer;
     ShopFactory shopFactory;
