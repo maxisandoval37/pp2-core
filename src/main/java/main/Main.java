@@ -1,7 +1,5 @@
 package main;
 
-import shoppinator.core.factory.ShopFactory;
-import service.discovery.ScrapperDiscoverer;
 import lombok.extern.slf4j.Slf4j;
 import shoppinator.core.Shoppinator;
 
@@ -12,7 +10,7 @@ public class Main {
 
         logAsciiArt();
 
-        Shoppinator shoppinator = new Shoppinator("plugins/");
+        Shoppinator shoppinator = new Shoppinator("src/dist/lib/plugins");
     }
 
     public static void logAsciiArt() {

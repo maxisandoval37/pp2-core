@@ -20,11 +20,13 @@ public class ScrapperDiscoverer {
     }
 
     public Set<Scrapper> discover(String path) {
+        //this.v2(path);
         return this.findClasses(path);
     }
 
     @SneakyThrows
     private Set<Scrapper> findClasses(String path) {
+        System.getProperty("java.class.path");
         Set<Scrapper> result = new HashSet<>();
         for (File f : new File(path).listFiles()) {
             if(f.isDirectory()) {
@@ -59,5 +61,12 @@ public class ScrapperDiscoverer {
         }
 
         return result;
+    }
+
+    @SneakyThrows
+    public void v2(String path)  {
+        //print classpath
+        System.out.println(System.getProperty("java.class.path"));
+            Class<?> cls = Class.forName("src.main.java.main.Example");
     }
 }

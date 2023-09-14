@@ -1,5 +1,5 @@
 plugins {
-    id 'java'
+    id 'application'
 }
 
 group 'org.ungs'
@@ -7,6 +7,11 @@ version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+}
+
+application {
+    mainClass = 'src.main.java.main.Main'
+    executableDir = 'src.dist.lib'
 }
 
 dependencies {
@@ -19,6 +24,9 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:2.0.5'
     implementation 'ch.qos.logback:logback-classic:1.4.7'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.15.2'
+
+    runtimeOnly files('src/dist/lib')
+    implementation fileTree(dir: 'src/dist/lib/plugins', include: '**/*.class')
 }
 
 test {
