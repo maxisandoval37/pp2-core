@@ -15,7 +15,7 @@ public abstract class Shop extends Observable {
     public abstract List<Product> search(String productName);
 
     protected void addProducts(List<Product> newProducts) {
-        products.addAll(newProducts);
+        products = newProducts;
         products.sort(Comparator.comparing(p -> p.getProductPresentation().getPrice()));
 
         this.sendNotification();

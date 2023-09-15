@@ -29,6 +29,8 @@ public class ShopScraper extends Shop {
 
     private List<Product> searchFeaturedProducts() {
         String featuredProducts = this.scraper.scrap("featured");
-        return productFactory.create(featuredProducts);
+        List<Product> products = productFactory.create(featuredProducts);
+        this.addProducts(products);
+        return this.getProducts();
     }
 }
