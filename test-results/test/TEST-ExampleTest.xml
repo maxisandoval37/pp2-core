@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="ExampleTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2023-09-15T15:42:04" hostname="fv-az790-517" time="0.024">
-  <properties/>
-  <testcase name="exampleTest1()" classname="ExampleTest" time="0.022"/>
-  <testcase name="exampleTest2()" classname="ExampleTest" time="0.001"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
