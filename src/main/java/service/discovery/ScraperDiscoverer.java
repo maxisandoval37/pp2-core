@@ -1,7 +1,6 @@
 package service.discovery;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -21,7 +20,17 @@ public class ScraperDiscoverer {
 
     @SneakyThrows
     public Set<Scraper> discover(String path) {
-        return this.findClasses(path);
+        File directory = new File(path);
+
+        if (!directory.exists()) {
+            throw new FileNotFoundException("Location does not exist: " + path);
+        }
+
+        if (!directory.isDirectory()) {
+            throw new IllegalArgumentException("Invalid location: " + path);
+        }
+
+        return findClasses(path);
     }
 
     public Set<Scraper> findClasses(String path) {
