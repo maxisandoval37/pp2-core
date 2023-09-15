@@ -49,6 +49,5 @@ jobs:
     - name: Publish Test Results as Github Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
-        repository: https://github.com/maxisandoval37/pp2-core.git
         github_token: ${{ secrets.TOKEN_PP2 }}
         publish_dir: ./test-results/
