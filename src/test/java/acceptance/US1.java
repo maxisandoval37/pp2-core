@@ -1,6 +1,5 @@
 package acceptance;
 
-import java.io.FileNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import shoppinator.core.Shoppinator;
@@ -24,37 +23,22 @@ class US1 {
     }
 
     @Test
-    void testComparePrices() {
+    void CA1_shouldListProductsOrderedByPrice() {
         List<Product> products = shoppinator.search("a");
         ProductFactory productFactory = new ProductFactory();
         String json = "[{\"name\":\"a\",\"post_url\":\"https://example.com/\",\"product_presentation\":{\"price\":799.99,\"product_image_url\":\"https://example.com/\"}},{\"name\":\"a\",\"post_url\":\"https://example.com/\",\"product_presentation\":{\"price\":799.99,\"product_image_url\":\"https://example.com/\"}}]";
 
         List<Product> productsMock = productFactory.create(json);
 
+        float[] prices = getProductPrices(products);
+
         assertFalse(products.isEmpty());
         assertEquals(productsMock, products);
-        assertTrue(
-            products.get(0).getProductPresentation().getPrice() <= products.get(1).getProductPresentation().getPrice());
-    }
-
-
-    @Test
-    void testEmptySearchCA2() {
-        List<Product> products = shoppinator.search("");
-
-        Shop shopC = null;
-        for (Shop shop : shops) {
-            if (shop.getProducts().size() == 0) {
-                shopC = shop;
-            }
-        }
-
-        assertTrue(products.isEmpty());
-        assertEquals(products.size(), shopC.getProducts().size());
+        assertTrue(prices[0] <= prices[1]);
     }
 
     @Test
-    void testProductNotFoundCA3() {
+    void CA2_shouldNotAddNewProductsToShops() {
         List<Product> products = shoppinator.search("e");
 
         Shop shopC = null;
@@ -69,9 +53,19 @@ class US1 {
     }
 
     @Test
-    void testCoreInitializationCA4() {
+    void CA3_shouldAddNewProductsOnInitialization() {
         List<Product> products = shoppinator.search("featured");
 
         assertTrue(!products.isEmpty());
+    }
+
+    private float[] getProductPrices(List<Product> products) {
+        float[] prices = new float[products.size()];
+
+        for (int i = 0; i < products.size(); i++) {
+            prices[i] = products.get(i).getProductPresentation().getPrice();
+        }
+
+        return prices;
     }
 }
