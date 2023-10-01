@@ -2,6 +2,9 @@ package utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,10 +20,13 @@ public class ScraperUrlFinder {
 
     private static String findUrlFromScraperName(String prefix) {
         Properties prop = new Properties();
-        try(InputStream is = ScraperUrlFinder.class.getClassLoader().getResourceAsStream("config.properties")) {
+        Path path = Paths.get("src/main/resources/conf/config.properties"); // specify the correct path to your file
+
+        try (InputStream is = Files.newInputStream(path)) {
             prop.load(is);
         } catch (IOException e) {
             log.error(e.getMessage());
+            return null;
         }
 
         for (String key : prop.stringPropertyNames()) {
