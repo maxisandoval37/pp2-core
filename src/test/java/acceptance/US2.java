@@ -23,44 +23,47 @@ class US2 {
     }
 
     @Test
-    void CA1() {
+    void CA1_DiscoveryOnNonExistentLocation_ShouldThrow_FileNotFoundException() {
         String nonExistingPath = "non-existent-location/";
 
         assertThrows(FileNotFoundException.class, () -> scraperDiscoverer.discover(nonExistingPath));
     }
 
     @Test
-    void CA2() {
+    void CA2_DiscoveryOnInvalidPath_ShouldThrow_IllegalArgumentException() {
         String invalidPath = "a,,rc.h.i./.vo.txt";
-        assertThrows(FileNotFoundException.class, () -> scraperDiscoverer.discover(invalidPath));
+        assertThrows(IllegalArgumentException.class, () -> scraperDiscoverer.discover(invalidPath));
     }
 
     @Test
-    void CA3() {
+    void CA3_DiscoveryOnEmptyFolder_ShouldReturn_EmptySet() throws FileNotFoundException {
         String emptyFolderPath = "src/test/resources/empty-folder";
 
-        var result = scraperDiscoverer.discover(emptyFolderPath);
+        Set<Scraper> result = scraperDiscoverer.discover(emptyFolderPath);
 
         assertTrue(result.isEmpty());
     }
 
     @Test
-    void CA4() {
+    void CA4_DiscoveryOnFolderWithNonScraperFile_ShouldReturn_EmptySet() throws FileNotFoundException {
         String notScraperPath = "src/test/resources/not-scraper";
 
-        assertTrue(scraperDiscoverer.discover(notScraperPath).isEmpty());
+        Set<Scraper> result = scraperDiscoverer.discover(notScraperPath);
+
+        assertTrue(result.isEmpty());
     }
 
     @Test
-    void CA5() {
+    void CA5_DiscoveryOnFolderWithOneScraperFile_ShouldReturn_SetWithONEScraper() throws FileNotFoundException {
         String simpleScraperPath = "src/test/resources/simple-scraper";
 
-        Set<Scraper> scrapers = scraperDiscoverer.discover(simpleScraperPath);
-        assertEquals(1, scrapers.size());
+        Set<Scraper> result = scraperDiscoverer.discover(simpleScraperPath);
+
+        assertEquals(1, result.size());
     }
 
     @Test
-    void CA6() {
+    void CA6_DiscoveryOnFolderWithTwoScraperFiles_ShouldReturn_SetWithTWOScrapers() throws FileNotFoundException {
         String multipleScraperPath = "src/test/resources/multiple-scraper";
 
         Set<Scraper> scrapers = scraperDiscoverer.discover(multipleScraperPath);

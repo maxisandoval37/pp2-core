@@ -1,6 +1,5 @@
 package shoppinator.core.interfaces;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Observable;
 import lombok.Getter;
@@ -16,7 +15,6 @@ public abstract class Shop extends Observable {
 
     protected void addProducts(List<Product> newProducts) {
         products = newProducts;
-        products.sort(Comparator.comparing(p -> p.getProductPresentation().getPrice()));
 
         this.sendNotification();
     }
