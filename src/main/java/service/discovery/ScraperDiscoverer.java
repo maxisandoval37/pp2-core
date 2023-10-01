@@ -12,9 +12,9 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import lombok.NoArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import shoppinator.core.interfaces.Scraper;
+import utils.ScraperUrlFinder;
 
 @Slf4j
 @NoArgsConstructor
@@ -83,7 +83,10 @@ public class ScraperDiscoverer {
         try {
             Class<?> cls = loadClassFromJar(jarFile, entry.getName());
             if (cls != null && Scraper.class.isAssignableFrom(cls)) {
-                scrapers.add((Scraper) cls.getDeclaredConstructor().newInstance());
+                Scraper scraper = (Scraper) cls.getDeclaredConstructor().newInstance();
+                scraper.setUrl(ScraperUrlFinder.findUrl(cls.getSimpleName()));
+
+                scrapers.add(scraper);
             }
         } catch (InstantiationException | NoSuchMethodException | InvocationTargetException |
                  IllegalAccessException e) {
