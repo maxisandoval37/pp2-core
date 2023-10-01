@@ -1,5 +1,6 @@
 package shoppinator.core;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -18,15 +19,16 @@ public class Shoppinator extends Observable implements Observer {
 
     @Getter
     List<Product> products;
+    @Getter
     Set<Shop> shops;
     ScraperDiscoverer scraperDiscoverer;
     ShopFactory shopFactory;
 
-    public Shoppinator(String path) {
+    public Shoppinator(String path) throws FileNotFoundException {
         this.init(path);
     }
 
-    private void init(String path) {
+    private void init(String path) throws FileNotFoundException {
         this.shopFactory = new ShopFactory();
         this.scraperDiscoverer = new ScraperDiscoverer();
 

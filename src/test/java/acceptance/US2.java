@@ -36,7 +36,7 @@ class US2 {
     }
 
     @Test
-    void CA3_DiscoveryOnEmptyFolder_ShouldReturn_EmptySet() {
+    void CA3_DiscoveryOnEmptyFolder_ShouldReturn_EmptySet() throws FileNotFoundException {
         String emptyFolderPath = "src/test/resources/empty-folder";
 
         Set<Scraper> result = scraperDiscoverer.discover(emptyFolderPath);
@@ -45,7 +45,7 @@ class US2 {
     }
 
     @Test
-    void CA4_DiscoveryOnFolderWithNonScraperFile_ShouldReturn_EmptySet() {
+    void CA4_DiscoveryOnFolderWithNonScraperFile_ShouldReturn_EmptySet() throws FileNotFoundException {
         String notScraperPath = "src/test/resources/not-scraper";
 
         Set<Scraper> result = scraperDiscoverer.discover(notScraperPath);
@@ -54,7 +54,7 @@ class US2 {
     }
 
     @Test
-    void CA5_DiscoveryOnFolderWithOneScraperFile_ShouldReturn_SetWithONEScraper() {
+    void CA5_DiscoveryOnFolderWithOneScraperFile_ShouldReturn_SetWithONEScraper() throws FileNotFoundException {
         String simpleScraperPath = "src/test/resources/simple-scraper";
 
         Set<Scraper> result = scraperDiscoverer.discover(simpleScraperPath);
@@ -63,7 +63,7 @@ class US2 {
     }
 
     @Test
-    void CA6_DiscoveryOnFolderWithTwoScraperFiles_ShouldReturn_SetWithTWOScrapers() {
+    void CA6_DiscoveryOnFolderWithTwoScraperFiles_ShouldReturn_SetWithTWOScrapers() throws FileNotFoundException {
         String multipleScraperPath = "src/test/resources/multiple-scraper";
 
         Set<Scraper> scrapers = scraperDiscoverer.discover(multipleScraperPath);

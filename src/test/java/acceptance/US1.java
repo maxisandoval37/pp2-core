@@ -1,5 +1,6 @@
 package acceptance;
 
+import java.io.FileNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import shoppinator.core.Shoppinator;
@@ -15,7 +16,7 @@ class US1 {
     private Set<Shop> shops;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws FileNotFoundException {
 
         String path = "src/test/resources/scrapers/";
         shoppinator = new Shoppinator(path);
