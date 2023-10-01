@@ -4,7 +4,7 @@ public abstract class Scraper {
 
     private String url;
 
-    Scraper() {}
+    public Scraper() {}
 
     public abstract String scrap(String productName);
 
