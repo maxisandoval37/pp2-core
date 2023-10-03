@@ -9,10 +9,12 @@ import java.util.Observer;
 import java.util.Set;
 import lombok.Getter;
 import service.discovery.ScraperDiscoverer;
+import shoppinator.core.factory.SearchCriteriaFactory;
 import shoppinator.core.factory.ShopFactory;
 import shoppinator.core.interfaces.Scraper;
 import shoppinator.core.interfaces.Shop;
 import shoppinator.core.model.Product;
+import shoppinator.core.model.SearchCriteria;
 
 @SuppressWarnings("deprecation")
 public class Shoppinator extends Observable implements Observer {
@@ -23,6 +25,7 @@ public class Shoppinator extends Observable implements Observer {
     Set<Shop> shops;
     ScraperDiscoverer scraperDiscoverer;
     ShopFactory shopFactory;
+    SearchCriteriaFactory searchCriteriaFactory;
 
     public Shoppinator(String path) throws FileNotFoundException {
         this.init(path);
@@ -31,16 +34,24 @@ public class Shoppinator extends Observable implements Observer {
     private void init(String path) throws FileNotFoundException {
         this.shopFactory = new ShopFactory();
         this.scraperDiscoverer = new ScraperDiscoverer();
+        this.searchCriteriaFactory = new SearchCriteriaFactory();
 
         Set<Scraper> scrapers = scraperDiscoverer.discover(path);
         this.shops = shopFactory.create(scrapers);
         this.addObservers();
+
+        // busqueda inicial de productos destacados
+        // , en el scraper que esta por defecto
+        this.search("featured");
     }
 
-    public List<Product> search(String productName) {
+    public List<Product> search(String... params) {
+        SearchCriteria searchCriteria = searchCriteriaFactory.create(params);
+
         this.products = new ArrayList<>();
+
         for (Shop shop : this.shops) {
-            shop.search(productName);
+            shop.search(searchCriteria);
         }
 
         return products;

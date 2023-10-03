@@ -11,7 +11,7 @@ public class Main {
 
         logAsciiArt();
 
-        Shoppinator shoppinator = new Shoppinator("plugins/");
+        Shoppinator shoppinator = new Shoppinator("plugins/default");
 
         shoppinator.search("iphone");
     }
