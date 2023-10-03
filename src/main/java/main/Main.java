@@ -11,9 +11,10 @@ public class Main {
 
         logAsciiArt();
 
-        Shoppinator shoppinator = new Shoppinator("plugins/default");
+        Shoppinator shoppinator = new Shoppinator("src/main/resources/conf/plugins/default/");
 
         shoppinator.search("iphone");
+        log.info("Products: {}", shoppinator.getProducts());
     }
 
     public static void logAsciiArt() {
