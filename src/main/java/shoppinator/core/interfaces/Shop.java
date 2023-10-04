@@ -20,8 +20,9 @@ public abstract class Shop extends Observable {
         this.sendNotification();
     }
 
-    public void sendNotification() {
+    public boolean sendNotification() {
         setChanged();
         super.notifyObservers(this.products);
+        return hasChanged();
     }
 }

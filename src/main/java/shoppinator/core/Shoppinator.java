@@ -61,6 +61,13 @@ public class Shoppinator extends Observable implements Observer {
     public void update(Observable o, Object productList) {
         this.products.addAll((List<Product>) productList);
         products.sort(Comparator.comparing(p -> p.getProductPresentation().getPrice()));
+        sendNotification();
+    }
+
+    public boolean sendNotification() {
+        setChanged();
+        super.notifyObservers(this.products);
+        return hasChanged();
     }
 
     private void addObservers() {
