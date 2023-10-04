@@ -28,18 +28,18 @@ public class PriceFilter extends Filter {
 /*
         try {
             while (true) {
-                // Leer productos como cadenas JSON de la tubería de entrada
+                // Leer productos como cadenas JSON del pipe in
                 String productoJson = read();
                 if (productoJson == null) {
-                    break; // Se alcanzó el final de la tubería de entrada
+                    break; // pipe in finish
                 }
 
                 // Convertir la cadena JSON en un objeto Producto
-
+                
 
             }
         } catch (EOFException e) {
-            // Se alcanzó el final de la tubería de entrada
+            // pipe in finish
         }
 */
         products = jsonToProduct(data);
@@ -61,7 +61,7 @@ public class PriceFilter extends Filter {
             }
         }
 
-        // Cerrar la tubería de salida
+        // close pipe out
         out.close();
 
     }
