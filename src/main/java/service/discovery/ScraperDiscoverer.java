@@ -37,6 +37,22 @@ public class ScraperDiscoverer {
         return findClasses(path);
     }
 
+    public Set<Scraper> discoverSelectedShops(String path, String... params)
+            throws FileNotFoundException, IllegalArgumentException
+    {
+        File directory = new File(path);
+
+        if (!path.matches(DIRECTORY_REGEX)) {
+            throw new IllegalArgumentException("Invalid location: " + path);
+        }
+
+        if (!directory.exists()) {
+            throw new FileNotFoundException("Location does not exist: " + path);
+        }
+
+        return findClasses(path);
+    }
+
     public Set<Scraper> findClasses(String path) {
         Set<Scraper> scrapers = new HashSet<>();
         findClassesInPath(new File(path), scrapers);
