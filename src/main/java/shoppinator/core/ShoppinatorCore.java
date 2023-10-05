@@ -7,6 +7,7 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import shoppinator.core.interfaces.Shop;
 import shoppinator.core.model.Product;
@@ -14,15 +15,11 @@ import shoppinator.core.model.SearchCriteria;
 
 @SuppressWarnings("deprecation")
 @Getter
+@NoArgsConstructor
 public class ShoppinatorCore extends Observable implements Observer {
 
     List<Product> products;
-    @Setter
     Set<Shop> shops;
-
-    public ShoppinatorCore() {
-        this.addObservers();
-    }
 
     public List<Product> search(SearchCriteria params) {
         this.products = new ArrayList<>();
@@ -45,6 +42,11 @@ public class ShoppinatorCore extends Observable implements Observer {
         setChanged();
         super.notifyObservers(this.products);
         return hasChanged();
+    }
+
+    public void setShops(Set<Shop> shops) {
+        this.shops = shops;
+        this.addObservers();
     }
 
     private void addObservers() {

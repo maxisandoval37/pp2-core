@@ -15,6 +15,8 @@ public class Main {
         shoppinator.init("plugins/default/");
 
         log.info("Products: {}", shoppinator.getProductList());
+
+        shoppinator.search("plugins/default/", "televisor", "1000", "10", "garbarino", "fravega");
     }
 
     public static void logAsciiArt() {

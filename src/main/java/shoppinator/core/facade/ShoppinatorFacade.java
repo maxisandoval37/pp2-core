@@ -26,6 +26,7 @@ public class ShoppinatorFacade {
     public ShoppinatorFacade() {
         this.scraperDiscoverer = new ScraperDiscoverer();
         this.searchCriteriaFactory = new SearchCriteriaFactory();
+        this.shopFactory = new ShopFactory();
         shoppinatorCore = new ShoppinatorCore();
     }
 
