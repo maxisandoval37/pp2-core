@@ -9,7 +9,7 @@ import java.util.Observer;
 import java.util.Set;
 import lombok.Getter;
 import service.discovery.ScraperDiscoverer;
-import shoppinator.core.factory.SearchCriteriaFactory;
+import shoppinator.core.facade.ShoppinatorFacade;
 import shoppinator.core.factory.ShopFactory;
 import shoppinator.core.interfaces.Scraper;
 import shoppinator.core.interfaces.Shop;
@@ -25,7 +25,7 @@ public class Shoppinator extends Observable implements Observer {
     Set<Shop> shops;
     ScraperDiscoverer scraperDiscoverer;
     ShopFactory shopFactory;
-    SearchCriteriaFactory searchCriteriaFactory;
+    ShoppinatorFacade shoppinatorFacade;
 
     public Shoppinator(String path) throws FileNotFoundException {
         this.init(path);
@@ -34,7 +34,7 @@ public class Shoppinator extends Observable implements Observer {
     private void init(String path) throws FileNotFoundException {
         this.shopFactory = new ShopFactory();
         this.scraperDiscoverer = new ScraperDiscoverer();
-        this.searchCriteriaFactory = new SearchCriteriaFactory();
+        this.shoppinatorFacade = new ShoppinatorFacade();
 
         Set<Scraper> scrapers = scraperDiscoverer.discover(path);
         this.shops = shopFactory.create(scrapers);
@@ -45,16 +45,14 @@ public class Shoppinator extends Observable implements Observer {
         this.search("featured");
     }
 
-    public List<Product> search(String... params) {
-        SearchCriteria searchCriteria = searchCriteriaFactory.create(params);
-
+    public List<Product> search(String... params) throws FileNotFoundException {
+        //aca va la US5
+        //this.shops = shoppinatorFacade.loadShops(params);
         this.products = new ArrayList<>();
+        SearchCriteria searchCriteria = shoppinatorFacade.createCriteria(params);
+        shoppinatorFacade.search(shops, searchCriteria);
 
-        for (Shop shop : this.shops) {
-            shop.search(searchCriteria);
-        }
-
-        return products;
+        return this.products;
     }
 
     @Override
@@ -75,5 +73,4 @@ public class Shoppinator extends Observable implements Observer {
             shop.addObserver(this);
         }
     }
-
 }
