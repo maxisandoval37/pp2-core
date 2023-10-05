@@ -1,7 +1,5 @@
-package pipeAndFilter;
+package pipeandfilter;
 
-import pipeAndFilter.Pipe;
-import pipeAndFilter.Filter;
 public class Pipeline implements Runnable {
 
     private final Filter[] filters;

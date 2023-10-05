@@ -1,4 +1,4 @@
-package pipeAndFilter;
+package pipeandfilter;
 
 import java.io.EOFException;
 
@@ -6,13 +6,14 @@ public class Sink extends Filter {
 
     @Override
     public void run() {
-        while(true) {
+
             try {
-                System.out.print(read());
+                String productsJson = in.read();
+                productsFiltered = jsonToProducts(productsJson);
             } catch(EOFException e) {
-                break;
+                throw new RuntimeException(e);
             }
-        }
+
     }
 
 }

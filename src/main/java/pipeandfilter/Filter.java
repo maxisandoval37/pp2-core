@@ -1,11 +1,14 @@
-package pipeAndFilter;
+package pipeandfilter;
 
 import java.io.EOFException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import lombok.Getter;
-import pipeAndFilter.Pipe;
+import shoppinator.core.factory.ProductFactory;
 import shoppinator.core.model.Product;
 
 @Getter
@@ -32,7 +35,7 @@ public abstract class Filter implements Runnable {
             out.close();
             return;
         }
-        out.write(s);
+        out.write((s));
     }
 
     /**
@@ -45,4 +48,13 @@ public abstract class Filter implements Runnable {
         return in.read();
     }
 
+    public List<Product> jsonToProducts(String json) {
+        ProductFactory pf = new ProductFactory();
+        return pf.create(json);
+    }
+    public String productsToJson(List<Product> products) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+        return mapper.writeValueAsString(products);
+    }
 }
