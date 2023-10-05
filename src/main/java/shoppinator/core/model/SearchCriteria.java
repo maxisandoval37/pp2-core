@@ -8,6 +8,7 @@ import lombok.Data;
 public class SearchCriteria {
 
     private String productName;
-    private String priceMin;
-    private String priceMax;
+    private Long priceMin;
+    private Long priceMax;
+    private String[] selectedShops;
 }

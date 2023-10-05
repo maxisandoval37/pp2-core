@@ -1,76 +1,28 @@
 package shoppinator.core;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Set;
-import lombok.Getter;
-import service.discovery.ScraperDiscoverer;
 import shoppinator.core.facade.ShoppinatorFacade;
-import shoppinator.core.factory.ShopFactory;
-import shoppinator.core.interfaces.Scraper;
-import shoppinator.core.interfaces.Shop;
 import shoppinator.core.model.Product;
-import shoppinator.core.model.SearchCriteria;
 
-@SuppressWarnings("deprecation")
-public class Shoppinator extends Observable implements Observer {
+public class Shoppinator {
 
-    @Getter
-    List<Product> products;
-    @Getter
-    Set<Shop> shops;
-    ScraperDiscoverer scraperDiscoverer;
-    ShopFactory shopFactory;
-    ShoppinatorFacade shoppinatorFacade;
+    ShoppinatorFacade facade;
 
-    public Shoppinator(String path) throws FileNotFoundException {
-        this.init(path);
+    public Shoppinator() {
+        facade = new ShoppinatorFacade();
     }
 
-    private void init(String path) throws FileNotFoundException {
-        this.shopFactory = new ShopFactory();
-        this.scraperDiscoverer = new ScraperDiscoverer();
-        this.shoppinatorFacade = new ShoppinatorFacade();
-
-        Set<Scraper> scrapers = scraperDiscoverer.discover(path);
-        this.shops = shopFactory.create(scrapers);
-        this.addObservers();
-
-        // busqueda inicial de productos destacados
-        // , en el scraper que esta por defecto
-        this.search("featured");
+    public void init(String path) throws FileNotFoundException {
+        facade.init(path);
     }
 
-    public List<Product> search(String... params) throws FileNotFoundException {
-        //aca va la US5
-        //this.shops = shoppinatorFacade.loadShops(params);
-        this.products = new ArrayList<>();
-        SearchCriteria searchCriteria = shoppinatorFacade.createCriteria(params);
-        shoppinatorFacade.search(shops, searchCriteria);
-
-        return this.products;
+    public void search(String... params) throws FileNotFoundException {
+        facade.search(params);
     }
 
-    @Override
-    public void update(Observable o, Object productList) {
-        this.products.addAll((List<Product>) productList);
-        products.sort(Comparator.comparing(p -> p.getProductPresentation().getPrice()));
-        sendNotification();
+    public List<Product> getProductList() {
+        return facade.getProductList();
     }
 
-    public boolean sendNotification() {
-        setChanged();
-        super.notifyObservers(this.products);
-        return hasChanged();
-    }
-
-    private void addObservers() {
-        for (Shop shop : this.shops) {
-            shop.addObserver(this);
-        }
-    }
 }

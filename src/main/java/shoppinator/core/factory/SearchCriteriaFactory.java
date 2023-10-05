@@ -6,9 +6,10 @@ public class SearchCriteriaFactory {
 
     public SearchCriteria create(String[] params) {
         String name = (params.length > 0) ? params[0] : null;
-        String priceMin = (params.length > 1) ? params[1] : null;
-        String priceMax = (params.length > 2) ? params[2] : null;
+        Long priceMin = (params.length > 1) ? Long.parseLong(params[1]) : null;
+        Long priceMax = (params.length > 2) ? Long.parseLong(params[2]) : null;
+        String[] shopNames = (params.length > 3) ? new String[params.length - 3] : null;
 
-        return new SearchCriteria(name, priceMin, priceMax);
+        return new SearchCriteria(name, priceMin, priceMax, shopNames);
     }
 }
