@@ -22,6 +22,8 @@ public class ShopScraper extends Shop {
         String scrapedProduct = scraper.scrap(criteria.getProductName());
         List<Product> products = productFactory.create(scrapedProduct);
 
+        // TODO aca iria el filter
+
         this.addProducts(products);
         return this.getProducts();
     }
