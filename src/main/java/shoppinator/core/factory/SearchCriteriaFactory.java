@@ -1,5 +1,6 @@
 package shoppinator.core.factory;
 
+import java.util.Arrays;
 import shoppinator.core.model.SearchCriteria;
 
 public class SearchCriteriaFactory {
@@ -22,7 +23,7 @@ public class SearchCriteriaFactory {
         String name = (params.length > 1) ? params[1] : null;
         Long priceMin = (params.length > 2) ? Long.parseLong(params[2]) : null;
         Long priceMax = (params.length > 3) ? Long.parseLong(params[3]) : null;
-        String[] shopNames = (params.length > 4) ? new String[params.length - 4] : null;
+        String[] shopNames = Arrays.copyOfRange(params, 4, params.length);
 
         return new SearchCriteria(name, priceMin, priceMax, shopNames);
     }
