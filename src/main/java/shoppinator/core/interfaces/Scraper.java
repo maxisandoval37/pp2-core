@@ -2,7 +2,7 @@ package shoppinator.core.interfaces;
 
 public abstract class Scraper {
 
-    String url;
+    private String url;
 
     public Scraper() {}
 
@@ -10,5 +10,9 @@ public abstract class Scraper {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getUrl() {
+        return this.url;
     }
 }
