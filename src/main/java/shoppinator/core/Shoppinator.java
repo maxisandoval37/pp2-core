@@ -45,4 +45,10 @@ public class Shoppinator {
         return facade.getProductList();
     }
 
+    /**
+     * Subscribes an observer to the update of the core product list.
+     */
+    public void subscribe(Object observer) {
+        facade.subscribe(observer);
+    }
 }

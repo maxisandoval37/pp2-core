@@ -1,5 +1,6 @@
 package shoppinator.core.facade;
 
+import java.util.Observer;
 import service.discovery.ScraperDiscoverer;
 import shoppinator.core.ShoppinatorCore;
 import shoppinator.core.factory.SearchCriteriaFactory;
@@ -65,5 +66,9 @@ public class ShoppinatorFacade {
         Set<Scraper> scrapers = scraperDiscoverer.discover(criteria.getDiscoverCriteria());
 
         return shopFactory.create(scrapers);
+    }
+
+    public void subscribe(Object observer) {
+        this.shoppinatorCore.addObserver((Observer) observer);
     }
 }
