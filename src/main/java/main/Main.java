@@ -11,10 +11,21 @@ public class Main {
 
         logAsciiArt();
 
-        Shoppinator shoppinator = new Shoppinator("plugins/default/");
+        Shoppinator shoppinator = new Shoppinator();
+        shoppinator.init("plugins/default/");
 
-        shoppinator.search("iphone");
-        log.info("Products: {}", shoppinator.getProducts());
+        log.info("Products on inicialization: {}", shoppinator.getProductList());
+
+        // TODO ver de hacer que nos manden un map en vez de un array de strings
+        shoppinator.search("plugins/availables", "televisor", "10", "1000", "garbarino", "fravega");
+
+        log.info("Products after search:");
+        shoppinator.getProductList().forEach(product -> log.info("Product: {}", product));
+
+        shoppinator.search();
+
+        log.info("Products after refresh:");
+        shoppinator.getProductList().forEach(product -> log.info("Product: {}", product));
     }
 
     public static void logAsciiArt() {
