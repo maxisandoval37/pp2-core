@@ -5,9 +5,6 @@ import lombok.Data;
 @Data
 public class SearchCriteria {
 
-    private static final Long MIN_PRICE = 0L;
-    private static final Long MAX_PRICE = Long.MAX_VALUE;
-
     private String productName;
     private Long priceMin;
     private Long priceMax;
@@ -22,7 +19,7 @@ public class SearchCriteria {
 
     public SearchCriteria(String productName) {
         this.productName = productName;
-        this.priceMin = MIN_PRICE;
-        this.priceMax = MAX_PRICE;
+        this.priceMin = 0L;
+        this.priceMax = Long.MAX_VALUE;
     }
 }
