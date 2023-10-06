@@ -24,11 +24,11 @@ public class ProductsFilterer {
     //      podriamos crear una interfaz marker Criteria y que SearchCriteria
     //      y FilterCriteria la implementen
     public List<Product> filter(SearchCriteria criteria, List<Product> products) {
-        Sink sink = new Sink();
-        Pipeline pipeline = pipelineFactory.create(criteria, products, sink);
+        Pipeline pipeline = pipelineFactory.create(criteria, products);
 
         pipeline.run();
 
+        Sink sink = (Sink) pipeline.getFilters()[pipeline.getFilters().length - 1];
         return sink.getFilteredProducts();
     }
 }

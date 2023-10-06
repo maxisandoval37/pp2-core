@@ -1,5 +1,8 @@
 package pipeandfilter.architecture;
 
+import lombok.Getter;
+
+@Getter
 public class Pipeline implements Runnable {
 
     private final Filter[] filters;

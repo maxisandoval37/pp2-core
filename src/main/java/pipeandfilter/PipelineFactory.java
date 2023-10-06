@@ -11,14 +11,11 @@ import shoppinator.core.model.SearchCriteria;
 
 public class PipelineFactory {
 
-    public Pipeline create(SearchCriteria criteria, List<Product> products, Sink sink) {
-        // TODO está medio choto que tengamos que pasarle el sink
-        //      como parametro para crear el pipeline, ver como
-        //      podemos refactorizar esto
+    public Pipeline create(SearchCriteria criteria, List<Product> products) {
         Filter[] filters = {
             new Pump(products),
             new PriceFilter(criteria.getMinPrice(), criteria.getMaxPrice()),
-            sink
+            new Sink()
         };
 
         return new Pipeline(filters);
