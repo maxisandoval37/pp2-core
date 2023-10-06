@@ -14,9 +14,11 @@ public class Main {
         Shoppinator shoppinator = new Shoppinator();
         shoppinator.init("plugins/default/");
 
-        log.info("Products: {}", shoppinator.getProductList());
+        log.info("Featured products: {}", shoppinator.getProductList());
 
-        shoppinator.search("plugins/default/", "televisor", "1000", "10", "garbarino", "fravega");
+        shoppinator.search("plugins/availables/", "televisor", "1000", "10", "garbarino", "fravega");
+
+        log.info("Products result: {}", shoppinator.getProductList());
     }
 
     public static void logAsciiArt() {
