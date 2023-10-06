@@ -23,24 +23,54 @@ public class SearchCriteriaFactory {
     public SearchCriteria create(String[] params) {
         SearchCriteria searchCriteria = new SearchCriteria();
 
-        searchCriteria.setProductName((params.length > 1) ? params[1] : null);
+        setProductName(params, searchCriteria);
+        setFilterCriteria(params, searchCriteria);
+        setDiscoverCriteria(params, searchCriteria);
 
+        return searchCriteria;
+    }
+
+    private void setProductName(String[] params, SearchCriteria searchCriteria) {
+        if (params.length > 1) {
+            searchCriteria.setProductName(params[1]);
+        }
+    }
+
+    private void setFilterCriteria(String[] params, SearchCriteria searchCriteria) {
         FilterCriteria filterCriteria = new FilterCriteria();
-        filterCriteria.setMinPrice((params.length > 2) ? Long.parseLong(params[2]) : DEFAULT_MIN_VALUE);
-        filterCriteria.setMaxPrice((params.length > 3) ? Long.parseLong(params[3]) : DEFAULT_MAX_VALUE);
+
+        if (params.length > 2 && params[2] != null && !params[2].isEmpty()) {
+            filterCriteria.setMinPrice(Long.parseLong(params[2]));
+        } else {
+            filterCriteria.setMinPrice(DEFAULT_MIN_VALUE);
+        }
+
+        if (params.length > 3 && params[3] != null && !params[3].isEmpty()) {
+            filterCriteria.setMaxPrice(Long.parseLong(params[3]));
+        } else {
+            filterCriteria.setMaxPrice(DEFAULT_MAX_VALUE);
+        }
 
         if (filterCriteria.getMinPrice() != null && filterCriteria.getMaxPrice() != null
             && filterCriteria.getMinPrice() > filterCriteria.getMaxPrice()) {
             throw new IllegalArgumentException("The minimum price cannot be greater than the maximum price.");
         }
 
-        DiscoverCriteria discoverCriteria = new DiscoverCriteria();
-        discoverCriteria.setPath((params.length > 0) ? params[0] : null);
-        discoverCriteria.setSelectedShops((params.length > 4) ? Arrays.copyOfRange(params, 4, params.length) : null);
-
         searchCriteria.setFilterCriteria(filterCriteria);
-        searchCriteria.setDiscoverCriteria(discoverCriteria);
-
-        return searchCriteria;
     }
+
+    private void setDiscoverCriteria(String[] params, SearchCriteria searchCriteria) {
+        DiscoverCriteria discoverCriteria = new DiscoverCriteria();
+
+        if (params.length > 0) {
+            discoverCriteria.setPath(params[0]);
+        }
+
+        if (params.length > 4) {
+            discoverCriteria.setSelectedShops(Arrays.copyOfRange(params, 4, params.length));
+        }
+
+        searchCriteria.setDiscoverCriteria(discoverCriteria);
+    }
+
 }
