@@ -8,10 +8,9 @@ import java.util.Observer;
 import java.util.Set;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import shoppinator.core.interfaces.Shop;
 import shoppinator.core.model.Product;
-import shoppinator.core.model.SearchCriteria;
+import shoppinator.core.model.criteria.SearchCriteria;
 
 @SuppressWarnings("deprecation")
 @Getter
@@ -21,11 +20,11 @@ public class ShoppinatorCore extends Observable implements Observer {
     List<Product> products;
     Set<Shop> shops;
 
-    public List<Product> search(SearchCriteria params) {
+    public List<Product> search(SearchCriteria criteria) {
         this.products = new ArrayList<>();
 
         for (Shop shop : this.shops) {
-            shop.search(params);
+            shop.search(criteria);
         }
 
         return this.products;

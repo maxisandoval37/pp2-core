@@ -14,11 +14,13 @@ public class Main {
         Shoppinator shoppinator = new Shoppinator();
         shoppinator.init("plugins/default/");
 
-        log.info("Featured products: {}", shoppinator.getProductList());
+        log.info("Products on inicialization: {}", shoppinator.getProductList());
 
-        shoppinator.search("plugins/availables/", "televisor", "1000", "10", "garbarino", "fravega");
+        // TODO ver de hacer que nos manden un map en vez de un array de strings
+        shoppinator.search("plugins/availables", "televisor", "10", "1000", "garbarino", "fravega");
 
-        log.info("Products result: {}", shoppinator.getProductList());
+        log.info("Products after search:");
+        shoppinator.getProductList().forEach(product -> log.info("Product: {}", product));
     }
 
     public static void logAsciiArt() {

@@ -14,52 +14,37 @@ import java.util.jar.JarFile;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import shoppinator.core.interfaces.Scraper;
+import shoppinator.core.model.criteria.DiscoverCriteria;
 import utils.ScraperUrlFinder;
 
 @Slf4j
 @NoArgsConstructor
 public class ScraperDiscoverer {
 
-    private static final String DEFAULT_PATH = "scrapers";
     private static final String DIRECTORY_REGEX = "^[^\\s^\\x00-\\x1f\\\\?*:\"\";<>|/,][^\\x00-\\x1f\\\\?*:\"\";<>|/,]*[^,\\s^\\x00-\\x1f\\\\?*:\"\";<>|]+$";
 
-    public Set<Scraper> discover(String path) throws FileNotFoundException, IllegalArgumentException {
-        File directory = new File(path);
+    public Set<Scraper> discover(DiscoverCriteria criteria) throws FileNotFoundException, IllegalArgumentException {
+        File directory = new File(criteria.getPath());
 
-        if (!path.matches(DIRECTORY_REGEX)) {
-            throw new IllegalArgumentException("Invalid location: " + path);
+        if (!criteria.getPath().matches(DIRECTORY_REGEX)) {
+            throw new IllegalArgumentException("Invalid location: " + criteria.getPath());
         }
 
         if (!directory.exists()) {
-            throw new FileNotFoundException("Location does not exist: " + path);
+            throw new FileNotFoundException("Location does not exist: " + criteria.getPath());
         }
 
-        return findClasses(path);
+        return criteria.getSelectedShops() == null ? findClasses(criteria.getPath())
+            : findSelectedShops(criteria.getPath(), criteria.getSelectedShops());
     }
 
-    public Set<Scraper> discoverSelectedShops(String path, String... params)
-            throws FileNotFoundException, IllegalArgumentException
-    {
-        File directory = new File(path);
-
-        if (!path.matches(DIRECTORY_REGEX)) {
-            throw new IllegalArgumentException("Invalid location: " + path);
-        }
-
-        if (!directory.exists()) {
-            throw new FileNotFoundException("Location does not exist: " + path);
-        }
-
-        return findSelectedShops(path, Set.of(params));
-    }
-
-    public Set<Scraper> findClasses(String path) {
+    private Set<Scraper> findClasses(String path) {
         Set<Scraper> scrapers = new HashSet<>();
         findClassesInPath(new File(path), scrapers);
         return scrapers;
     }
 
-    public Set<Scraper> findSelectedShops(String path, Set<String> scraperNames) {
+    private Set<Scraper> findSelectedShops(String path, String[] scraperNames) {
         Set<Scraper> scrapers = new HashSet<>();
         findSelectedClassesInPath(new File(path), scrapers, scraperNames);
         return scrapers;
@@ -82,7 +67,7 @@ public class ScraperDiscoverer {
         }
     }
 
-    private void findSelectedClassesInPath(File path, Set<Scraper> scrapers, Set<String> scraperNames) {
+    private void findSelectedClassesInPath(File path, Set<Scraper> scrapers, String[] scraperNames) {
         if (!path.exists()) {
             return;
         }
@@ -94,11 +79,23 @@ public class ScraperDiscoverer {
                     findSelectedClassesInPath(file, scrapers, scraperNames);
                 }
             }
-        } else if (path.isFile() && scraperNames.contains(path.getName().replace(".jar", "")) &&
-                path.getName().endsWith(".jar")
-        ) {
+        } else if (path.isFile() && endsWithJarExtension(path) && isScraperInNames(path, scraperNames)) {
             scrapers.addAll(findScrapersInJar(path));
         }
+    }
+
+    private boolean endsWithJarExtension(File file) {
+        return file.getName().endsWith(".jar");
+    }
+
+    private boolean isScraperInNames(File file, String[] scraperNames) {
+        String fileName = file.getName().replace(".jar", "");
+        for (String name : scraperNames) {
+            if (name.equals(fileName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private Set<Scraper> findScrapersInJar(File jarFile) {
