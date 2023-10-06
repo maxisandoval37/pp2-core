@@ -52,8 +52,10 @@ public class ShoppinatorFacade {
     private Set<Shop> loadSelectedShops(String... params) throws FileNotFoundException {
         // podriamos dejar esto más extensible (crear otro objeto que sea como un
         // searchcriteria pero para hacer el discover de los scrapers seleccionados)
-        Set<Scraper> scrapers = scraperDiscoverer.discoverSelectedShops(params[0],
-            new String[params.length - 4]);
+        Set<Scraper> scrapers = scraperDiscoverer.discoverSelectedShops(
+                params[0],
+                Arrays.copyOfRange(params, 4, params.length)
+        );
 
         return shopFactory.create(scrapers);
     }
