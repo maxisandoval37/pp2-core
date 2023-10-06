@@ -1,5 +1,6 @@
 package shoppinator.core;
 
+import service.ProductsFilterer;
 import shoppinator.core.factory.ProductFactory;
 import shoppinator.core.interfaces.Scraper;
 import shoppinator.core.interfaces.Shop;
@@ -11,20 +12,23 @@ public class ShopScraper extends Shop {
 
     private final Scraper scraper;
     private final ProductFactory productFactory;
+    private final ProductsFilterer productsFilterer;
 
-    public ShopScraper(Scraper scraper) {
+    public ShopScraper(Scraper scraper, ProductFactory productFactory, ProductsFilterer productsFilterer) {
         this.scraper = scraper;
-        this.productFactory = new ProductFactory();
+        this.productFactory = productFactory;
+        this.productsFilterer = productsFilterer;
     }
 
     @Override
     public List<Product> search(SearchCriteria criteria) {
+        // TODO quizas tendríamos que hacer una sola clase Criteria que adentro
+        //      tenga dos objetos, searchCriteria y FilterCriteria
         String scrapedProduct = scraper.scrap(criteria.getProductName());
         List<Product> products = productFactory.create(scrapedProduct);
+        List<Product> filtered = productsFilterer.filter(criteria, products);
 
-        // TODO aca iria el filter
-
-        this.addProducts(products);
+        this.addProducts(filtered);
         return this.getProducts();
     }
 
