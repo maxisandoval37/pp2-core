@@ -50,12 +50,18 @@ public class ScraperDiscoverer {
             throw new FileNotFoundException("Location does not exist: " + path);
         }
 
-        return findClasses(path);
+        return findSelectedShops(path, Set.of(params));
     }
 
     public Set<Scraper> findClasses(String path) {
         Set<Scraper> scrapers = new HashSet<>();
         findClassesInPath(new File(path), scrapers);
+        return scrapers;
+    }
+
+    public Set<Scraper> findSelectedShops(String path, Set<String> scraperNames) {
+        Set<Scraper> scrapers = new HashSet<>();
+        findSelectedClassesInPath(new File(path), scrapers, scraperNames);
         return scrapers;
     }
 
@@ -72,6 +78,25 @@ public class ScraperDiscoverer {
                 }
             }
         } else if (path.isFile() && path.getName().endsWith(".jar")) {
+            scrapers.addAll(findScrapersInJar(path));
+        }
+    }
+
+    private void findSelectedClassesInPath(File path, Set<Scraper> scrapers, Set<String> scraperNames) {
+        if (!path.exists()) {
+            return;
+        }
+
+        if (path.isDirectory()) {
+            File[] files = path.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    findSelectedClassesInPath(file, scrapers, scraperNames);
+                }
+            }
+        } else if (path.isFile() && scraperNames.contains(path.getName().replace(".jar", "")) &&
+                path.getName().endsWith(".jar")
+        ) {
             scrapers.addAll(findScrapersInJar(path));
         }
     }
