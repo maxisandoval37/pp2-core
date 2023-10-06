@@ -17,7 +17,7 @@ public class Main {
         log.info("Products on inicialization: {}", shoppinator.getProductList());
 
         // TODO ver de hacer que nos manden un map en vez de un array de strings
-        shoppinator.search("plugins/availables", "televisor", "10", "1000", "garbarino", "fravega");
+        shoppinator.search("plugins/availables", "webcam", "10", "1000", "garbarino", "fravega");
 
         log.info("Products after search:");
         shoppinator.getProductList().forEach(product -> log.info("Product: {}", product));
