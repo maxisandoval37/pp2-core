@@ -6,7 +6,7 @@ import shoppinator.core.interfaces.Scraper;
 import shoppinator.core.interfaces.Shop;
 import java.util.List;
 import shoppinator.core.model.Product;
-import shoppinator.core.model.SearchCriteria;
+import shoppinator.core.model.criteria.SearchCriteria;
 
 public class ShopScraper extends Shop {
 
@@ -22,11 +22,9 @@ public class ShopScraper extends Shop {
 
     @Override
     public List<Product> search(SearchCriteria criteria) {
-        // TODO quizas tendríamos que hacer una sola clase Criteria que adentro
-        //      tenga dos objetos, searchCriteria y FilterCriteria
-        String scrapedProduct = scraper.scrap(criteria.getProductName());
-        List<Product> products = productFactory.create(scrapedProduct);
-        List<Product> filtered = productsFilterer.filter(criteria, products);
+        String scrapResult = scraper.scrap(criteria.getProductName());
+        List<Product> products = productFactory.create(scrapResult);
+        List<Product> filtered = productsFilterer.filter(criteria.getFilterCriteria(), products);
 
         this.addProducts(filtered);
         return this.getProducts();

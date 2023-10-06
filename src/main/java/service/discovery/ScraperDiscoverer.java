@@ -14,43 +14,28 @@ import java.util.jar.JarFile;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import shoppinator.core.interfaces.Scraper;
+import shoppinator.core.model.criteria.DiscoverCriteria;
 import utils.ScraperUrlFinder;
 
 @Slf4j
 @NoArgsConstructor
 public class ScraperDiscoverer {
 
-    private static final String DEFAULT_PATH = "scrapers";
     private static final String DIRECTORY_REGEX = "^[^\\s^\\x00-\\x1f\\\\?*:\"\";<>|/,][^\\x00-\\x1f\\\\?*:\"\";<>|/,]*[^,\\s^\\x00-\\x1f\\\\?*:\"\";<>|]+$";
 
-    public Set<Scraper> discover(String path) throws FileNotFoundException, IllegalArgumentException {
-        File directory = new File(path);
+    public Set<Scraper> discover(DiscoverCriteria criteria)
+        throws FileNotFoundException, IllegalArgumentException {
+        File directory = new File(criteria.getPath());
 
-        if (!path.matches(DIRECTORY_REGEX)) {
-            throw new IllegalArgumentException("Invalid location: " + path);
+        if (!criteria.getPath().matches(DIRECTORY_REGEX)) {
+            throw new IllegalArgumentException("Invalid location: " + criteria.getPath());
         }
 
         if (!directory.exists()) {
-            throw new FileNotFoundException("Location does not exist: " + path);
+            throw new FileNotFoundException("Location does not exist: " + criteria.getPath());
         }
 
-        return findClasses(path);
-    }
-
-    public Set<Scraper> discoverSelectedShops(String path, String... params)
-            throws FileNotFoundException, IllegalArgumentException
-    {
-        File directory = new File(path);
-
-        if (!path.matches(DIRECTORY_REGEX)) {
-            throw new IllegalArgumentException("Invalid location: " + path);
-        }
-
-        if (!directory.exists()) {
-            throw new FileNotFoundException("Location does not exist: " + path);
-        }
-
-        return findClasses(path);
+        return findClasses(criteria.getPath());
     }
 
     public Set<Scraper> findClasses(String path) {

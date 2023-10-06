@@ -16,7 +16,12 @@ public class Main {
 
         log.info("Products: {}", shoppinator.getProductList());
 
+        // TODO ver de hacer que nos manden un map en vez de un array de strings
         shoppinator.search("plugins/default/", "televisor", "10", "1000", "garbarino", "fravega");
+
+        shoppinator.getProductList().forEach(product -> {
+            log.info("Product: {}", product);
+        });
     }
 
     public static void logAsciiArt() {

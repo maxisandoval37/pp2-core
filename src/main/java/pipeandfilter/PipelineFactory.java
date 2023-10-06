@@ -7,11 +7,11 @@ import pipeandfilter.architecture.PriceFilter;
 import pipeandfilter.architecture.Pump;
 import pipeandfilter.architecture.Sink;
 import shoppinator.core.model.Product;
-import shoppinator.core.model.SearchCriteria;
+import shoppinator.core.model.criteria.FilterCriteria;
 
 public class PipelineFactory {
 
-    public Pipeline create(SearchCriteria criteria, List<Product> products) {
+    public Pipeline create(FilterCriteria criteria, List<Product> products) {
         Filter[] filters = {
             new Pump(products),
             new PriceFilter(criteria.getMinPrice(), criteria.getMaxPrice()),

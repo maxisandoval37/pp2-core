@@ -5,7 +5,7 @@ import pipeandfilter.PipelineFactory;
 import pipeandfilter.architecture.Pipeline;
 import pipeandfilter.architecture.Sink;
 import shoppinator.core.model.Product;
-import shoppinator.core.model.SearchCriteria;
+import shoppinator.core.model.criteria.FilterCriteria;
 
 /*
  * This class is responsible for creating a pipeline of filters
@@ -20,10 +20,7 @@ public class ProductsFilterer {
         this.pipelineFactory = new PipelineFactory();
     }
 
-    // TODO en este caso no sería searchCriteria sino filterCriteria, quizas
-    //      podriamos crear una interfaz marker Criteria y que SearchCriteria
-    //      y FilterCriteria la implementen
-    public List<Product> filter(SearchCriteria criteria, List<Product> products) {
+    public List<Product> filter(FilterCriteria criteria, List<Product> products) {
         Pipeline pipeline = pipelineFactory.create(criteria, products);
 
         pipeline.run();

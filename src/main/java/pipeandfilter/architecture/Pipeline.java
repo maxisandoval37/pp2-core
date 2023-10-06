@@ -20,7 +20,7 @@ public class Pipeline implements Runnable {
     @Override
     public void run() {
         for (Filter f : filters) {
-            (new Thread(f)).start();
+            (new Thread(f)).run();
         }
     }
 }

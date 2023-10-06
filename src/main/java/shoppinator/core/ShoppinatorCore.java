@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shoppinator.core.interfaces.Shop;
 import shoppinator.core.model.Product;
-import shoppinator.core.model.SearchCriteria;
+import shoppinator.core.model.criteria.SearchCriteria;
 
 @SuppressWarnings("deprecation")
 @Getter

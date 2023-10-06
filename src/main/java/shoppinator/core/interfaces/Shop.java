@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Observable;
 import lombok.Getter;
 import shoppinator.core.model.Product;
-import shoppinator.core.model.SearchCriteria;
+import shoppinator.core.model.criteria.SearchCriteria;
 
 @Getter
 @SuppressWarnings("deprecation")

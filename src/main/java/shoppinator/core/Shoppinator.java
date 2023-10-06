@@ -13,14 +13,33 @@ public class Shoppinator {
         facade = new ShoppinatorFacade();
     }
 
+    /*
+     * Initializes the Shoppinator, loading the plugins in the given path
+     * and searching for the featured product.
+     */
     public void init(String path) throws FileNotFoundException {
         facade.init(path);
     }
 
-    public void search(String... params) throws FileNotFoundException {
-        facade.search(params);
+    /**
+     * Searches for products based on certain criteria.
+     *
+     * @param params Product search parameters.
+     *               <ol>
+     *                  <li>The first parameter is the path to the plugins folder.</li>
+     *                  <li>The second parameter is the product name.</li>
+     *                  <li>The third parameter is the minimum price.</li>
+     *                  <li>The fourth parameter is the maximum price.</li>
+     *                  <li>The remaining parameters are the selected shops.</li>
+     *               </ol>
+     */
+    public List<Product> search(String... params) throws FileNotFoundException {
+        return facade.search(params);
     }
 
+    /*
+     * Returns the list of products found in the last search.
+     */
     public List<Product> getProductList() {
         return facade.getProductList();
     }
