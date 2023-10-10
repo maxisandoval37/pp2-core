@@ -1,5 +1,6 @@
 package shoppinator.core;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -13,8 +14,11 @@ import shoppinator.core.interfaces.Scraper;
 import shoppinator.core.interfaces.Shop;
 import shoppinator.core.model.Product;
 
+@SuppressWarnings("deprecation")
 public class Shoppinator extends Observable implements Observer {
 
+    @Getter
+    List<Product> products;
     @Getter
     Set<Shop> shops;
     @Getter
@@ -22,14 +26,14 @@ public class Shoppinator extends Observable implements Observer {
     ScraperDiscoverer scraperDiscoverer;
     ShopFactory shopFactory;
 
-    public Shoppinator(String path) {
+    public Shoppinator(String path) throws FileNotFoundException {
         this.init(path);
 
         // la app inicia con productos destacados
         this.search("mouse");
     }
 
-    private void init(String path) {
+    private void init(String path) throws FileNotFoundException {
         this.shopFactory = new ShopFactory();
         this.scraperDiscoverer = new ScraperDiscoverer();
 
@@ -40,6 +44,7 @@ public class Shoppinator extends Observable implements Observer {
 
     public List<Product> search(String productName) {
         products = new ArrayList<>();
+      
         for (Shop shop : this.shops) {
             shop.search(productName);
         }
@@ -51,6 +56,7 @@ public class Shoppinator extends Observable implements Observer {
     public void update(Observable o, Object productList) {
         this.products.addAll((List<Product>) productList);
         products.sort(Comparator.comparing(p -> p.getProductPresentation().getPrice()));
+
         sendNotification();
     }
 

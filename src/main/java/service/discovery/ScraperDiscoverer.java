@@ -1,6 +1,7 @@
 package service.discovery;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
@@ -19,9 +20,21 @@ import shoppinator.core.interfaces.Scraper;
 @NoArgsConstructor
 public class ScraperDiscoverer {
 
-    @SneakyThrows
-    public Set<Scraper> discover(String path) {
-        return this.findClasses(path);
+    private static final String DEFAULT_PATH = "scrapers";
+    private static final String DIRECTORY_REGEX = "^[^\\s^\\x00-\\x1f\\\\?*:\"\";<>|/,][^\\x00-\\x1f\\\\?*:\"\";<>|/,]*[^,\\s^\\x00-\\x1f\\\\?*:\"\";<>|]+$";
+
+    public Set<Scraper> discover(String path) throws FileNotFoundException, IllegalArgumentException {
+        File directory = new File(path);
+
+        if (!path.matches(DIRECTORY_REGEX)) {
+            throw new IllegalArgumentException("Invalid location: " + path);
+        }
+
+        if (!directory.exists()) {
+            throw new FileNotFoundException("Location does not exist: " + path);
+        }
+
+        return findClasses(path);
     }
 
     public Set<Scraper> findClasses(String path) {
