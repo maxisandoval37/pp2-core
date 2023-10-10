@@ -1,5 +1,6 @@
 package shoppinator.core;
 
+import java.util.Collections;
 import shoppinator.core.factory.ProductFactory;
 import shoppinator.core.interfaces.Scraper;
 import shoppinator.core.interfaces.Shop;
@@ -11,11 +12,9 @@ public class ShopScraper extends Shop {
     private Scraper scraper;
     private ProductFactory productFactory;
 
-    public ShopScraper(Scraper scraper) {
+    public ShopScraper(Scraper scraper, ProductFactory productFactory) {
         this.scraper = scraper;
-        this.productFactory = new ProductFactory();
-
-        this.searchFeaturedProducts();
+        this.productFactory = productFactory;
     }
 
     @Override
@@ -23,14 +22,12 @@ public class ShopScraper extends Shop {
         String scrapedProduct = scraper.scrap(productName);
         List<Product> products = productFactory.create(scrapedProduct);
 
-        this.addProducts(products);
-        return this.getProducts();
-    }
+        if(!products.isEmpty()) {
+            this.addProducts(products);
+        } else {
+            this.addProducts(Collections.emptyList());
+        }
 
-    private List<Product> searchFeaturedProducts() {
-        String featuredProducts = this.scraper.scrap("featured");
-        List<Product> products = productFactory.create(featuredProducts);
-        this.addProducts(products);
         return this.getProducts();
     }
 }

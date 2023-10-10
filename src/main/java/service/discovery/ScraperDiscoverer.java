@@ -20,7 +20,6 @@ import shoppinator.core.interfaces.Scraper;
 @NoArgsConstructor
 public class ScraperDiscoverer {
 
-    private static final String DEFAULT_PATH = "scrapers";
     private static final String DIRECTORY_REGEX = "^[^\\s^\\x00-\\x1f\\\\?*:\"\";<>|/,][^\\x00-\\x1f\\\\?*:\"\";<>|/,]*[^,\\s^\\x00-\\x1f\\\\?*:\"\";<>|]+$";
 
     public Set<Scraper> discover(String path) throws FileNotFoundException, IllegalArgumentException {

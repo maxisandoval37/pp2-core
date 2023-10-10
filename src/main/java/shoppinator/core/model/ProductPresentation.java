@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductPresentation {
-    private Float price;
+
+    private Long price;
     private String productImageUrl;
 }

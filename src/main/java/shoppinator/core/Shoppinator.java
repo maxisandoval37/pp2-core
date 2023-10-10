@@ -26,6 +26,9 @@ public class Shoppinator extends Observable implements Observer {
 
     public Shoppinator(String path) throws FileNotFoundException {
         this.init(path);
+
+        // la app inicia con productos destacados
+        this.search("mouse");
     }
 
     private void init(String path) throws FileNotFoundException {
@@ -33,12 +36,13 @@ public class Shoppinator extends Observable implements Observer {
         this.scraperDiscoverer = new ScraperDiscoverer();
 
         Set<Scraper> scrapers = scraperDiscoverer.discover(path);
-        this.shops = shopFactory.create(scrapers);
-        this.addObservers();
+        Set<Shop> shopSet = shopFactory.create(scrapers);
+        this.setShops(shopSet);
     }
 
     public List<Product> search(String productName) {
-        this.products = new ArrayList<>();
+        products = new ArrayList<>();
+
         for (Shop shop : this.shops) {
             shop.search(productName);
         }
@@ -49,7 +53,23 @@ public class Shoppinator extends Observable implements Observer {
     @Override
     public void update(Observable o, Object productList) {
         this.products.addAll((List<Product>) productList);
-        products.sort(Comparator.comparing(p -> p.getProductPresentation().getPrice()));
+
+        if (!this.products.isEmpty()) {
+            products.sort(Comparator.comparing(p -> p.getProductPresentation().getPrice()));
+        }
+
+        sendNotification();
+    }
+
+    public boolean sendNotification() {
+        setChanged();
+        super.notifyObservers(this.products);
+        return hasChanged();
+    }
+
+    public void setShops(Set<Shop> shops) {
+        this.shops = shops;
+        this.addObservers();
     }
 
     private void addObservers() {
@@ -57,5 +77,4 @@ public class Shoppinator extends Observable implements Observer {
             shop.addObserver(this);
         }
     }
-
 }

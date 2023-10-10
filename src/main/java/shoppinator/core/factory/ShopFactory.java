@@ -14,7 +14,9 @@ public class ShopFactory {
         Set<Shop> shops = new HashSet<>();
 
         for (Scraper scraper : scrapers) {
-            shops.add(new ShopScraper(scraper));
+            ProductFactory productFactory = new ProductFactory();
+
+            shops.add(new ShopScraper(scraper, productFactory));
         }
 
         return shops;
