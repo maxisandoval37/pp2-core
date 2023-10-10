@@ -21,8 +21,6 @@ public class Shoppinator extends Observable implements Observer {
     List<Product> products;
     @Getter
     Set<Shop> shops;
-    @Getter
-    List<Product> products;
     ScraperDiscoverer scraperDiscoverer;
     ShopFactory shopFactory;
 
