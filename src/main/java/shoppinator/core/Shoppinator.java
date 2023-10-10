@@ -42,7 +42,7 @@ public class Shoppinator extends Observable implements Observer {
 
     public List<Product> search(String productName) {
         products = new ArrayList<>();
-      
+
         for (Shop shop : this.shops) {
             shop.search(productName);
         }
@@ -53,7 +53,10 @@ public class Shoppinator extends Observable implements Observer {
     @Override
     public void update(Observable o, Object productList) {
         this.products.addAll((List<Product>) productList);
-        products.sort(Comparator.comparing(p -> p.getProductPresentation().getPrice()));
+
+        if (!this.products.isEmpty()) {
+            products.sort(Comparator.comparing(p -> p.getProductPresentation().getPrice()));
+        }
 
         sendNotification();
     }
