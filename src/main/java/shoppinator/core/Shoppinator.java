@@ -1,24 +1,32 @@
 package shoppinator.core;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Set;
 import lombok.Getter;
 import service.discovery.ScraperDiscoverer;
 import shoppinator.core.factory.ShopFactory;
 import shoppinator.core.interfaces.Scraper;
 import shoppinator.core.interfaces.Shop;
-import java.util.Set;
 import shoppinator.core.model.Product;
 
-public class Shoppinator {
+public class Shoppinator extends Observable implements Observer {
 
     @Getter
     Set<Shop> shops;
+    @Getter
+    List<Product> products;
     ScraperDiscoverer scraperDiscoverer;
     ShopFactory shopFactory;
 
     public Shoppinator(String path) {
         this.init(path);
+
+        // la app inicia con productos destacados
+        this.search("mouse");
     }
 
     private void init(String path) {
@@ -26,16 +34,40 @@ public class Shoppinator {
         this.scraperDiscoverer = new ScraperDiscoverer();
 
         Set<Scraper> scrapers = scraperDiscoverer.discover(path);
-        this.shops = shopFactory.create(scrapers);
+        Set<Shop> shopSet = shopFactory.create(scrapers);
+        this.setShops(shopSet);
     }
 
     public List<Product> search(String productName) {
-        List<Product> products = new ArrayList<>();
+        products = new ArrayList<>();
         for (Shop shop : this.shops) {
             shop.search(productName);
-            products.addAll(shop.getProducts());
         }
 
         return products;
+    }
+
+    @Override
+    public void update(Observable o, Object productList) {
+        this.products.addAll((List<Product>) productList);
+        products.sort(Comparator.comparing(p -> p.getProductPresentation().getPrice()));
+        sendNotification();
+    }
+
+    public boolean sendNotification() {
+        setChanged();
+        super.notifyObservers(this.products);
+        return hasChanged();
+    }
+
+    public void setShops(Set<Shop> shops) {
+        this.shops = shops;
+        this.addObservers();
+    }
+
+    private void addObservers() {
+        for (Shop shop : this.shops) {
+            shop.addObserver(this);
+        }
     }
 }

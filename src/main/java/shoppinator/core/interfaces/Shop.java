@@ -14,12 +14,14 @@ public abstract class Shop extends Observable {
     public abstract List<Product> search(String productName);
 
     protected void addProducts(List<Product> newProducts) {
-        products.addAll(newProducts);
+        products = newProducts;
+
         this.sendNotification();
     }
 
-    public void sendNotification() {
+    public boolean sendNotification() {
         setChanged();
         super.notifyObservers(this.products);
+        return hasChanged();
     }
 }

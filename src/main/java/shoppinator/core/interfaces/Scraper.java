@@ -1,7 +1,19 @@
 package shoppinator.core.interfaces;
 
-// a ver si ahora funcionas FORRO
-public interface Scraper {
+public abstract class Scraper {
 
-    String scrap(String productName);
+    private String url;
+
+    public Scraper() {
+    }
+
+    public abstract String scrap(String productName);
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getUrl() {
+        return this.url;
+    }
 }

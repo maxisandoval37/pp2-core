@@ -11,11 +11,9 @@ public class ShopScraper extends Shop {
     private Scraper scraper;
     private ProductFactory productFactory;
 
-    public ShopScraper(Scraper scraper) {
+    public ShopScraper(Scraper scraper, ProductFactory productFactory) {
         this.scraper = scraper;
-        this.productFactory = new ProductFactory();
-
-        this.searchFeaturedProducts();
+        this.productFactory = productFactory;
     }
 
     @Override
@@ -25,10 +23,5 @@ public class ShopScraper extends Shop {
 
         this.addProducts(products);
         return this.getProducts();
-    }
-
-    private List<Product> searchFeaturedProducts() {
-        String featuredProducts = this.scraper.scrap("featured");
-        return productFactory.create(featuredProducts);
     }
 }
