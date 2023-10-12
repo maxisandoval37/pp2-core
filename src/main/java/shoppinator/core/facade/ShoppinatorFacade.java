@@ -3,7 +3,6 @@ package shoppinator.core.facade;
 import java.util.Observer;
 import service.discovery.ScraperDiscoverer;
 import shoppinator.core.ShoppinatorCore;
-import shoppinator.core.factory.SearchCriteriaFactory;
 import shoppinator.core.factory.ShopFactory;
 import shoppinator.core.interfaces.Scraper;
 import shoppinator.core.interfaces.Shop;
@@ -13,7 +12,6 @@ import shoppinator.core.model.criteria.SearchCriteria;
 import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Set;
-import utils.PropertiesHelper;
 
 public class ShoppinatorFacade {
 
@@ -21,54 +19,30 @@ public class ShoppinatorFacade {
     ScraperDiscoverer scraperDiscoverer;
     ShopFactory shopFactory;
 
-    SearchCriteriaFactory searchCriteriaFactory;
-    SearchCriteria criteria;
-    SearchCriteria.Memento lastSearchCriteria;
-
-    String featuredProduct;
-
     public ShoppinatorFacade() {
         this.scraperDiscoverer = new ScraperDiscoverer();
-        this.searchCriteriaFactory = new SearchCriteriaFactory();
         this.shopFactory = new ShopFactory();
         this.shoppinatorCore = new ShoppinatorCore();
-
-        this.featuredProduct = PropertiesHelper.getValue("featured.product");
     }
 
-    public void init(String path) throws FileNotFoundException {
-        this.criteria = searchCriteriaFactory.create(new String[]{path, featuredProduct});
-        performSearch();
-    }
+    public List<Product> searchProductsInShops(SearchCriteria criteria) throws FileNotFoundException {
+        shoppinatorCore.setShops(loadShops(criteria));
 
-    public List<Product> search(String... params) throws FileNotFoundException {
-        if (params.length == 0) {
-            criteria.restoreCriteria(lastSearchCriteria);
-        } else {
-            this.criteria = searchCriteriaFactory.create(params);
-        }
-
-        return performSearch();
+        return shoppinatorCore.search(criteria);
     }
 
     public List<Product> getProductList() {
         return shoppinatorCore.getProducts();
     }
 
-    private List<Product> performSearch() throws FileNotFoundException {
-        this.lastSearchCriteria = criteria.saveState();
-
-        shoppinatorCore.setShops(loadShops());
-        return shoppinatorCore.search(criteria);
+    public void subscribe(Object observer) {
+        shoppinatorCore.addObserver((Observer) observer);
     }
 
-    private Set<Shop> loadShops() throws FileNotFoundException {
+    private Set<Shop> loadShops(SearchCriteria criteria) throws FileNotFoundException {
         Set<Scraper> scrapers = scraperDiscoverer.discover(criteria.getDiscoverCriteria());
 
         return shopFactory.create(scrapers);
     }
 
-    public void subscribe(Object observer) {
-        this.shoppinatorCore.addObserver((Observer) observer);
-    }
 }

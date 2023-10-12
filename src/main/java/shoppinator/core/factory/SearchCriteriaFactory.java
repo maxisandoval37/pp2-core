@@ -10,17 +10,8 @@ public class SearchCriteriaFactory {
     private static final Long DEFAULT_MIN_VALUE = 0L;
     private static final Long DEFAULT_MAX_VALUE = Long.MAX_VALUE;
 
-    /**
-     * Creates a SearchCriteria object from the given parameters.
-     * @param params The parameters to create the SearchCriteria object.
-     *               The first parameter is the path to the plugins folder.
-     *               The second parameter is the product name.
-     *               The third parameter is the minimum price.
-     *               The fourth parameter is the maximum price.
-     *               The rest of the parameters are the selected shops.
-     *               If the first parameter is the only one, then it is the product name.
-     */
     public SearchCriteria create(String[] params) {
+        validateParams(params);
         SearchCriteria searchCriteria = new SearchCriteria();
 
         setProductName(params, searchCriteria);
@@ -31,9 +22,7 @@ public class SearchCriteriaFactory {
     }
 
     private void setProductName(String[] params, SearchCriteria searchCriteria) {
-        if (params.length > 1) {
-            searchCriteria.setProductName(params[1]);
-        }
+        searchCriteria.setProductName(params[1]);
     }
 
     private void setFilterCriteria(String[] params, SearchCriteria searchCriteria) {
@@ -61,16 +50,25 @@ public class SearchCriteriaFactory {
 
     private void setDiscoverCriteria(String[] params, SearchCriteria searchCriteria) {
         DiscoverCriteria discoverCriteria = new DiscoverCriteria();
-
-        if (params.length > 0) {
-            discoverCriteria.setPath(params[0]);
-        }
+        discoverCriteria.setPath(params[0]);
 
         if (params.length > 4) {
             discoverCriteria.setSelectedShops(Arrays.copyOfRange(params, 4, params.length));
         }
 
         searchCriteria.setDiscoverCriteria(discoverCriteria);
+    }
+
+    private void validateParams(String[] params) {
+        if (params == null || params.length == 0) {
+            throw new IllegalArgumentException("The parameters cannot be null or empty.");
+        }
+        if (params[1] == null || params[1].isEmpty()) {
+            throw new IllegalArgumentException("Product name cannot be null or empty.");
+        }
+        if (params[0] == null || params[0].isEmpty()) {
+            throw new IllegalArgumentException("Path cannot be null or empty.");
+        }
     }
 
 }

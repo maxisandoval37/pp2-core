@@ -22,7 +22,7 @@ public class Main {
         log.info("Products after search:");
         shoppinator.getProductList().forEach(product -> log.info("Product: {}", product));
 
-        shoppinator.search();
+        shoppinator.refresh();
 
         log.info("Products after refresh:");
         shoppinator.getProductList().forEach(product -> log.info("Product: {}", product));
