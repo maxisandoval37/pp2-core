@@ -33,7 +33,7 @@ class US2 {
 
     @Test
     void CA2_DiscoveryOnInvalidPath_ShouldThrow_IllegalArgumentException() {
-        String invalidPath = "a,,rc.h.i./.vo.txt";
+        String invalidPath = "archivo,txt";
         DiscoverCriteria testCriteria = getTestCriteria(invalidPath);
 
         assertThrows(IllegalArgumentException.class, () -> scraperDiscoverer.discover(testCriteria));

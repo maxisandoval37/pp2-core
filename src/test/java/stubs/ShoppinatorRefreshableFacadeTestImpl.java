@@ -6,28 +6,31 @@ import shoppinator.core.interfaces.ShoppinatorFacade;
 import shoppinator.core.model.Product;
 import shoppinator.core.model.criteria.SearchCriteria;
 
+/**
+ * <ul>
+ * <li>Test implementation of shoppinator facade, that only returns products
+ * if the product name is the same as the one passed in the constructor.</li>
+ * <li>The search method returns a different list of products if it is called
+ * successively.</li>
+ * <li>This implementation is used to test the refresh functionality.</li>
+ */
 public class ShoppinatorRefreshableFacadeTestImpl implements ShoppinatorFacade {
 
     private int callCounter;
     private List<Product> currentProductList;
-    private List<Product> initialProductList;
-    private List<Product> updatedProductList;
+    private final List<Product> initialProductList;
+    private final List<Product> refreshedProductList;
     private final String productToSearch;
 
-    public ShoppinatorRefreshableFacadeTestImpl(String productToSearch) {
-        this.productToSearch = productToSearch;
+    public ShoppinatorRefreshableFacadeTestImpl(String productToSearch, List<Product> initialProductList,
+        List<Product> refreshedProductList) {
         this.currentProductList = new ArrayList<>();
-        callCounter = 1;
+        this.initialProductList = initialProductList;
+        this.refreshedProductList = refreshedProductList;
+        this.productToSearch = productToSearch;
+        this.callCounter = 1;
     }
 
-    /**
-     * <ul>
-     * <li>Test implementation of products search, that only returns products
-     * if the product name is the same as the one passed in the constructor.</li>
-     * <li>This method returns a different number of products if it is called
-     * successively.</li>
-     * <li>This implementation is used to test the refresh functionality.</li>
-     */
     @Override
     public List<Product> searchProductsInShops(SearchCriteria criteria) {
         currentProductList.clear();
@@ -35,19 +38,8 @@ public class ShoppinatorRefreshableFacadeTestImpl implements ShoppinatorFacade {
             return currentProductList;
         }
 
-        updateCurrentProductList();
-        callCounter++;
+        updateProductList();
         return currentProductList;
-    }
-
-    private void updateCurrentProductList() {
-        currentProductList.add(new Product("aa", "", null));
-        currentProductList.add(new Product("ab", "", null));
-        currentProductList.add(new Product("ac", "", null));
-
-        if (callCounter % 2 == 0) {
-            currentProductList.add(new Product("ad", "", null));
-        }
     }
 
     @Override
@@ -57,4 +49,14 @@ public class ShoppinatorRefreshableFacadeTestImpl implements ShoppinatorFacade {
 
     @Override
     public void subscribe(Object observer) {}
+
+    private void updateProductList() {
+        if (callCounter % 2 == 0) {
+            this.currentProductList = new ArrayList<>(refreshedProductList);
+        } else {
+            this.currentProductList = new ArrayList<>(initialProductList);
+        }
+
+        callCounter++;
+    }
 }
