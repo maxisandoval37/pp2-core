@@ -7,11 +7,9 @@ import shoppinator.core.Shoppinator;
 import shoppinator.core.factory.ProductFactory;
 import shoppinator.core.model.Product;
 import java.util.*;
-import shoppinator.core.model.criteria.DiscoverCriteria;
-import shoppinator.core.model.criteria.FilterCriteria;
-import shoppinator.core.model.criteria.SearchCriteria;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static utils.TestUtils.getTestParams;
 
 class US1 {
 
@@ -31,7 +29,7 @@ class US1 {
 
     @Test
     void CA1_shouldListProductsOrderedByPrice() throws FileNotFoundException {
-        String[] testParams = getTestParams(productsToSearch[0]);
+        String[] testParams = getTestParams(path, productsToSearch[0]);
         List<Product> products = shoppinator.search(testParams);
         ProductFactory productFactory = new ProductFactory();
         String json = "[{\"name\":\"a\",\"post_url\":\"https://example.com/\",\"price\":799.99,\"product_image_url\":\"https://example.com/\"},{\"name\":\"a\",\"post_url\":\"https://example.com/\",\"price\":799.99,\"product_image_url\":\"https://example.com/\"}]";
@@ -48,7 +46,7 @@ class US1 {
 
     @Test
     void CA2_shouldNotAddNewProductsToShops() throws FileNotFoundException {
-        String[] testParams = getTestParams(productsToSearch[2]);
+        String[] testParams = getTestParams(path, productsToSearch[2]);
         List<Product> retrievedProducts = shoppinator.search(testParams);
 
         assertEquals("e", productsToSearch[2]);
@@ -78,18 +76,6 @@ class US1 {
         }
 
         return prices;
-    }
-
-    private SearchCriteria getTestCriteria(String productName) {
-        DiscoverCriteria discoverCriteria = new DiscoverCriteria("", new String[]{});
-        FilterCriteria filterCriteria = new FilterCriteria(null, null);
-
-        return new SearchCriteria(productName, filterCriteria, discoverCriteria);
-    }
-
-
-    private String[] getTestParams(String productsToSearch) {
-        return new String[]{"src/test/resources/scrapers/", productsToSearch, "0", "1000"};
     }
 
 }

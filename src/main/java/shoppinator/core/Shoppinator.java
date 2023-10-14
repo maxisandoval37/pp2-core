@@ -2,8 +2,9 @@ package shoppinator.core;
 
 import java.io.FileNotFoundException;
 import java.util.List;
-import shoppinator.core.facade.ShoppinatorFacade;
+import shoppinator.core.facade.ShoppinatorFacadeImpl;
 import shoppinator.core.factory.SearchCriteriaFactory;
+import shoppinator.core.interfaces.ShoppinatorFacade;
 import shoppinator.core.model.Product;
 import shoppinator.core.model.criteria.SearchCriteria;
 import utils.PropertiesHelper;
@@ -18,7 +19,13 @@ public class Shoppinator {
     private SearchCriteria.Memento lastSearchCriteria;
 
     public Shoppinator() {
-        facade = new ShoppinatorFacade();
+        facade = new ShoppinatorFacadeImpl();
+        searchCriteriaFactory = new SearchCriteriaFactory();
+        this.featuredProduct = PropertiesHelper.getValue("featured.product");
+    }
+
+    public Shoppinator(ShoppinatorFacade shoppinatorFacade) {
+        facade = shoppinatorFacade;
         searchCriteriaFactory = new SearchCriteriaFactory();
         this.featuredProduct = PropertiesHelper.getValue("featured.product");
     }
@@ -64,7 +71,7 @@ public class Shoppinator {
      * Returns the list of products found in the last search.
      */
     public List<Product> getProductList() {
-        return facade.getProductList();
+        return facade.getCurrentProductList();
     }
 
     /**
