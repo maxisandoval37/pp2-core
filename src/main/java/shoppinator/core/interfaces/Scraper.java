@@ -11,4 +11,8 @@ public abstract class Scraper {
     public void setUrl(String url) {
         this.url = url;
     }
+
+    public String getUrl() {
+        return this.url;
+    }
 }
