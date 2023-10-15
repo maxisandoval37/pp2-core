@@ -1,10 +1,11 @@
-package shoppinator.core.interfaces;
+package shoppinator.core;
 
 import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Set;
-import shoppinator.core.model.Product;
-import shoppinator.core.model.criteria.SearchCriteria;
+import entities.Shop;
+import entities.Product;
+import entities.criteria.SearchCriteria;
 
 public interface ShoppinatorFacade {
 

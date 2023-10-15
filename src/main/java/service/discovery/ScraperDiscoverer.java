@@ -13,8 +13,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import shoppinator.core.interfaces.Scraper;
-import shoppinator.core.model.criteria.DiscoverCriteria;
+import entities.Scraper;
+import entities.criteria.DiscoverCriteria;
 import utils.ScraperUrlFinder;
 
 @Slf4j

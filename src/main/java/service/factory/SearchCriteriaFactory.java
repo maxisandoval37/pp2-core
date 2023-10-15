@@ -1,16 +1,16 @@
-package shoppinator.core.factory;
+package service.factory;
 
 import java.util.Arrays;
-import shoppinator.core.model.criteria.DiscoverCriteria;
-import shoppinator.core.model.criteria.FilterCriteria;
-import shoppinator.core.model.criteria.SearchCriteria;
+import entities.criteria.DiscoverCriteria;
+import entities.criteria.FilterCriteria;
+import entities.criteria.SearchCriteria;
 
 public class SearchCriteriaFactory {
 
     private static final Long DEFAULT_MIN_VALUE = 0L;
     private static final Long DEFAULT_MAX_VALUE = Long.MAX_VALUE;
 
-    public SearchCriteria create(String[] params) {
+    public SearchCriteria create(String[] params) throws IllegalArgumentException {
         validateParams(params);
         SearchCriteria searchCriteria = new SearchCriteria();
 
@@ -25,7 +25,7 @@ public class SearchCriteriaFactory {
         searchCriteria.setProductName(params[1]);
     }
 
-    private void setFilterCriteria(String[] params, SearchCriteria searchCriteria) {
+    private void setFilterCriteria(String[] params, SearchCriteria searchCriteria) throws IllegalArgumentException {
         FilterCriteria filterCriteria = new FilterCriteria();
 
         if (params.length > 2 && params[2] != null && !params[2].isEmpty()) {

@@ -1,4 +1,4 @@
-package pipeandfilter.architecture;
+package entities.filtering;
 
 import lombok.Getter;
 

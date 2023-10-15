@@ -7,21 +7,23 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import shoppinator.core.interfaces.Shop;
-import shoppinator.core.model.Product;
-import shoppinator.core.model.criteria.SearchCriteria;
+import entities.Shop;
+import entities.Product;
+import entities.criteria.SearchCriteria;
 
 @SuppressWarnings("deprecation")
 @Getter
-@NoArgsConstructor
 public class ShoppinatorCore extends Observable implements Observer {
 
-    List<Product> products;
-    Set<Shop> shops;
+    private List<Product> products;
+    private Set<Shop> shops;
+
+    public ShoppinatorCore() {
+        this.products = new ArrayList<>();
+    }
 
     public List<Product> search(SearchCriteria criteria) {
-        this.products = new ArrayList<>();
+        this.products.clear();
 
         for (Shop shop : this.shops) {
             shop.search(criteria);

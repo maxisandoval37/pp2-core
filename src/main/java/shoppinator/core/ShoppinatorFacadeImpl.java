@@ -1,14 +1,12 @@
-package shoppinator.core.facade;
+package shoppinator.core;
 
 import java.util.Observer;
 import service.discovery.ScraperDiscoverer;
-import shoppinator.core.ShoppinatorCore;
-import shoppinator.core.factory.ShopFactory;
-import shoppinator.core.interfaces.Scraper;
-import shoppinator.core.interfaces.Shop;
-import shoppinator.core.interfaces.ShoppinatorFacade;
-import shoppinator.core.model.Product;
-import shoppinator.core.model.criteria.SearchCriteria;
+import service.factory.ShopFactory;
+import entities.Scraper;
+import entities.Shop;
+import entities.Product;
+import entities.criteria.SearchCriteria;
 
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -16,9 +14,9 @@ import java.util.Set;
 
 public class ShoppinatorFacadeImpl implements ShoppinatorFacade {
 
-    ShoppinatorCore shoppinatorCore;
-    ScraperDiscoverer scraperDiscoverer;
-    ShopFactory shopFactory;
+    private final ShoppinatorCore shoppinatorCore;
+    private final ScraperDiscoverer scraperDiscoverer;
+    private final ShopFactory shopFactory;
 
     public ShoppinatorFacadeImpl() {
         this.scraperDiscoverer = new ScraperDiscoverer();

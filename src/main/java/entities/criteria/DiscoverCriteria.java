@@ -1,4 +1,4 @@
-package shoppinator.core.model.criteria;
+package entities.criteria;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

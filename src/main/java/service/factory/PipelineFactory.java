@@ -1,13 +1,13 @@
-package pipeandfilter;
+package service.factory;
 
 import java.util.List;
-import pipeandfilter.architecture.Filter;
-import pipeandfilter.architecture.Pipeline;
-import pipeandfilter.architecture.PriceFilter;
-import pipeandfilter.architecture.Pump;
-import pipeandfilter.architecture.Sink;
-import shoppinator.core.model.Product;
-import shoppinator.core.model.criteria.FilterCriteria;
+import entities.filtering.Filter;
+import entities.filtering.Pipeline;
+import entities.filtering.PriceFilter;
+import entities.filtering.Pump;
+import entities.filtering.Sink;
+import entities.Product;
+import entities.criteria.FilterCriteria;
 
 public class PipelineFactory {
 

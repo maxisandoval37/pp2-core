@@ -1,11 +1,11 @@
-package pipeandfilter.architecture;
+package entities.filtering;
 
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import shoppinator.core.model.Product;
+import entities.Product;
 
 
 @Slf4j

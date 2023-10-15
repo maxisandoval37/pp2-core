@@ -1,11 +1,11 @@
-package service;
+package service.filtering;
 
 import java.util.List;
-import pipeandfilter.PipelineFactory;
-import pipeandfilter.architecture.Pipeline;
-import pipeandfilter.architecture.Sink;
-import shoppinator.core.model.Product;
-import shoppinator.core.model.criteria.FilterCriteria;
+import service.factory.PipelineFactory;
+import entities.filtering.Pipeline;
+import entities.filtering.Sink;
+import entities.Product;
+import entities.criteria.FilterCriteria;
 
 /*
  * This class is responsible for creating a pipeline of filters

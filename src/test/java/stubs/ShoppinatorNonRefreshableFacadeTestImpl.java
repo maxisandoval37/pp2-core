@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import shoppinator.core.interfaces.Shop;
-import shoppinator.core.interfaces.ShoppinatorFacade;
-import shoppinator.core.model.Product;
-import shoppinator.core.model.criteria.SearchCriteria;
+import entities.Shop;
+import shoppinator.core.ShoppinatorFacade;
+import entities.Product;
+import entities.criteria.SearchCriteria;
 
 /**
  * <ul>

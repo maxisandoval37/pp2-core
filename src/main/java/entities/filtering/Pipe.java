@@ -1,4 +1,4 @@
-package pipeandfilter.architecture;
+package entities.filtering;
 
 import java.io.EOFException;
 import java.util.LinkedList;

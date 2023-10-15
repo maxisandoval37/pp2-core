@@ -8,7 +8,7 @@ import java.util.function.Predicate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import shoppinator.core.Shoppinator;
-import shoppinator.core.model.Product;
+import entities.Product;
 
 class US4 {
 

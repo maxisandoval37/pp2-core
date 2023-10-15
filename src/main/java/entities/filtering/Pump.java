@@ -1,9 +1,9 @@
-package pipeandfilter.architecture;
+package entities.filtering;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import shoppinator.core.model.Product;
+import entities.Product;
 
 import java.util.List;
 

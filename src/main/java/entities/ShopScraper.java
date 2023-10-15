@@ -1,13 +1,10 @@
-package shoppinator.core;
+package entities;
 
 import lombok.Getter;
-import service.ProductsFilterer;
-import shoppinator.core.factory.ProductFactory;
-import shoppinator.core.interfaces.Scraper;
-import shoppinator.core.interfaces.Shop;
+import service.filtering.ProductsFilterer;
+import service.factory.ProductFactory;
 import java.util.List;
-import shoppinator.core.model.Product;
-import shoppinator.core.model.criteria.SearchCriteria;
+import entities.criteria.SearchCriteria;
 
 public class ShopScraper extends Shop {
 

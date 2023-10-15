@@ -10,8 +10,8 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import shoppinator.core.Shoppinator;
-import shoppinator.core.interfaces.ShoppinatorFacade;
-import shoppinator.core.model.Product;
+import shoppinator.core.ShoppinatorFacade;
+import entities.Product;
 import stubs.ShoppinatorNonRefreshableFacadeTestImpl;
 import stubs.ShoppinatorRefreshableFacadeTestImpl;
 

@@ -1,4 +1,4 @@
-package shoppinator.core.factory;
+package service.factory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import java.util.Collections;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import shoppinator.core.model.Product;
+import entities.Product;
 
 @Slf4j
 public class ProductFactory {

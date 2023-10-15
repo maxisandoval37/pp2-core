@@ -4,8 +4,8 @@ import java.io.FileNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import shoppinator.core.Shoppinator;
-import shoppinator.core.factory.ProductFactory;
-import shoppinator.core.model.Product;
+import service.factory.ProductFactory;
+import entities.Product;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;

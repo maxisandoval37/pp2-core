@@ -1,4 +1,4 @@
-package pipeandfilter.architecture;
+package entities.filtering;
 
 import java.io.EOFException;
 import java.util.ArrayList;
@@ -8,8 +8,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import lombok.Getter;
-import shoppinator.core.factory.ProductFactory;
-import shoppinator.core.model.Product;
+import service.factory.ProductFactory;
+import entities.Product;
 
 @Getter
 public abstract class Filter implements Runnable {

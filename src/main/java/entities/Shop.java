@@ -1,10 +1,9 @@
-package shoppinator.core.interfaces;
+package entities;
 
 import java.util.List;
 import java.util.Observable;
 import lombok.Getter;
-import shoppinator.core.model.Product;
-import shoppinator.core.model.criteria.SearchCriteria;
+import entities.criteria.SearchCriteria;
 
 @Getter
 @SuppressWarnings("deprecation")

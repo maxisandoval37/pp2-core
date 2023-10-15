@@ -12,10 +12,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import shoppinator.core.ShopScraper;
+import entities.ShopScraper;
 import shoppinator.core.Shoppinator;
-import shoppinator.core.interfaces.Scraper;
-import shoppinator.core.interfaces.Shop;
+import entities.Scraper;
+import entities.Shop;
 
 class US5 {
 
