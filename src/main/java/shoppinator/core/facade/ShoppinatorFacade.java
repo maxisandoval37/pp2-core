@@ -1,5 +1,6 @@
 package shoppinator.core.facade;
 
+import java.util.Observer;
 import service.discovery.ScraperDiscoverer;
 import shoppinator.core.ShoppinatorCore;
 import shoppinator.core.factory.SearchCriteriaFactory;
@@ -21,8 +22,10 @@ public class ShoppinatorFacade {
     ScraperDiscoverer scraperDiscoverer;
     ShopFactory shopFactory;
     SearchCriteriaFactory searchCriteriaFactory;
-
+    SearchCriteria criteria;
+    SearchCriteria.Memento lastSearchCriteria;
     String featuredProduct;
+    Set<Scraper> scrapers;
 
     public ShoppinatorFacade() {
         this.scraperDiscoverer = new ScraperDiscoverer();
@@ -34,27 +37,40 @@ public class ShoppinatorFacade {
     }
 
     public void init(String path) throws FileNotFoundException {
-        SearchCriteria criteria = searchCriteriaFactory.create(new String[]{path, featuredProduct});
-        performSearch(criteria);
+        this.criteria = searchCriteriaFactory.create(new String[]{path, featuredProduct});
+        performSearch();
     }
 
     public List<Product> search(String... params) throws FileNotFoundException {
-        SearchCriteria criteria = searchCriteriaFactory.create(params);
-        return performSearch(criteria);
+        if (params.length == 0) {
+            criteria.restoreCriteria(lastSearchCriteria);
+        } else {
+            this.criteria = searchCriteriaFactory.create(params);
+        }
+
+        return performSearch();
     }
 
     public List<Product> getProductList() {
         return shoppinatorCore.getProducts();
     }
 
-    private List<Product> performSearch(SearchCriteria criteria) throws FileNotFoundException {
+    public Set<Scraper> getScrapers() { return scrapers; }
+
+    private List<Product> performSearch() throws FileNotFoundException {
+        this.lastSearchCriteria = criteria.saveState();
+
         shoppinatorCore.setShops(loadShops(criteria.getDiscoverCriteria()));
         return shoppinatorCore.search(criteria);
     }
 
     private Set<Shop> loadShops(DiscoverCriteria criteria) throws FileNotFoundException {
-        Set<Scraper> scrapers = scraperDiscoverer.discover(criteria);
+        scrapers = scraperDiscoverer.discover(criteria);
 
         return shopFactory.create(scrapers);
+    }
+
+    public void subscribe(Object observer) {
+        this.shoppinatorCore.addObserver((Observer) observer);
     }
 }
