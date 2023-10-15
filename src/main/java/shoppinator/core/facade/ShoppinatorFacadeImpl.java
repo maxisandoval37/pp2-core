@@ -39,6 +39,11 @@ public class ShoppinatorFacadeImpl implements ShoppinatorFacade {
     }
 
     @Override
+    public Set<Shop> getShops() {
+        return shoppinatorCore.getShops();
+    }
+
+    @Override
     public void subscribe(Object observer) {
         shoppinatorCore.addObserver((Observer) observer);
     }

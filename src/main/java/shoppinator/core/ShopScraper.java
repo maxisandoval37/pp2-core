@@ -1,5 +1,6 @@
 package shoppinator.core;
 
+import lombok.Getter;
 import service.ProductsFilterer;
 import shoppinator.core.factory.ProductFactory;
 import shoppinator.core.interfaces.Scraper;
@@ -10,6 +11,7 @@ import shoppinator.core.model.criteria.SearchCriteria;
 
 public class ShopScraper extends Shop {
 
+    @Getter
     private final Scraper scraper;
     private final ProductFactory productFactory;
     private final ProductsFilterer productsFilterer;

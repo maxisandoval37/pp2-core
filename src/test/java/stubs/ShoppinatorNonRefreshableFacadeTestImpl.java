@@ -3,6 +3,8 @@ package stubs;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import shoppinator.core.interfaces.Shop;
 import shoppinator.core.interfaces.ShoppinatorFacade;
 import shoppinator.core.model.Product;
 import shoppinator.core.model.criteria.SearchCriteria;
@@ -40,6 +42,11 @@ public class ShoppinatorNonRefreshableFacadeTestImpl implements ShoppinatorFacad
     @Override
     public List<Product> getCurrentProductList() {
         return productList;
+    }
+
+    @Override
+    public Set<Shop> getShops() {
+        return Collections.EMPTY_SET;
     }
 
     @Override

@@ -2,8 +2,10 @@ package shoppinator.core;
 
 import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.Set;
 import shoppinator.core.facade.ShoppinatorFacadeImpl;
 import shoppinator.core.factory.SearchCriteriaFactory;
+import shoppinator.core.interfaces.Shop;
 import shoppinator.core.interfaces.ShoppinatorFacade;
 import shoppinator.core.model.Product;
 import shoppinator.core.model.criteria.SearchCriteria;
@@ -31,8 +33,7 @@ public class Shoppinator {
     }
 
     /**
-     * Initializes the core, loading the shops in the given path
-     * and searching for the featured product.
+     * Initializes the core, loading the shops in the given path and searching for the featured product.
      */
     public void init(String path) throws FileNotFoundException {
         createAndSaveCriteria(path, featuredProduct);
@@ -72,6 +73,13 @@ public class Shoppinator {
      */
     public List<Product> getProductList() {
         return facade.getCurrentProductList();
+    }
+
+    /*
+     * Returns the list of shops.
+     */
+    public Set<Shop> getShops() {
+        return facade.getShops();
     }
 
     /**
