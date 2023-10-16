@@ -20,13 +20,13 @@ class US6 {
     private Shoppinator shoppinator;
     private List<Product> productsToRetrieve;
     private List<Product> productsRetrieved;
-    private String aProduct;
+    private String productName;
 
     private String path;
 
     @BeforeEach
     public void setUp() {
-        aProduct = "a";
+        productName = "a";
         path = "fake-path/";
     }
 
@@ -34,14 +34,14 @@ class US6 {
         productsToRetrieve = getTestProducts("aa", "ab", "ac");
         productsRetrieved = getTestProducts("aa", "ab", "ac", "ad");
 
-        ShoppinatorFacade shoppinatorFacade = new ShoppinatorRefreshableFacadeTestImpl(aProduct, productsToRetrieve, productsRetrieved);
+        ShoppinatorFacade shoppinatorFacade = new ShoppinatorRefreshableFacadeTestImpl(productName, productsToRetrieve, productsRetrieved);
         shoppinator = new Shoppinator(shoppinatorFacade);
     }
 
     @Test
     void CA1_shouldUpdateProductListWhenSearchIsRefreshed() throws FileNotFoundException {
         CA1_setUp();
-        String[] testParams = getTestParams(path, aProduct);
+        String[] testParams = getTestParams(path, productName);
 
         shoppinator.search(testParams);
         List<Product> productsBeforeUpdate = new ArrayList<>(shoppinator.getProductList());
@@ -55,7 +55,7 @@ class US6 {
     }
 
     void CA2_setUp() {
-        ShoppinatorFacade shoppinatorFacade = new ShoppinatorNonRefreshableFacadeTestImpl(aProduct);
+        ShoppinatorFacade shoppinatorFacade = new ShoppinatorNonRefreshableFacadeTestImpl(productName);
         shoppinator = new Shoppinator(shoppinatorFacade);
 
         productsToRetrieve = getTestProducts("aa", "ab", "ac");
@@ -65,7 +65,7 @@ class US6 {
     @Test
     void CA2_shouldNOTUpdateProductListWhenSearchIsRefreshed() throws FileNotFoundException {
         CA2_setUp();
-        String[] testParams = getTestParams(path, aProduct);
+        String[] testParams = getTestParams(path, productName);
 
         shoppinator.search(testParams);
         List<Product> productsBeforeUpdate = new ArrayList<>(shoppinator.getProductList());

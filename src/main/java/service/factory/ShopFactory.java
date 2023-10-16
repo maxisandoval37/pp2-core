@@ -13,12 +13,10 @@ public class ShopFactory {
 
     public Set<Shop> create(Set<Scraper> scrapers) {
         Set<Shop> shops = new HashSet<>();
-        // TODO estaría mal pasarle el mismo productFactory y productsFilterer
-        //      a todos los shops?
-        for (Scraper scraper : scrapers) {
-            ProductFactory productFactory = new ProductFactory();
-            ProductsFilterer productsFilterer = new ProductsFilterer();
+        ProductFactory productFactory = new ProductFactory();
+        ProductsFilterer productsFilterer = new ProductsFilterer();
 
+        for (Scraper scraper : scrapers) {
             shops.add(new ShopScraper(scraper, productFactory, productsFilterer));
         }
 

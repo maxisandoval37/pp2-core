@@ -27,7 +27,7 @@ public class Main {
         shoppinator.getProductList().forEach(product -> log.info("Product: {}", product));
     }
 
-    public static void logAsciiArt() {
+    private static void logAsciiArt() {
         String[] asciiLines = {
             "        ______   __    __   ______   _______   _______  ______  __    __   ______  ________   ______   _______",
             "       /      \\ |  \\  |  \\ /      \\ |       \\ |       \\|      \\|  \\  |  \\ /      \\|        \\ /      \\ |       \\",
