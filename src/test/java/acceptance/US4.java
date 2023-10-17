@@ -30,13 +30,13 @@ class US4 {
 
     @Test
     void CA1_filterProductsWithAPriceLessThanOrEqualToASpecifiedValue() throws FileNotFoundException {
-        String[] testParams = {path, "webcam", "1000", "100000", shopName};
+        String[] testParams = {path, "webcam", "0", "50", shopName};
 
         shoppinator.search(testParams);
         List<Product> retrievedProducts = shoppinator.getProductList();
 
         for (Product product : retrievedProducts) {
-            assertTrue(predicator.testPrice(product, x -> x >= 1000L && x <= 100000L));
+            assertTrue(predicator.testPrice(product, x -> x <= 50L));
         }
     }
 
