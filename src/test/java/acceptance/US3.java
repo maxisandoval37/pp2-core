@@ -53,12 +53,24 @@ class US3 {
 
     @Test
     void CA3_searchExistingProductInMultipleRealShops() throws FileNotFoundException, IllegalArgumentException {
-        String[] testParams = {path, existingProduct, "1000", "10000000", shopName};
+        String[] testParams = {path, existingProduct, "1000", "10000000", "fravega", "garbarino"};
         List<Product> retrievedProducts = shoppinator.search(testParams);
+
+        int fravegaCount = 0;
+        int garbarinoCount = 0;
 
         for (Product product : retrievedProducts) {
             assertTrue(product.getName().toLowerCase().contains(existingProduct));
+
+            if (product.getPostUrl().contains("fravega")) {
+                fravegaCount++;
+            } else if (product.getPostUrl().contains("garbarino")) {
+                garbarinoCount++;
+            }
         }
+
+        assertTrue(fravegaCount > 0);
+        assertTrue(garbarinoCount > 0);
     }
 
     @Test
