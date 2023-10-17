@@ -36,7 +36,7 @@ class US4 {
         List<Product> retrievedProducts = shoppinator.getProductList();
 
         for (Product product : retrievedProducts) {
-            assertTrue(predicator.testPrice(product, x -> x <= 50L));
+            assertTrue(predicator.testPrice(product, x -> x >= 1000L && x <= 100000L));
         }
     }
 
