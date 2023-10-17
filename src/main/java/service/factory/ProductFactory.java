@@ -1,4 +1,4 @@
-package shoppinator.core.factory;
+package service.factory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -7,12 +7,11 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import java.util.Collections;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import shoppinator.core.model.Product;
+import entities.Product;
 
 @Slf4j
 public class ProductFactory {
-
-    ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
     public ProductFactory() {
         this.objectMapper = new ObjectMapper();
@@ -21,7 +20,7 @@ public class ProductFactory {
 
     public List<Product> create(String productJson) {
         try {
-            return this.objectMapper.readValue(productJson, new TypeReference<List<Product>>(){});
+            return this.objectMapper.readValue(productJson, new TypeReference<List<Product>>() {});
         } catch (JsonProcessingException e) {
             log.error(e.getMessage());
         }

@@ -4,30 +4,33 @@ import java.io.FileNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import shoppinator.core.Shoppinator;
-import shoppinator.core.factory.ProductFactory;
-import shoppinator.core.model.Product;
-import shoppinator.core.interfaces.Shop;
+import service.factory.ProductFactory;
+import entities.Product;
 import java.util.*;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static utils.TestUtils.getTestParams;
 
 class US1 {
 
     private Shoppinator shoppinator;
-    private Set<Shop> shops;
+    private List<Product> products;
     private String[] productsToSearch;
+
+    String path = "src/test/resources/scrapers/";
 
     @BeforeEach
     public void setUp() throws FileNotFoundException {
-
-        String path = "src/test/resources/scrapers/";
-        shoppinator = new Shoppinator(path);
-        shops = shoppinator.getShops();
+        shoppinator = new Shoppinator();
+        shoppinator.init(path);
+        products = shoppinator.getProductList();
         productsToSearch = new String[]{"a", "b", "e"};
     }
 
     @Test
-    void CA1_shouldListProductsOrderedByPrice() {
-        List<Product> products = shoppinator.search(productsToSearch[0]);
+    void CA1_shouldListProductsOrderedByPrice() throws FileNotFoundException {
+        String[] testParams = getTestParams(path, productsToSearch[0]);
+        List<Product> products = shoppinator.search(testParams);
         ProductFactory productFactory = new ProductFactory();
         String json = "[{\"name\":\"a\",\"post_url\":\"https://example.com/\",\"price\":799.99,\"product_image_url\":\"https://example.com/\"},{\"name\":\"a\",\"post_url\":\"https://example.com/\",\"price\":799.99,\"product_image_url\":\"https://example.com/\"}]";
 
@@ -42,24 +45,18 @@ class US1 {
     }
 
     @Test
-    void CA2_shouldNotAddNewProductsToShops() {
-        List<Product> products = shoppinator.search(productsToSearch[2]);
-
-        Shop shopC = null;
-        for (Shop shop : shops) {
-            if (shop.getProducts().size() == 0) {
-                shopC = shop;
-            }
-        }
+    void CA2_shouldNotAddNewProductsToShops() throws FileNotFoundException {
+        String[] testParams = getTestParams(path, productsToSearch[2]);
+        List<Product> retrievedProducts = shoppinator.search(testParams);
 
         assertEquals("e", productsToSearch[2]);
-        assertTrue(products.isEmpty());
-        assertEquals(products.size(), shopC.getProducts().size());
+        assertTrue(retrievedProducts.isEmpty());
+        assertEquals(shoppinator.getProductList().size(), retrievedProducts.size());
     }
 
     @Test
     void CA3_shouldAddNewProductsOnInitialization() {
-        List<Product> products = shoppinator.getProducts();
+        List<Product> products = shoppinator.getProductList();
 
         ProductFactory productFactory = new ProductFactory();
         String json = "[{\"name\":\"a\",\"post_url\":\"https://example.com/\",\"price\":799.99,\"product_image_url\":\"https://example.com/\"},{\"name\":\"a\",\"post_url\":\"https://example.com/\",\"price\":799.99,\"product_image_url\":\"https://example.com/\"}"
@@ -80,4 +77,5 @@ class US1 {
 
         return prices;
     }
+
 }
