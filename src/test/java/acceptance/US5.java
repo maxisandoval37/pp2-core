@@ -9,7 +9,6 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import entities.ShopScraper;
@@ -20,83 +19,69 @@ import entities.Shop;
 class US5 {
 
     private Shoppinator shoppinator;
-    private List<String> defaultShop;
-    private List<String> newShop;
-    private List<String> mutipleShops;
+    private List<String> defaultShop, newShop, mutipleShops;
 
     @BeforeEach
     public void setUp() {
         shoppinator = new Shoppinator();
-        defaultShop = List.of("fravega");
-        newShop = List.of("garbarino");
+        defaultShop = Arrays.asList("fravega");
+        newShop = Arrays.asList("garbarino");
         mutipleShops = Arrays.asList("fravega", "garbarino");
     }
 
     @Test
-    void CA1_defaultShopShouldBeChosenWhenItIsTheSelectedOne()
-        throws FileNotFoundException, URISyntaxException {
-        String[] testParams = {"plugins/default", "webcam", "1000", "100000", "fravega"};
+    void CA1_shouldOnlyBeChoosedDefaultShopBecauseItWasTheSelectedOne() throws FileNotFoundException, URISyntaxException {
+        shoppinator = new Shoppinator();
+        shoppinator.search("plugins/default", "webcam", "1000", "100000", "fravega");
+        Set<Shop> shops = shoppinator.getShops();
 
-        shoppinator.search(testParams);
-
-        Set<Scraper> scrapers = getScrapersByShops(shoppinator.getShops());
-        assertTrue(scrapers.size() == 1);
-        assertEquals("fravega", defaultShop.get(0));
-        for (Scraper aScraper : scrapers) {
-            assertEquals(defaultShop.get(0), getShopName(aScraper));
+        assertTrue(shops.size() == 1);
+        assertEquals("fravega" , defaultShop.get(0));
+        for (Shop aShop : shops) {
+            assertEquals(defaultShop.get(0), getShopName((ShopScraper) aShop));
         }
     }
 
     @Test
-    void CA2_defaultShopShouldBeChosenWhenNoOtherShopIsSelected()
-        throws FileNotFoundException, URISyntaxException {
-        String[] testParams = {"plugins/default", "webcam", "1000", "100000", "fravega"};
+    void CA2_shouldOnlyBeChoosedTheDefaultShopBecauseAnotherShopWasNotChoosed() throws FileNotFoundException, URISyntaxException {
+        shoppinator = new Shoppinator();
+        shoppinator.search("plugins/default", "webcam", "1000", "100000", "fravega");
+        Set<Shop> shops = shoppinator.getShops();
 
-        shoppinator.search(testParams);
-
-        Set<Scraper> scrapers = getScrapersByShops(shoppinator.getShops());
-        assertTrue(scrapers.size() == 1);
-        assertEquals("fravega", defaultShop.get(0));
-        for (Scraper aScraper : scrapers) {
-            assertEquals(defaultShop.get(0), getShopName(aScraper));
+        assertTrue(shops.size() == 1);
+        assertEquals("fravega" , defaultShop.get(0));
+        for (Shop aShop : shops) {
+            assertEquals(defaultShop.get(0), getShopName((ShopScraper) aShop));
         }
     }
 
     @Test
-    void CA3_differentShopShouldBeChosenInsteadOfTheDefaultOne() throws FileNotFoundException, URISyntaxException {
-        String[] testParams = {"plugins/availables", "webcam", "1000", "100000", "garbarino"};
+    void CA3_shouldBeChoosedAnotherShopDifferentThanTheDefaultOne() throws FileNotFoundException, URISyntaxException {
+        shoppinator = new Shoppinator();
+        shoppinator.search("plugins/availables", "webcam", "1000", "100000", "garbarino");
+        Set<Shop> shops = shoppinator.getShops();
 
-        shoppinator.search(testParams);
-
-        Set<Scraper> scrapers = getScrapersByShops(shoppinator.getShops());
-
-        assertTrue(scrapers.size() == 1);
-        assertEquals("garbarino", newShop.get(0));
-        for (Scraper aScraper : scrapers) {
-            assertEquals(newShop.get(0), getShopName(aScraper));
+        assertTrue(shops.size() == 1);
+        assertEquals("garbarino" , newShop.get(0));
+        for (Shop aShop : shops) {
+            assertEquals(newShop.get(0), getShopName((ShopScraper) aShop));
         }
     }
 
     @Test
-    void CA4_multipleShopsShouldBeAbleToBeChosen() throws FileNotFoundException, URISyntaxException {
-        String[] testParams = {"plugins/availables", "webcam", "1000", "100000", "garbarino", "fravega"};
+    void CA4_shouldBeChoosedMoreThanOneShop() throws FileNotFoundException, URISyntaxException {
+        shoppinator = new Shoppinator();
+        shoppinator.search("plugins/availables", "webcam", "1000", "100000", "garbarino", "fravega");
+        Set<Shop> shops = shoppinator.getShops();
 
-        shoppinator.search(testParams);
-
-        Set<Scraper> scrapers = getScrapersByShops(shoppinator.getShops());
-        assertTrue(scrapers.size() == 2);
-        for (Scraper aScraper : scrapers) {
-            assertTrue(mutipleShops.contains(getShopName(aScraper)));
+        assertTrue(shops.size() == 2);
+        for (Shop aShop : shops) {
+            assertTrue(mutipleShops.contains(getShopName((ShopScraper) aShop)));
         }
     }
 
-    private Set<Scraper> getScrapersByShops(Set<Shop> shops) {
-        return shops.stream()
-            .map(shop -> ((ShopScraper) shop).getScraper())
-            .collect(Collectors.toSet());
-    }
-
-    private String getShopName(Scraper scraper) throws URISyntaxException {
+    private String getShopName(ShopScraper shop) throws URISyntaxException {
+        Scraper scraper = shop.getScraper();
         URI uri = new URI(scraper.getUrl());
         String domain = uri.getHost();
         domain = domain.startsWith("www.") ? domain.substring(4) : domain;
