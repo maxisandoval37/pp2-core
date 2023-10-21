@@ -10,7 +10,7 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import service.discovery.ScraperDiscoverer;
-import shoppinator.core.interfaces.Scraper;
+import entities.Scraper;
 
 
 class US2 {

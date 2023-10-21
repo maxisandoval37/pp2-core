@@ -1,4 +1,4 @@
-package shoppinator.core.model;
+package entities;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.Data;

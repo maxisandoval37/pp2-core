@@ -1,11 +1,11 @@
-package shoppinator.core.factory;
+package service.factory;
 
 import lombok.NoArgsConstructor;
-import shoppinator.core.ShopScraper;
+import entities.ShopScraper;
 import java.util.HashSet;
 import java.util.Set;
-import shoppinator.core.interfaces.Scraper;
-import shoppinator.core.interfaces.Shop;
+import entities.Scraper;
+import entities.Shop;
 
 @NoArgsConstructor
 public class ShopFactory {

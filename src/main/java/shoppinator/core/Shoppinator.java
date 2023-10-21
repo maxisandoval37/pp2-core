@@ -9,10 +9,10 @@ import java.util.Observer;
 import java.util.Set;
 import lombok.Getter;
 import service.discovery.ScraperDiscoverer;
-import shoppinator.core.factory.ShopFactory;
-import shoppinator.core.interfaces.Scraper;
-import shoppinator.core.interfaces.Shop;
-import shoppinator.core.model.Product;
+import service.factory.ShopFactory;
+import entities.Scraper;
+import entities.Shop;
+import entities.Product;
 
 @SuppressWarnings("deprecation")
 public class Shoppinator extends Observable implements Observer {

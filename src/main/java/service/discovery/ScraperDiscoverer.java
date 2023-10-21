@@ -12,9 +12,8 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import lombok.NoArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import shoppinator.core.interfaces.Scraper;
+import entities.Scraper;
 
 @Slf4j
 @NoArgsConstructor

@@ -1,4 +1,4 @@
-package shoppinator.core.interfaces;
+package entities;
 
 public interface Scraper {
 

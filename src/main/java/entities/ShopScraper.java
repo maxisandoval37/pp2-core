@@ -1,11 +1,11 @@
-package shoppinator.core;
+package entities;
 
 import java.util.Collections;
-import shoppinator.core.factory.ProductFactory;
-import shoppinator.core.interfaces.Scraper;
-import shoppinator.core.interfaces.Shop;
+import service.factory.ProductFactory;
+import entities.Scraper;
+import entities.Shop;
 import java.util.List;
-import shoppinator.core.model.Product;
+import entities.Product;
 
 public class ShopScraper extends Shop {
 

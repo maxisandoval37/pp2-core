@@ -4,9 +4,9 @@ import java.io.FileNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import shoppinator.core.Shoppinator;
-import shoppinator.core.factory.ProductFactory;
-import shoppinator.core.model.Product;
-import shoppinator.core.interfaces.Shop;
+import service.factory.ProductFactory;
+import entities.Product;
+import entities.Shop;
 import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,7 +19,7 @@ class US1 {
     @BeforeEach
     public void setUp() throws FileNotFoundException {
 
-        String path = "src/test/resources/scrapers/";
+        String path = "src/test/resources/multiple-scraper/";
         shoppinator = new Shoppinator(path);
         shops = shoppinator.getShops();
         productsToSearch = new String[]{"a", "b", "e"};
