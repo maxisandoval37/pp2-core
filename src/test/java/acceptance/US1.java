@@ -17,7 +17,7 @@ class US1 {
     private List<Product> products;
     private String[] productsToSearch;
 
-    String path = "src/test/resources/scrapers/";
+    String path = "src/test/resources/multiple-scraper/";
 
     @BeforeEach
     public void setUp() throws FileNotFoundException {
