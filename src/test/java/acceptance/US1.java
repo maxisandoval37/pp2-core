@@ -25,7 +25,7 @@ class US1 {
 
     @Test
     void CA1_shouldReturnProductsOrderedByPriceOnSearch_WhenProductIsAvailableInShops() throws FileNotFoundException {
-        this.setUp("src/test/resources/simple-scraper/");
+        this.setUp("src/test/resources/simple-shop/");
         List<Result> expectedResult = this.getExpectedResult("a", shoppinator.getShops());
 
         List<Result> actualResult = shoppinator.search("a");
@@ -37,7 +37,7 @@ class US1 {
 
     @Test
     void CA2_shouldNotFindProductsOnSearch_WhenProductIsNotAvailableInShops() throws FileNotFoundException {
-        this.setUp("src/test/resources/simple-scraper/");
+        this.setUp("src/test/resources/simple-shop/");
 
         List<Result> searchResult = shoppinator.search("e");
 
@@ -54,7 +54,7 @@ class US1 {
 
     @Test
     void CA4_shouldFindProductsOnSearch_WhenMultipleShopsAreLoaded_AndProductIsAvailableInShops() throws FileNotFoundException {
-        this.setUp("src/test/resources/multiple-scraper/");
+        this.setUp("src/test/resources/multiple-shops/");
         List<Result> expectedResult = this.getExpectedResult("a", shoppinator.getShops());
 
         List<Result> actualResult = shoppinator.search("a");
@@ -65,7 +65,7 @@ class US1 {
 
     @Test
     void CA5_shouldFindProductsOnShoppinatorCreation() throws FileNotFoundException {
-        this.setUp("src/test/resources/multiple-scraper/");
+        this.setUp("src/test/resources/multiple-shops/");
         List<Result> expectedResult = this.getExpectedResult("a", shoppinator.getShops());
 
         List<Result> featuredSearchResult = shoppinator.getSearchResult();

@@ -44,28 +44,28 @@ class US2 {
     }
 
     @Test
-    void CA4_DiscoveryOnFolderWithNonScraperFile_ShouldReturn_EmptySet() throws FileNotFoundException {
-        String notScraperPath = "src/test/resources/not-scraper";
+    void CA4_DiscoveryOnFolderWithNonShopFile_ShouldReturn_EmptySet() throws FileNotFoundException {
+        String notShopPath = "src/test/resources/not-shops";
 
-        Set<Shop> result = shopsDiscoverer.discover(notScraperPath);
+        Set<Shop> result = shopsDiscoverer.discover(notShopPath);
 
         assertTrue(result.isEmpty());
     }
 
     @Test
-    void CA5_DiscoveryOnFolderWithOneScraperFile_ShouldReturn_SetWithONEScraper() throws FileNotFoundException {
-        String simpleScraperPath = "src/test/resources/simple-scraper";
+    void CA5_DiscoveryOnFolderWithOneShopFile_ShouldReturn_SetWithONEShop() throws FileNotFoundException {
+        String simpleShopPath = "src/test/resources/simple-shop";
 
-        Set<Shop> result = shopsDiscoverer.discover(simpleScraperPath);
+        Set<Shop> result = shopsDiscoverer.discover(simpleShopPath);
 
         assertEquals(1, result.size());
     }
 
     @Test
-    void CA6_DiscoveryOnFolderWithTwoScraperFiles_ShouldReturn_SetWithTWOScrapers() throws FileNotFoundException {
-        String multipleScraperPath = "src/test/resources/multiple-scraper";
+    void CA6_DiscoveryOnFolderWithTwoShopFiles_ShouldReturn_SetWithTWOShops() throws FileNotFoundException {
+        String multipleShopPath = "src/test/resources/multiple-shops";
 
-        Set<Shop> scrapers = shopsDiscoverer.discover(multipleScraperPath);
-        assertEquals(3, scrapers.size());
+        Set<Shop> shops = shopsDiscoverer.discover(multipleShopPath);
+        assertEquals(3, shops.size());
     }
 }
