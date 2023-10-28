@@ -1,81 +1,111 @@
 package acceptance;
 
-import java.io.FileNotFoundException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import shoppinator.core.Shoppinator;
-import service.factory.ProductFactory;
-import entities.Product;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import entities.Result;
 import entities.Shop;
-import java.util.*;
-import static org.junit.jupiter.api.Assertions.*;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import org.junit.jupiter.api.Test;
+import service.factory.ShoppinatorFactory;
+import shoppinator.core.Shoppinator;
 
 class US1 {
 
     private Shoppinator shoppinator;
-    private Set<Shop> shops;
-    private String[] productsToSearch;
 
-    @BeforeEach
-    public void setUp() throws FileNotFoundException {
-
-        String path = "src/test/resources/multiple-scraper/";
-        shoppinator = new Shoppinator(path);
-        shops = shoppinator.getShops();
-        productsToSearch = new String[]{"a", "b", "e"};
+    private void setUp(String path) throws FileNotFoundException {
+        ShoppinatorFactory shoppinatorFactory = new ShoppinatorFactory("a");
+        shoppinator = shoppinatorFactory.create(path);
     }
 
     @Test
-    void CA1_shouldListProductsOrderedByPrice() {
-        List<Product> products = shoppinator.search(productsToSearch[0]);
-        ProductFactory productFactory = new ProductFactory();
-        String json = "[{\"name\":\"a\",\"post_url\":\"https://example.com/\",\"price\":799.99,\"product_image_url\":\"https://example.com/\"},{\"name\":\"a\",\"post_url\":\"https://example.com/\",\"price\":799.99,\"product_image_url\":\"https://example.com/\"}]";
+    void CA1_shouldReturnProductsOrderedByPriceOnSearch_WhenProductIsAvailableInShops() throws FileNotFoundException {
+        this.setUp("src/test/resources/simple-scraper/");
+        List<Result> expectedResult = this.getExpectedResult("a", shoppinator.getShops());
 
-        List<Product> productsMock = productFactory.create(json);
+        List<Result> actualResult = shoppinator.search("a");
 
-        Long[] prices = getProductPrices(products);
-
-        assertEquals("a", productsToSearch[0]);
-        assertTrue(!products.isEmpty());
-        assertEquals(productsMock, products);
-        assertTrue(prices[0] <= prices[1]);
+        assertFalse(actualResult.isEmpty());
+        assertEquals(expectedResult, actualResult);
+        assertTrue(isSortedByPrice(expectedResult));
     }
 
     @Test
-    void CA2_shouldNotAddNewProductsToShops() {
-        List<Product> products = shoppinator.search(productsToSearch[2]);
+    void CA2_shouldNotFindProductsOnSearch_WhenProductIsNotAvailableInShops() throws FileNotFoundException {
+        this.setUp("src/test/resources/simple-scraper/");
 
-        Shop shopC = null;
+        List<Result> searchResult = shoppinator.search("e");
+
+        assertTrue(searchResult.isEmpty());
+    }
+
+    @Test
+    void CA3_shouldNotFindProductsOnSearch_WhenNoShopsAreLoaded() throws FileNotFoundException {
+        this.setUp("src/test/resources/empty-folder/");
+
+        List<Result> searchResult = shoppinator.search("a");
+        assertTrue(searchResult.isEmpty());
+    }
+
+    @Test
+    void CA4_shouldFindProductsOnSearch_WhenMultipleShopsAreLoaded_AndProductIsAvailableInShops() throws FileNotFoundException {
+        this.setUp("src/test/resources/multiple-scraper/");
+        List<Result> expectedResult = this.getExpectedResult("a", shoppinator.getShops());
+
+        List<Result> actualResult = shoppinator.search("a");
+
+        assertFalse(actualResult.isEmpty());
+        assertEquals(expectedResult, actualResult);
+    }
+
+    @Test
+    void CA5_shouldFindProductsOnShoppinatorCreation() throws FileNotFoundException {
+        this.setUp("src/test/resources/multiple-scraper/");
+        List<Result> expectedResult = this.getExpectedResult("a", shoppinator.getShops());
+
+        List<Result> featuredSearchResult = shoppinator.getSearchResult();
+
+        assertFalse(featuredSearchResult.isEmpty());
+        assertEquals(expectedResult, featuredSearchResult);
+    }
+
+    private List<Result> getExpectedResult(String productName, Set<Shop> shops) {
+        List<Result> results = new ArrayList<>();
+        Long initialPrice = 100L;
+
         for (Shop shop : shops) {
-            if (shop.getProducts().size() == 0) {
-                shopC = shop;
+            Result result = new Result(productName, shop.getName(), "https://example.com/", initialPrice,
+                "https://example.com/");
+            results.add(result);
+
+            initialPrice += 100L;
+        }
+
+        return results;
+    }
+
+    private boolean isSortedByPrice(List<Result> results) {
+        Long[] prices = getProductPrices(results);
+
+        for (int i = 0; i < prices.length - 1; i++) {
+            if (prices[i] > prices[i + 1]) {
+                return false;
             }
         }
 
-        assertEquals("e", productsToSearch[2]);
-        assertTrue(products.isEmpty());
-        assertEquals(products.size(), shopC.getProducts().size());
+        return true;
     }
 
-    @Test
-    void CA3_shouldAddNewProductsOnInitialization() {
-        List<Product> products = shoppinator.getProducts();
+    private Long[] getProductPrices(List<Result> result) {
+        Long[] prices = new Long[result.size()];
 
-        ProductFactory productFactory = new ProductFactory();
-        String json = "[{\"name\":\"a\",\"post_url\":\"https://example.com/\",\"price\":799.99,\"product_image_url\":\"https://example.com/\"},{\"name\":\"a\",\"post_url\":\"https://example.com/\",\"price\":799.99,\"product_image_url\":\"https://example.com/\"}"
-            + ",{\"name\":\"b\",\"post_url\":\"https://example.com/\",\"price\":1299,\"product_image_url\":\"https://example.com/\"},{\"name\":\"b\",\"post_url\":\"https://example.com/\",\"price\":1299,\"product_image_url\":\"https://example.com/\"}]";
-
-        List<Product> productsMock = productFactory.create(json);
-
-        assertTrue(!products.isEmpty());
-        assertEquals(productsMock, products);
-    }
-
-    private Long[] getProductPrices(List<Product> products) {
-        Long[] prices = new Long[products.size()];
-
-        for (int i = 0; i < products.size(); i++) {
-            prices[i] = products.get(i).getProductPresentation().getPrice();
+        for (int i = 0; i < result.size(); i++) {
+            prices[i] = result.get(i).getPrice();
         }
 
         return prices;

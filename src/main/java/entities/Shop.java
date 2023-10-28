@@ -8,6 +8,8 @@ import lombok.Getter;
 @SuppressWarnings("deprecation")
 public abstract class Shop extends Observable {
 
+    public String name;
+
     public abstract Set<Product> search(String productName);
 
     protected void notifySearchResult(Set<Product> newProducts) {

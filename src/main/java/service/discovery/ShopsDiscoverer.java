@@ -14,7 +14,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import entities.Scraper;
 
 @Slf4j
 @NoArgsConstructor

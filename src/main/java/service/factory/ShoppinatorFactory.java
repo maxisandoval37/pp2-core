@@ -10,7 +10,14 @@ public class ShoppinatorFactory {
 
     ShopsDiscoverer shopsDiscoverer;
 
+    String featuredProduct = "a";
+
     public ShoppinatorFactory() {
+        this.shopsDiscoverer = new ShopsDiscoverer();
+    }
+
+    public ShoppinatorFactory(String featuredProduct) {
+        this.featuredProduct = featuredProduct;
         this.shopsDiscoverer = new ShopsDiscoverer();
     }
 
@@ -19,7 +26,7 @@ public class ShoppinatorFactory {
         Shoppinator shoppinator = new Shoppinator(shops);
 
         // la app inicia con productos destacados
-        shoppinator.search("mouse");
+        shoppinator.search(featuredProduct);
         return shoppinator;
     }
 
