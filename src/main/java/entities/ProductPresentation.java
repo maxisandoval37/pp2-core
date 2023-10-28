@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 public class ProductPresentation {
 
     private Long price;
+    private String postUrl;
     private String productImageUrl;
 }

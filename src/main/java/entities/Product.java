@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Product {
     private String name;
-    private String postUrl;
+    private String shopName;
+
     @JsonUnwrapped
     private ProductPresentation productPresentation;
 }
