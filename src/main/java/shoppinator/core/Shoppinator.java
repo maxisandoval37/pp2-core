@@ -18,6 +18,7 @@ public class Shoppinator extends Observable implements Observer {
     List<Result> searchResult;
     @Getter
     Set<Shop> shops;
+
     private final ResultAssembler resultAssembler;
     private Set<Product> domainProducts;
 
