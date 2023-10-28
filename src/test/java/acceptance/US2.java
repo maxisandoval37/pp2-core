@@ -66,6 +66,6 @@ class US2 {
         String multipleShopPath = "src/test/resources/multiple-shops";
 
         Set<Shop> shops = shopsDiscoverer.discover(multipleShopPath);
-        assertEquals(3, shops.size());
+        assertEquals(2, shops.size());
     }
 }

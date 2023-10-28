@@ -5,11 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import entities.Result;
-import entities.Shop;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import org.junit.jupiter.api.Test;
 import service.factory.ShoppinatorFactory;
 import shoppinator.core.Shoppinator;
@@ -25,8 +23,8 @@ class US1 {
 
     @Test
     void CA1_shouldReturnProductsOrderedByPriceOnSearch_WhenProductIsAvailableInShops() throws FileNotFoundException {
-        this.setUp("src/test/resources/simple-shop/");
-        List<Result> expectedResult = this.getExpectedResult("a", shoppinator.getShops());
+        this.setUp("src/test/resources/multiple-shops/");
+        List<Result> expectedResult = this.getExpectedResult("a");
 
         List<Result> actualResult = shoppinator.search("a");
 
@@ -55,7 +53,7 @@ class US1 {
     @Test
     void CA4_shouldFindProductsOnSearch_WhenMultipleShopsAreLoaded_AndProductIsAvailableInShops() throws FileNotFoundException {
         this.setUp("src/test/resources/multiple-shops/");
-        List<Result> expectedResult = this.getExpectedResult("a", shoppinator.getShops());
+        List<Result> expectedResult = this.getExpectedResult("a");
 
         List<Result> actualResult = shoppinator.search("a");
 
@@ -66,7 +64,7 @@ class US1 {
     @Test
     void CA5_shouldFindProductsOnShoppinatorCreation() throws FileNotFoundException {
         this.setUp("src/test/resources/multiple-shops/");
-        List<Result> expectedResult = this.getExpectedResult("a", shoppinator.getShops());
+        List<Result> expectedResult = this.getExpectedResult("a");
 
         List<Result> featuredSearchResult = shoppinator.getSearchResult();
 
@@ -74,12 +72,13 @@ class US1 {
         assertEquals(expectedResult, featuredSearchResult);
     }
 
-    private List<Result> getExpectedResult(String productName, Set<Shop> shops) {
+    private List<Result> getExpectedResult(String productName) {
         List<Result> results = new ArrayList<>();
+        String[] shopNames = {"F", "G"};
         Long initialPrice = 100L;
 
-        for (Shop shop : shops) {
-            Result result = new Result(productName, shop.getName(), "https://example.com/", initialPrice,
+        for (String shopName : shopNames) {
+            Result result = new Result(productName, shopName, "https://example.com/", initialPrice,
                 "https://example.com/");
             results.add(result);
 

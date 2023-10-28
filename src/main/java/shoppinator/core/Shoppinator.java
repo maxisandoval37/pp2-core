@@ -3,6 +3,7 @@ package shoppinator.core;
 import entities.Product;
 import entities.Result;
 import entities.Shop;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Observable;
@@ -23,12 +24,15 @@ public class Shoppinator extends Observable implements Observer {
     private Set<Product> domainProducts;
 
     public Shoppinator(Set<Shop> shops) {
-        this.shops = shops;
+        this.setShops(shops);
+        this.domainProducts = new HashSet<>();
+        this.searchResult = new ArrayList<>();
         this.resultAssembler = new ResultAssembler();
     }
 
     public List<Result> search(String productName) {
-        this.domainProducts = new HashSet<>();
+        this.domainProducts.clear();
+        this.searchResult.clear();
 
         for (Shop shop : this.shops) {
             shop.search(productName);
