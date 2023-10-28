@@ -1,5 +1,6 @@
 package service.discovery;
 
+import entities.Shop;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -17,11 +18,11 @@ import entities.Scraper;
 
 @Slf4j
 @NoArgsConstructor
-public class ScraperDiscoverer {
+public class ShopsDiscoverer {
 
     private static final String DIRECTORY_REGEX = "^[^\\s^\\x00-\\x1f\\\\?*:\"\";<>|/,][^\\x00-\\x1f\\\\?*:\"\";<>|/,]*[^,\\s^\\x00-\\x1f\\\\?*:\"\";<>|]+$";
 
-    public Set<Scraper> discover(String path) throws FileNotFoundException, IllegalArgumentException {
+    public Set<Shop> discover(String path) throws FileNotFoundException, IllegalArgumentException {
         File directory = new File(path);
 
         if (!path.matches(DIRECTORY_REGEX)) {
@@ -35,13 +36,13 @@ public class ScraperDiscoverer {
         return findClasses(path);
     }
 
-    public Set<Scraper> findClasses(String path) {
-        Set<Scraper> scrapers = new HashSet<>();
-        findClassesInPath(new File(path), scrapers);
-        return scrapers;
+    private Set<Shop> findClasses(String path) {
+        Set<Shop> shops = new HashSet<>();
+        findClassesInPath(new File(path), shops);
+        return shops;
     }
 
-    private void findClassesInPath(File path, Set<Scraper> scrapers) {
+    private void findClassesInPath(File path, Set<Shop> shops) {
         if (!path.exists()) {
             return;
         }
@@ -50,16 +51,16 @@ public class ScraperDiscoverer {
             File[] files = path.listFiles();
             if (files != null) {
                 for (File file : files) {
-                    findClassesInPath(file, scrapers);
+                    findClassesInPath(file, shops);
                 }
             }
         } else if (path.isFile() && path.getName().endsWith(".jar")) {
-            scrapers.addAll(findScrapersInJar(path));
+            shops.addAll(findShopsInJar(path));
         }
     }
 
-    private Set<Scraper> findScrapersInJar(File jarFile) {
-        Set<Scraper> scrapers = new HashSet<>();
+    private Set<Shop> findShopsInJar(File jarFile) {
+        Set<Shop> shops = new HashSet<>();
 
         try (JarFile jar = new JarFile(jarFile)) {
             Enumeration<JarEntry> entries = jar.entries();
@@ -67,21 +68,21 @@ public class ScraperDiscoverer {
             while (entries.hasMoreElements()) {
                 JarEntry entry = entries.nextElement();
                 if (!entry.isDirectory() && entry.getName().endsWith(".class")) {
-                    instantiateClassFromJar(jarFile, entry, scrapers);
+                    instantiateClassFromJar(jarFile, entry, shops);
                 }
             }
         } catch (IOException e) {
             log.error("Error reading jar file: " + e.getMessage());
         }
 
-        return scrapers;
+        return shops;
     }
 
-    private void instantiateClassFromJar(File jarFile, JarEntry entry, Set<Scraper> scrapers) {
+    private void instantiateClassFromJar(File jarFile, JarEntry entry, Set<Shop> shops) {
         try {
             Class<?> cls = loadClassFromJar(jarFile, entry.getName());
-            if (cls != null && Scraper.class.isAssignableFrom(cls)) {
-                scrapers.add((Scraper) cls.getDeclaredConstructor().newInstance());
+            if (cls != null && Shop.class.isAssignableFrom(cls)) {
+                shops.add((Shop) cls.getDeclaredConstructor().newInstance());
             }
         } catch (InstantiationException | NoSuchMethodException | InvocationTargetException |
                  IllegalAccessException e) {

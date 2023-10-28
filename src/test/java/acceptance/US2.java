@@ -9,37 +9,37 @@ import java.io.FileNotFoundException;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import service.discovery.ScraperDiscoverer;
+import service.discovery.ShopsDiscoverer;
 import entities.Scraper;
 
 
 class US2 {
 
-    ScraperDiscoverer scraperDiscoverer;
+    ShopsDiscoverer shopsDiscoverer;
 
     @BeforeEach
     public void setUp() {
-        scraperDiscoverer = new ScraperDiscoverer();
+        shopsDiscoverer = new ShopsDiscoverer();
     }
 
     @Test
     void CA1_DiscoveryOnNonExistentLocation_ShouldThrow_FileNotFoundException() {
         String nonExistingPath = "non-existent-location/";
 
-        assertThrows(FileNotFoundException.class, () -> scraperDiscoverer.discover(nonExistingPath));
+        assertThrows(FileNotFoundException.class, () -> shopsDiscoverer.discover(nonExistingPath));
     }
 
     @Test
     void CA2_DiscoveryOnInvalidPath_ShouldThrow_IllegalArgumentException() {
         String invalidPath = "archivo,txt";
-        assertThrows(IllegalArgumentException.class, () -> scraperDiscoverer.discover(invalidPath));
+        assertThrows(IllegalArgumentException.class, () -> shopsDiscoverer.discover(invalidPath));
     }
 
     @Test
     void CA3_DiscoveryOnEmptyFolder_ShouldReturn_EmptySet() throws FileNotFoundException {
         String emptyFolderPath = "src/test/resources/empty-folder";
 
-        Set<Scraper> result = scraperDiscoverer.discover(emptyFolderPath);
+        Set<Scraper> result = shopsDiscoverer.discover(emptyFolderPath);
 
         assertTrue(result.isEmpty());
     }
@@ -48,7 +48,7 @@ class US2 {
     void CA4_DiscoveryOnFolderWithNonScraperFile_ShouldReturn_EmptySet() throws FileNotFoundException {
         String notScraperPath = "src/test/resources/not-scraper";
 
-        Set<Scraper> result = scraperDiscoverer.discover(notScraperPath);
+        Set<Scraper> result = shopsDiscoverer.discover(notScraperPath);
 
         assertTrue(result.isEmpty());
     }
@@ -57,7 +57,7 @@ class US2 {
     void CA5_DiscoveryOnFolderWithOneScraperFile_ShouldReturn_SetWithONEScraper() throws FileNotFoundException {
         String simpleScraperPath = "src/test/resources/simple-scraper";
 
-        Set<Scraper> result = scraperDiscoverer.discover(simpleScraperPath);
+        Set<Scraper> result = shopsDiscoverer.discover(simpleScraperPath);
 
         assertEquals(1, result.size());
     }
@@ -66,7 +66,7 @@ class US2 {
     void CA6_DiscoveryOnFolderWithTwoScraperFiles_ShouldReturn_SetWithTWOScrapers() throws FileNotFoundException {
         String multipleScraperPath = "src/test/resources/multiple-scraper";
 
-        Set<Scraper> scrapers = scraperDiscoverer.discover(multipleScraperPath);
+        Set<Scraper> scrapers = shopsDiscoverer.discover(multipleScraperPath);
         assertEquals(3, scrapers.size());
     }
 }

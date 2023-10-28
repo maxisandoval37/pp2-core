@@ -1,70 +1,49 @@
 package shoppinator.core;
 
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Comparator;
+import entities.Product;
+import entities.Result;
+import entities.Shop;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
 import lombok.Getter;
-import service.discovery.ScraperDiscoverer;
-import service.factory.ShopFactory;
-import entities.Scraper;
-import entities.Shop;
-import entities.Product;
+import service.assembly.ResultAssembler;
 
 @SuppressWarnings("deprecation")
 public class Shoppinator extends Observable implements Observer {
 
     @Getter
-    List<Product> products;
+    List<Result> searchResult;
     @Getter
     Set<Shop> shops;
-    ScraperDiscoverer scraperDiscoverer;
-    ShopFactory shopFactory;
+    private final ResultAssembler resultAssembler;
+    private Set<Product> domainProducts;
 
-    public Shoppinator(String path) throws FileNotFoundException {
-        this.init(path);
-
-        // la app inicia con productos destacados
-        this.search("mouse");
+    public Shoppinator(Set<Shop> shops) {
+        this.shops = shops;
+        this.resultAssembler = new ResultAssembler();
     }
 
-    private void init(String path) throws FileNotFoundException {
-        this.shopFactory = new ShopFactory();
-        this.scraperDiscoverer = new ScraperDiscoverer();
-
-        Set<Scraper> scrapers = scraperDiscoverer.discover(path);
-        Set<Shop> shopSet = shopFactory.create(scrapers);
-        this.setShops(shopSet);
-    }
-
-    public List<Product> search(String productName) {
-        products = new ArrayList<>();
+    public List<Result> search(String productName) {
+        this.domainProducts = new HashSet<>();
 
         for (Shop shop : this.shops) {
             shop.search(productName);
         }
 
-        return products;
+        return this.searchResult;
     }
 
     @Override
-    public void update(Observable o, Object productList) {
-        this.products.addAll((List<Product>) productList);
+    @SuppressWarnings("unchecked")
+    public void update(Observable o, Object products) {
+        this.domainProducts.addAll((Set<Product>) products);
+        this.searchResult = resultAssembler.assembly(domainProducts);
 
-        if (!this.products.isEmpty()) {
-            products.sort(Comparator.comparing(p -> p.getProductPresentation().getPrice()));
-        }
-
-        sendNotification();
-    }
-
-    public boolean sendNotification() {
         setChanged();
-        super.notifyObservers(this.products);
-        return hasChanged();
+        super.notifyObservers(this.searchResult);
     }
 
     public void setShops(Set<Shop> shops) {

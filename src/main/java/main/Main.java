@@ -2,16 +2,17 @@ package main;
 
 import java.io.FileNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import service.factory.ShoppinatorFactory;
 import shoppinator.core.Shoppinator;
 
 @Slf4j
 public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
-
         logAsciiArt();
 
-        Shoppinator shoppinator = new Shoppinator("plugins/");
+        ShoppinatorFactory shoppinatorFactory = new ShoppinatorFactory();
+        Shoppinator shoppinator = shoppinatorFactory.create("plugins/");
 
         shoppinator.search("iphone");
     }
