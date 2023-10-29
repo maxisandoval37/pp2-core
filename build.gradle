@@ -23,7 +23,6 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.26'
     implementation 'org.slf4j:slf4j-api:2.0.5'
     implementation 'ch.qos.logback:logback-classic:1.4.7'
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.15.2'
 
     runtimeOnly files('src/dist/lib')
     implementation fileTree(dir: 'src/dist/lib/plugins', include: '**/*.class')
