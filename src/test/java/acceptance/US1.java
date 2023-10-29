@@ -78,7 +78,7 @@ class US1 {
         Long initialPrice = 100L;
 
         for (String shopName : shopNames) {
-            Result result = new Result(productName, shopName, "https://example.com/", initialPrice,
+            Result result = new Result(productName, shopName, initialPrice,"https://example.com/",
                 "https://example.com/");
             results.add(result);
 
