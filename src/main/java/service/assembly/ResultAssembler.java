@@ -23,8 +23,8 @@ public class ResultAssembler {
     private Result toResult(Product product) {
         ProductPresentation presentation = product.getProductPresentation();
 
-        return new Result(product.getName(), product.getShopName(), presentation.getPostUrl(), presentation.getPrice(),
-            presentation.getProductImageUrl());
+        return new Result(product.getName(), product.getShopName(), presentation.getPrice(), presentation.getPostUrl(),
+                   presentation.getProductImageUrl());
     }
 }
 
