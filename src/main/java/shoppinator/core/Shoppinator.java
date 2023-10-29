@@ -1,94 +1,64 @@
 package shoppinator.core;
 
-import java.io.FileNotFoundException;
-import java.util.List;
-import java.util.Set;
-import service.factory.SearchCriteriaFactory;
-import entities.Shop;
 import entities.Product;
-import entities.criteria.SearchCriteria;
-import utils.PropertiesHelper;
+import entities.Result;
+import entities.Shop;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Set;
+import lombok.Getter;
+import service.assembly.ResultAssembler;
 
-public class Shoppinator {
+@SuppressWarnings("deprecation")
+public class Shoppinator extends Observable implements Observer {
 
-    private final ShoppinatorFacade facade;
-    private final String featuredProduct;
+    @Getter
+    List<Result> searchResult;
+    @Getter
+    Set<Shop> shops;
 
-    private final SearchCriteriaFactory searchCriteriaFactory;
-    private SearchCriteria criteria;
-    private SearchCriteria.Memento lastSearchCriteria;
+    private final ResultAssembler resultAssembler;
+    private Set<Product> domainProducts;
 
-    public Shoppinator() {
-        facade = new ShoppinatorFacadeImpl();
-        searchCriteriaFactory = new SearchCriteriaFactory();
-        this.featuredProduct = PropertiesHelper.getValue("featured.product");
+    public Shoppinator(Set<Shop> shops) {
+        this.setShops(shops);
+        this.domainProducts = new HashSet<>();
+        this.searchResult = new ArrayList<>();
+        this.resultAssembler = new ResultAssembler();
     }
 
-    public Shoppinator(ShoppinatorFacade shoppinatorFacade) {
-        facade = shoppinatorFacade;
-        searchCriteriaFactory = new SearchCriteriaFactory();
-        this.featuredProduct = PropertiesHelper.getValue("featured.product");
+    public List<Result> search(String productName) {
+        this.domainProducts.clear();
+        this.searchResult.clear();
+
+        for (Shop shop : this.shops) {
+            shop.search(productName);
+        }
+
+        return this.searchResult;
     }
 
-    /**
-     * Initializes the core, loading the shops in the given path and searching for the featured product.
-     */
-    public void init(String path) throws FileNotFoundException {
-        createAndSaveCriteria(path, featuredProduct);
+    @Override
+    @SuppressWarnings("unchecked")
+    public void update(Observable o, Object products) {
+        this.domainProducts.addAll((Set<Product>) products);
+        this.searchResult = resultAssembler.assembly(domainProducts);
 
-        facade.searchProductsInShops(criteria);
+        setChanged();
+        super.notifyObservers(this.searchResult);
     }
 
-    /**
-     * Searches for products based on certain parameters.
-     *
-     * @param params Product search parameters.
-     *               <ol>
-     *                  <li>The first parameter is the path to the plugins folder. (Required)</li>
-     *                  <li>The second parameter is the product name. (Required)</li>
-     *                  <li>The third parameter is the minimum price to filter. (Optional)</li>
-     *                  <li>The fourth parameter is the maximum price to filter. (Optional)</li>
-     *                  <li>The remaining parameters are the selected shops. (At least 1 required)</li>
-     *               </ol>
-     */
-    public List<Product> search(String... params) throws FileNotFoundException, IllegalArgumentException {
-        createAndSaveCriteria(params);
-
-        return facade.searchProductsInShops(criteria);
+    public void setShops(Set<Shop> shops) {
+        this.shops = shops;
+        this.addObservers();
     }
 
-    /**
-     * Perform a new search with the last search parameters.
-     */
-    public List<Product> refresh() throws FileNotFoundException {
-        criteria.restoreCriteria(lastSearchCriteria);
-
-        return facade.searchProductsInShops(criteria);
-    }
-
-    /**
-     * Returns the list of products found in the last search.
-     */
-    public List<Product> getProductList() {
-        return facade.getCurrentProductList();
-    }
-
-    /*
-     * Returns the list of shops.
-     */
-    public Set<Shop> getShops() {
-        return facade.getShops();
-    }
-
-    /**
-     * Subscribes an observer to the update of the core product list.
-     */
-    public void subscribe(Object observer) {
-        facade.subscribe(observer);
-    }
-
-    private void createAndSaveCriteria(String... params) throws IllegalArgumentException {
-        this.criteria = searchCriteriaFactory.create(params);
-        this.lastSearchCriteria = criteria.saveState();
+    private void addObservers() {
+        for (Shop shop : this.shops) {
+            shop.addObserver(this);
+        }
     }
 }
