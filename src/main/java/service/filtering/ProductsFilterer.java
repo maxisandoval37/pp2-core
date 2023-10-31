@@ -1,6 +1,7 @@
 package service.filtering;
 
 import java.util.List;
+import java.util.Set;
 import service.factory.PipelineFactory;
 import entities.filtering.Pipeline;
 import entities.filtering.Sink;
@@ -20,8 +21,8 @@ public class ProductsFilterer {
         this.pipelineFactory = new PipelineFactory();
     }
 
-    public List<Product> filter(FilterCriteria criteria, List<Product> products) {
-        Pipeline pipeline = pipelineFactory.create(criteria, products);
+    public List<Product> filter(FilterCriteria criteria, Set<Product> products) {
+        Pipeline pipeline = pipelineFactory.create(criteria, List.copyOf(products));
 
         pipeline.run();
 

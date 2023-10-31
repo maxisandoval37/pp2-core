@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import entities.Shop;
-import shoppinator.core.ShoppinatorFacade;
+import shoppinator.core.ShoppinatorCore;
 import entities.Product;
 import entities.criteria.SearchCriteria;
 
@@ -17,7 +17,7 @@ import entities.criteria.SearchCriteria;
  * successively.</li>
  * <li>This implementation is used to test the refresh functionality.</li>
  */
-public class ShoppinatorNonRefreshableFacadeTestImpl implements ShoppinatorFacade {
+public class ShoppinatorNonRefreshableFacadeTestImpl implements ShoppinatorCore {
 
     private final List<Product> productList;
     private final String productToSearch;

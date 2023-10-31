@@ -1,58 +1,21 @@
 package shoppinator.core;
 
-import java.util.ArrayList;
-import java.util.Comparator;
+import entities.Result;
+import entities.Shop;
+import entities.criteria.SearchCriteria;
 import java.util.List;
-import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
-import lombok.Getter;
-import entities.Shop;
-import entities.Product;
-import entities.criteria.SearchCriteria;
 
-@SuppressWarnings("deprecation")
-@Getter
-public class ShoppinatorCore extends Observable implements Observer {
+public interface ShoppinatorCore {
 
-    private List<Product> products;
-    private Set<Shop> shops;
+    List<Result> search(SearchCriteria criteria);
 
-    public ShoppinatorCore() {
-        this.products = new ArrayList<>();
-    }
+    List<Result> getSearchResult();
 
-    public List<Product> search(SearchCriteria criteria) {
-        this.products.clear();
+    Set<Shop> getShops();
 
-        for (Shop shop : this.shops) {
-            shop.search(criteria);
-        }
+    void setShops(Set<Shop> shops);
 
-        return this.products;
-    }
-
-    @Override
-    public void update(Observable o, Object productList) {
-        this.products.addAll((List<Product>) productList);
-        products.sort(Comparator.comparing(p -> p.getProductPresentation().getPrice()));
-        sendNotification();
-    }
-
-    public boolean sendNotification() {
-        setChanged();
-        super.notifyObservers(this.products);
-        return hasChanged();
-    }
-
-    public void setShops(Set<Shop> shops) {
-        this.shops = shops;
-        this.addObservers();
-    }
-
-    private void addObservers() {
-        for (Shop shop : this.shops) {
-            shop.addObserver(this);
-        }
-    }
+    void addObserver(Observer observer);
 }

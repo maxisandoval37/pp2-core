@@ -22,13 +22,11 @@ public class PriceFilter extends Filter {
     @Override
     public void run() {
         try {
-            String productsJson = in.read();
-            List<Product> products = jsonToProducts(productsJson);
+            List<Product> products = in.read();
 
             List<Product> productsList = filterProductsByPriceRange(products, min, max);
 
-            String productsFilteredJson = productsToJson(productsList);
-            out.write(productsFilteredJson);
+            out.write(productsList);
             out.close();
         } catch (IOException | InterruptedException ex) {
             throw new RuntimeException(ex);

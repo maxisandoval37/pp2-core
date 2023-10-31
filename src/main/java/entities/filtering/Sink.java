@@ -7,8 +7,7 @@ public class Sink extends Filter {
     @Override
     public void run() {
         try {
-            String productsJson = in.read();
-            filteredProducts = jsonToProducts(productsJson);
+            filteredProducts = in.read();
         } catch (EOFException | InterruptedException e) {
             throw new RuntimeException(e);
         }

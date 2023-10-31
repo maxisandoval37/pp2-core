@@ -23,7 +23,7 @@ class US5 {
 
     @BeforeEach
     public void setUp() {
-        shoppinator = new Shoppinator();
+        shoppinator = new Shoppinator(shops);
         defaultShop = Arrays.asList("fravega");
         newShop = Arrays.asList("garbarino");
         mutipleShops = Arrays.asList("fravega", "garbarino");
@@ -31,7 +31,7 @@ class US5 {
 
     @Test
     void CA1_shouldOnlyBeChoosedDefaultShopBecauseItWasTheSelectedOne() throws FileNotFoundException, URISyntaxException {
-        shoppinator = new Shoppinator();
+        shoppinator = new Shoppinator(shops);
         shoppinator.search("plugins/default", "webcam", "1000", "100000", "fravega");
         Set<Shop> shops = shoppinator.getShops();
 
@@ -44,7 +44,7 @@ class US5 {
 
     @Test
     void CA2_shouldOnlyBeChoosedTheDefaultShopBecauseAnotherShopWasNotChoosed() throws FileNotFoundException, URISyntaxException {
-        shoppinator = new Shoppinator();
+        shoppinator = new Shoppinator(shops);
         shoppinator.search("plugins/default", "webcam", "1000", "100000", "fravega");
         Set<Shop> shops = shoppinator.getShops();
 
@@ -57,7 +57,7 @@ class US5 {
 
     @Test
     void CA3_shouldBeChoosedAnotherShopDifferentThanTheDefaultOne() throws FileNotFoundException, URISyntaxException {
-        shoppinator = new Shoppinator();
+        shoppinator = new Shoppinator(shops);
         shoppinator.search("plugins/availables", "webcam", "1000", "100000", "garbarino");
         Set<Shop> shops = shoppinator.getShops();
 
@@ -70,7 +70,7 @@ class US5 {
 
     @Test
     void CA4_shouldBeChoosedMoreThanOneShop() throws FileNotFoundException, URISyntaxException {
-        shoppinator = new Shoppinator();
+        shoppinator = new Shoppinator(shops);
         shoppinator.search("plugins/availables", "webcam", "1000", "100000", "garbarino", "fravega");
         Set<Shop> shops = shoppinator.getShops();
 

@@ -1,11 +1,9 @@
 package entities.filtering;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import entities.Product;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import entities.Product;
-
-import java.util.List;
 
 @AllArgsConstructor
 @Slf4j
@@ -16,12 +14,7 @@ public class Pump extends Filter {
     @Override
     public void run() {
 
-        try {
-            String json = productsToJson(data);
-            out.write(json);
-        } catch (JsonProcessingException e) {
-            log.error(e.getMessage());
-        }
+        out.write(data);
     }
 
 }

@@ -19,7 +19,7 @@ public class SearchCriteria {
     private String productName;
     // composition over inheritance
     private FilterCriteria filterCriteria;
-    private DiscoverCriteria discoverCriteria;
+    private ShopsSelectionCriteria shopsSelectionCriteria;
 
     public Memento saveState() {
         return new Memento(this);
@@ -28,22 +28,22 @@ public class SearchCriteria {
     public void restoreCriteria(Memento memento) {
         this.productName = memento.getSearchCriteria().getProductName();
         this.filterCriteria = memento.getSearchCriteria().getFilterCriteria();
-        this.discoverCriteria = memento.getSearchCriteria().getDiscoverCriteria();
+        this.shopsSelectionCriteria = memento.getSearchCriteria().getShopsSelectionCriteria();
     }
 
     public static class Memento {
         private final String productName;
         private final FilterCriteria filterCriteria;
-        private final DiscoverCriteria discoverCriteria;
+        private final ShopsSelectionCriteria shopsSelectionCriteria;
 
         public Memento(SearchCriteria searchCriteria) {
             this.productName = searchCriteria.getProductName();
             this.filterCriteria = searchCriteria.getFilterCriteria();
-            this.discoverCriteria = searchCriteria.getDiscoverCriteria();
+            this.shopsSelectionCriteria = searchCriteria.getShopsSelectionCriteria();
         }
 
         public SearchCriteria getSearchCriteria() {
-            return new SearchCriteria(productName, filterCriteria, discoverCriteria);
+            return new SearchCriteria(productName, filterCriteria, shopsSelectionCriteria);
         }
     }
 }

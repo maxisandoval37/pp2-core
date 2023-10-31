@@ -10,10 +10,10 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import shoppinator.core.Shoppinator;
-import shoppinator.core.ShoppinatorFacade;
+import shoppinator.core.ShoppinatorCore;
 import entities.Product;
 import stubs.ShoppinatorNonRefreshableFacadeTestImpl;
-import stubs.ShoppinatorRefreshableFacadeTestImpl;
+import stubs.ShoppinatorRefreshableCoreTestImpl;
 
 class US6 {
 
@@ -34,7 +34,7 @@ class US6 {
         productsToRetrieve = getTestProducts("aa", "ab", "ac");
         productsRetrieved = getTestProducts("aa", "ab", "ac", "ad");
 
-        ShoppinatorFacade shoppinatorFacade = new ShoppinatorRefreshableFacadeTestImpl(productName, productsToRetrieve, productsRetrieved);
+        ShoppinatorCore shoppinatorFacade = new ShoppinatorRefreshableCoreTestImpl(productName, productsToRetrieve, productsRetrieved);
         shoppinator = new Shoppinator(shoppinatorFacade);
     }
 
@@ -55,7 +55,7 @@ class US6 {
     }
 
     void CA2_setUp() {
-        ShoppinatorFacade shoppinatorFacade = new ShoppinatorNonRefreshableFacadeTestImpl(productName);
+        ShoppinatorCore shoppinatorFacade = new ShoppinatorNonRefreshableFacadeTestImpl(productName);
         shoppinator = new Shoppinator(shoppinatorFacade);
 
         productsToRetrieve = getTestProducts("aa", "ab", "ac");

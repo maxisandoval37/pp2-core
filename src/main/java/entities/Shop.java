@@ -1,27 +1,19 @@
 package entities;
 
-import java.util.List;
 import java.util.Observable;
+import java.util.Set;
 import lombok.Getter;
-import entities.criteria.SearchCriteria;
 
 @Getter
 @SuppressWarnings("deprecation")
 public abstract class Shop extends Observable {
 
-    List<Product> products;
+    public String name;
 
-    public abstract List<Product> search(SearchCriteria criteria);
+    public abstract Set<Product> search(String productName);
 
-    protected void addProducts(List<Product> newProducts) {
-        products = newProducts;
-
-        this.sendNotification();
-    }
-
-    public boolean sendNotification() {
+    protected void notifySearchResult(Set<Product> newProducts) {
         setChanged();
-        super.notifyObservers(this.products);
-        return hasChanged();
+        super.notifyObservers(newProducts);
     }
 }

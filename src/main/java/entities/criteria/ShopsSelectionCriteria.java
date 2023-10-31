@@ -9,8 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @Getter
-public class DiscoverCriteria {
+public class ShopsSelectionCriteria {
 
-    private String path;
     private String[] selectedShops;
 }

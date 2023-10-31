@@ -22,7 +22,7 @@ class US3 {
 
     @BeforeEach
     public void setUp() throws FileNotFoundException {
-        shoppinator = new Shoppinator();
+        shoppinator = new Shoppinator(shops);
         shoppinator.init("plugins/default/");
 
         existingProduct = "webcam";
