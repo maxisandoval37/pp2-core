@@ -1,9 +1,9 @@
 package service.factory;
 
 import entities.Shop;
+import entities.criteria.SearchCriteria;
+import entities.criteria.ShopsSelectionCriteria;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import service.discovery.ShopsDiscoverer;
 import shoppinator.core.Shoppinator;
@@ -22,21 +22,30 @@ public class ShoppinatorFactory {
         this.featuredProduct = PropertiesHelper.getValue("featured.product");
     }
 
-    public Shoppinator create(String path) throws FileNotFoundException {
-        Set<Shop> shops = shopsDiscoverer.discover(path);
-        Shoppinator shoppinator = new Shoppinator(shops);
-        Map<String, Object> initialParams = getInitialParams(featuredProduct, shops);
-
-        // la app inicia con productos destacados
-        shoppinator.search(initialParams);
-        return shoppinator;
+    public ShoppinatorFactory(String featuredProduct) {
+        this.shopsDiscoverer = new ShopsDiscoverer();
+        this.featuredProduct = featuredProduct;
     }
 
-    private Map<String, Object> getInitialParams(String featuredProduct, Set<Shop> shops) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("productName", featuredProduct);
-        params.put("selectedShops", shops.stream().map(Shop::getName).toArray(String[]::new));
-        return params;
+    public Shoppinator create(String path) throws FileNotFoundException {
+        Set<Shop> shops = shopsDiscoverer.discover(path);
+        ShoppinatorCore core = new ShoppinatorCoreImpl(shops);
+
+        // la app inicia con productos destacados
+        SearchCriteria initialCriteria = getInitialCriteria(featuredProduct, shops);
+        core.search(initialCriteria);
+
+        return new Shoppinator(core, shops);
+    }
+
+    private SearchCriteria getInitialCriteria(String featuredProduct, Set<Shop> shops) {
+        SearchCriteria initialCriteria = new SearchCriteria();
+        initialCriteria.setProductName(featuredProduct);
+        initialCriteria.setShopsSelectionCriteria(
+            new ShopsSelectionCriteria(shops.stream().map(Shop::getName).toArray(String[]::new))
+        );
+
+        return initialCriteria;
     }
 
 }

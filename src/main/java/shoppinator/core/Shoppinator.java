@@ -20,11 +20,10 @@ public class Shoppinator {
     private SearchCriteria criteria;
     private SearchCriteria.Memento lastSearchCriteria;
 
-    public Shoppinator(Set<Shop> shops) {
-        core = new ShoppinatorCoreImpl(shops);
-        shopsToLoad = shops;
-
+    public Shoppinator(ShoppinatorCore shoppinatorCore, Set<Shop> shops) {
         searchCriteriaFactory = new SearchCriteriaFactory();
+        core = shoppinatorCore;
+        shopsToLoad = shops;
     }
 
     /**
@@ -51,7 +50,7 @@ public class Shoppinator {
     public List<Result> refresh() {
         criteria.restoreCriteria(lastSearchCriteria);
 
-        return core.search(criteria);
+        return loadShopsAndPerformSearch(criteria);
     }
 
     /**
