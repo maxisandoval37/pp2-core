@@ -7,8 +7,8 @@ import java.util.Map;
 
 public class SearchCriteriaFactory {
 
-    private static final Long DEFAULT_MIN_VALUE = 0L;
-    private static final Long DEFAULT_MAX_VALUE = Long.MAX_VALUE;
+    static final Long DEFAULT_MIN_VALUE = 0L;
+    static final Long DEFAULT_MAX_VALUE = Long.MAX_VALUE;
 
     public SearchCriteria create(Map<String, Object> params) throws IllegalArgumentException {
         SearchCriteria searchCriteria = new SearchCriteria();
@@ -45,12 +45,16 @@ public class SearchCriteriaFactory {
 
     private void setShopsSelectionCriteria(Map<String, Object> params, SearchCriteria searchCriteria) {
         ShopsSelectionCriteria shopsSelectionCriteria = new ShopsSelectionCriteria();
-        if (params.containsKey("selectedShops")) {
+        if (params.containsKey("selectedShops") && isNotNullOrEmpty((String[]) params.get("selectedShops"))) {
             shopsSelectionCriteria.setSelectedShops((String[]) params.get("selectedShops"));
         } else {
             throw new IllegalArgumentException("At least one shop must be selected.");
         }
         searchCriteria.setShopsSelectionCriteria(shopsSelectionCriteria);
+    }
+
+    private boolean isNotNullOrEmpty(String[] array) {
+        return array != null && array.length > 0;
     }
 
 }

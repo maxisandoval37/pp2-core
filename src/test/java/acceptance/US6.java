@@ -3,51 +3,50 @@ package acceptance;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static utils.TestUtils.getTestParams;
+import static utils.TestUtils.getTestSearchParams;
 
+import entities.Product;
+import entities.Result;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import service.factory.ShoppinatorFactory;
 import shoppinator.core.Shoppinator;
 import shoppinator.core.ShoppinatorCore;
-import entities.Product;
 import stubs.ShoppinatorNonRefreshableFacadeTestImpl;
 import stubs.ShoppinatorRefreshableCoreTestImpl;
 
 class US6 {
 
     private Shoppinator shoppinator;
-    private List<Product> productsToRetrieve;
-    private List<Product> productsRetrieved;
+    private List<Result> productsToRetrieve;
+    private List<Result> productsRetrieved;
     private String productName;
 
-    private String path;
 
     @BeforeEach
     public void setUp() {
         productName = "a";
-        path = "fake-path/";
     }
 
-    public void CA1_setUp() {
+    public void CA1_setUp() throws FileNotFoundException {
         productsToRetrieve = getTestProducts("aa", "ab", "ac");
         productsRetrieved = getTestProducts("aa", "ab", "ac", "ad");
 
-        ShoppinatorCore shoppinatorFacade = new ShoppinatorRefreshableCoreTestImpl(productName, productsToRetrieve, productsRetrieved);
-        shoppinator = new Shoppinator(shoppinatorFacade);
+        ShoppinatorCore shoppinatorCore = new ShoppinatorRefreshableCoreTestImpl(productName, productsToRetrieve,
+            productsRetrieved);
+        shoppinator = new Shoppinator(shoppinatorCore, Collections.emptySet());
     }
 
     @Test
     void CA1_shouldUpdateProductListWhenSearchIsRefreshed() throws FileNotFoundException {
         CA1_setUp();
-        String[] testParams = getTestParams(path, productName);
 
-        shoppinator.search(testParams);
-        List<Product> productsBeforeUpdate = new ArrayList<>(shoppinator.getProductList());
-
-        shoppinator.refresh();
-        List<Product> productsAfterUpdate = new ArrayList<>(shoppinator.getProductList());
+        List<Result> productsBeforeUpdate = new ArrayList<>(shoppinator.search(getTestSearchParams(productName)));
+        List<Result> productsAfterUpdate = new ArrayList<>(shoppinator.refresh());
 
         assertEquals(productsBeforeUpdate, productsToRetrieve);
         assertEquals(productsAfterUpdate, productsRetrieved);
@@ -55,34 +54,31 @@ class US6 {
     }
 
     void CA2_setUp() {
-        ShoppinatorCore shoppinatorFacade = new ShoppinatorNonRefreshableFacadeTestImpl(productName);
-        shoppinator = new Shoppinator(shoppinatorFacade);
-
         productsToRetrieve = getTestProducts("aa", "ab", "ac");
         productsRetrieved = getTestProducts("aa", "ab", "ac");
+
+        ShoppinatorCore shoppinatorCore = new ShoppinatorRefreshableCoreTestImpl(productName, productsToRetrieve,
+            productsRetrieved);
+        shoppinator = new Shoppinator(shoppinatorCore, Collections.emptySet());
     }
 
     @Test
-    void CA2_shouldNOTUpdateProductListWhenSearchIsRefreshed() throws FileNotFoundException {
+    void CA2_shouldNOTUpdateProductListWhenSearchIsRefreshed() {
         CA2_setUp();
-        String[] testParams = getTestParams(path, productName);
 
-        shoppinator.search(testParams);
-        List<Product> productsBeforeUpdate = new ArrayList<>(shoppinator.getProductList());
-
-        shoppinator.refresh();
-        List<Product> productsAfterUpdate = new ArrayList<>(shoppinator.getProductList());
+        List<Result> productsBeforeUpdate = new ArrayList<>(shoppinator.search(getTestSearchParams(productName)));
+        List<Result> productsAfterUpdate = new ArrayList<>(shoppinator.refresh());
 
         assertEquals(productsBeforeUpdate, productsToRetrieve);
         assertEquals(productsAfterUpdate, productsRetrieved);
         assertEquals(productsBeforeUpdate, productsAfterUpdate);
     }
 
-    private List<Product> getTestProducts(String... productNames) {
-        List<Product> products = new ArrayList<>();
+    private List<Result> getTestProducts(String... productNames) {
+        List<Result> products = new ArrayList<>();
 
         for (String productName : productNames) {
-            products.add(new Product(productName, "", null));
+            products.add(new Result(productName, "Fake Shop", 1L, "http://example.com", "http://example.com"));
         }
 
         return products;

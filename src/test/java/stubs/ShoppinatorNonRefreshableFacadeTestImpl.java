@@ -1,8 +1,10 @@
 package stubs;
 
+import entities.Result;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Observer;
 import java.util.Set;
 import entities.Shop;
 import shoppinator.core.ShoppinatorCore;
@@ -19,29 +21,29 @@ import entities.criteria.SearchCriteria;
  */
 public class ShoppinatorNonRefreshableFacadeTestImpl implements ShoppinatorCore {
 
-    private final List<Product> productList;
+    private final List<Result> searchResult;
     private final String productToSearch;
 
     public ShoppinatorNonRefreshableFacadeTestImpl(String aProduct) {
         this.productToSearch = aProduct;
-        this.productList = new ArrayList<>();
-        productList.add(new Product("aa", "", null));
-        productList.add(new Product("ab", "", null));
-        productList.add(new Product("ac", "", null));
+        this.searchResult = new ArrayList<>();
+        searchResult.add(new Result("aa", "", 0L, "", ""));
+        searchResult.add(new Result("ab", "", 0L, "", ""));
+        searchResult.add(new Result("ac", "", 0L, "", ""));
     }
 
     @Override
-    public List<Product> searchProductsInShops(SearchCriteria criteria) {
+    public List<Result> search(SearchCriteria criteria) {
         if (!criteria.getProductName().equals(productToSearch)) {
             return Collections.EMPTY_LIST;
         }
 
-        return productList;
+        return searchResult;
     }
 
     @Override
-    public List<Product> getCurrentProductList() {
-        return productList;
+    public List<Result> getSearchResult() {
+        return searchResult;
     }
 
     @Override
@@ -50,5 +52,11 @@ public class ShoppinatorNonRefreshableFacadeTestImpl implements ShoppinatorCore 
     }
 
     @Override
-    public void subscribe(Object observer) {}
+    public void setShops(Set<Shop> shops) {
+    }
+
+    @Override
+    public void addObserver(Observer observer) {
+    }
+
 }

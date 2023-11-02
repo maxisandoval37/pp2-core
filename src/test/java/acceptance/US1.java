@@ -3,11 +3,13 @@ package acceptance;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static utils.TestUtils.getTestSearchParams;
 
 import entities.Result;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import service.factory.ShoppinatorFactory;
 import shoppinator.core.Shoppinator;
@@ -24,9 +26,10 @@ class US1 {
     @Test
     void CA1_shouldReturnProductsOrderedByPriceOnSearch_WhenProductIsAvailableInShops() throws FileNotFoundException {
         this.setUp("src/test/resources/multiple-shops/");
-        List<Result> expectedResult = this.getExpectedResult("a");
+        Map<String, Object> params = getTestSearchParams("a");
+        List<Result> expectedResult = getExpectedResult("a");
 
-        List<Result> actualResult = shoppinator.search("a");
+        List<Result> actualResult = shoppinator.search(params);
 
         assertFalse(actualResult.isEmpty());
         assertEquals(expectedResult, actualResult);
@@ -36,8 +39,9 @@ class US1 {
     @Test
     void CA2_shouldNotFindProductsOnSearch_WhenProductIsNotAvailableInShops() throws FileNotFoundException {
         this.setUp("src/test/resources/simple-shop/");
+        Map<String, Object> params = getTestSearchParams("e");
 
-        List<Result> searchResult = shoppinator.search("e");
+        List<Result> searchResult = shoppinator.search(params);
 
         assertTrue(searchResult.isEmpty());
     }
@@ -45,17 +49,20 @@ class US1 {
     @Test
     void CA3_shouldNotFindProductsOnSearch_WhenNoShopsAreLoaded() throws FileNotFoundException {
         this.setUp("src/test/resources/empty-folder/");
+        Map<String, Object> params = getTestSearchParams("a");
 
-        List<Result> searchResult = shoppinator.search("a");
+        List<Result> searchResult = shoppinator.search(params);
         assertTrue(searchResult.isEmpty());
     }
 
     @Test
-    void CA4_shouldFindProductsOnSearch_WhenMultipleShopsAreLoaded_AndProductIsAvailableInShops() throws FileNotFoundException {
+    void CA4_shouldFindProductsOnSearch_WhenMultipleShopsAreLoaded_AndProductIsAvailableInShops()
+        throws FileNotFoundException {
         this.setUp("src/test/resources/multiple-shops/");
         List<Result> expectedResult = this.getExpectedResult("a");
+        Map<String, Object> params = getTestSearchParams("a");
 
-        List<Result> actualResult = shoppinator.search("a");
+        List<Result> actualResult = shoppinator.search(params);
 
         assertFalse(actualResult.isEmpty());
         assertEquals(expectedResult, actualResult);
@@ -78,7 +85,7 @@ class US1 {
         Long initialPrice = 100L;
 
         for (String shopName : shopNames) {
-            Result result = new Result(productName, shopName, "https://example.com/", initialPrice,
+            Result result = new Result(productName, shopName, initialPrice, "https://example.com/",
                 "https://example.com/");
             results.add(result);
 

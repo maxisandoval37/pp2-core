@@ -29,7 +29,7 @@ class US2 {
 
     @Test
     void CA2_DiscoveryOnInvalidPath_ShouldThrow_IllegalArgumentException() {
-        String invalidPath = "archivo,txt";
+        String invalidPath = "invalid|||format|||file|||txt";
         assertThrows(IllegalArgumentException.class, () -> shopsDiscoverer.discover(invalidPath));
     }
 

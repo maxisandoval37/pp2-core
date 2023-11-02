@@ -1,12 +1,13 @@
 package stubs;
 
+import entities.Result;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Observer;
 import java.util.Set;
 import entities.Shop;
 import shoppinator.core.ShoppinatorCore;
-import entities.Product;
 import entities.criteria.SearchCriteria;
 
 /**
@@ -20,34 +21,34 @@ import entities.criteria.SearchCriteria;
 public class ShoppinatorRefreshableCoreTestImpl implements ShoppinatorCore {
 
     private int callCounter;
-    private List<Product> currentProductList;
-    private final List<Product> initialProductList;
-    private final List<Product> refreshedProductList;
+    private List<Result> currentSearchResult;
+    private final List<Result> initialSearchResult;
+    private final List<Result> refreshedSearchResult;
     private final String productToSearch;
 
-    public ShoppinatorRefreshableCoreTestImpl(String productToSearch, List<Product> initialProductList,
-        List<Product> refreshedProductList) {
-        this.currentProductList = new ArrayList<>();
-        this.initialProductList = initialProductList;
-        this.refreshedProductList = refreshedProductList;
+    public ShoppinatorRefreshableCoreTestImpl(String productToSearch, List<Result> initialSearchResult,
+        List<Result> refreshedProductList) {
+        this.currentSearchResult = new ArrayList<>();
+        this.initialSearchResult = initialSearchResult;
+        this.refreshedSearchResult = refreshedProductList;
         this.productToSearch = productToSearch;
         this.callCounter = 1;
     }
 
     @Override
-    public List<Product> searchProductsInShops(SearchCriteria criteria) {
-        currentProductList.clear();
+    public List<Result> search(SearchCriteria criteria) {
+        currentSearchResult.clear();
         if (!productToSearch.equals(criteria.getProductName())) {
-            return currentProductList;
+            return currentSearchResult;
         }
 
         updateProductList();
-        return currentProductList;
+        return currentSearchResult;
     }
 
     @Override
-    public List<Product> getCurrentProductList() {
-        return currentProductList;
+    public List<Result> getSearchResult() {
+        return currentSearchResult;
     }
 
     @Override
@@ -56,13 +57,20 @@ public class ShoppinatorRefreshableCoreTestImpl implements ShoppinatorCore {
     }
 
     @Override
-    public void subscribe(Object observer) {}
+    public void setShops(Set<Shop> shops) {
+
+    }
+
+    @Override
+    public void addObserver(Observer observer) {
+
+    }
 
     private void updateProductList() {
         if (callCounter % 2 == 0) {
-            this.currentProductList = new ArrayList<>(refreshedProductList);
+            this.currentSearchResult = new ArrayList<>(refreshedSearchResult);
         } else {
-            this.currentProductList = new ArrayList<>(initialProductList);
+            this.currentSearchResult = new ArrayList<>(initialSearchResult);
         }
 
         callCounter++;

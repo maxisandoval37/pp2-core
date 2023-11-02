@@ -1,6 +1,10 @@
 package service.factory;
 
+import static service.factory.SearchCriteriaFactory.DEFAULT_MAX_VALUE;
+import static service.factory.SearchCriteriaFactory.DEFAULT_MIN_VALUE;
+
 import entities.Shop;
+import entities.criteria.FilterCriteria;
 import entities.criteria.SearchCriteria;
 import entities.criteria.ShopsSelectionCriteria;
 import java.io.FileNotFoundException;
@@ -44,6 +48,7 @@ public class ShoppinatorFactory {
         initialCriteria.setShopsSelectionCriteria(
             new ShopsSelectionCriteria(shops.stream().map(Shop::getName).toArray(String[]::new))
         );
+        initialCriteria.setFilterCriteria(new FilterCriteria(DEFAULT_MIN_VALUE, DEFAULT_MAX_VALUE));
 
         return initialCriteria;
     }
