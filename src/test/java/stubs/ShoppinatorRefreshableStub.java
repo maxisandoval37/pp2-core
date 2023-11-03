@@ -12,13 +12,13 @@ import entities.criteria.SearchCriteria;
 
 /**
  * <ul>
- * <li>Test implementation of shoppinator facade, that only returns products
+ * <li>Test implementation of shoppinator, that only returns products
  * if the product name is the same as the one passed in the constructor.</li>
  * <li>The search method returns a different list of products if it is called
  * successively.</li>
  * <li>This implementation is used to test the refresh functionality.</li>
  */
-public class ShoppinatorRefreshableCoreTestImpl implements ShoppinatorCore {
+public class ShoppinatorRefreshableStub implements ShoppinatorCore {
 
     private int callCounter;
     private List<Result> currentSearchResult;
@@ -26,7 +26,7 @@ public class ShoppinatorRefreshableCoreTestImpl implements ShoppinatorCore {
     private final List<Result> refreshedSearchResult;
     private final String productToSearch;
 
-    public ShoppinatorRefreshableCoreTestImpl(String productToSearch, List<Result> initialSearchResult,
+    public ShoppinatorRefreshableStub(String productToSearch, List<Result> initialSearchResult,
         List<Result> refreshedProductList) {
         this.currentSearchResult = new ArrayList<>();
         this.initialSearchResult = initialSearchResult;

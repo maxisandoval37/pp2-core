@@ -2,10 +2,8 @@ package acceptance;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static utils.TestUtils.getTestParams;
 import static utils.TestUtils.getTestSearchParams;
 
-import entities.Product;
 import entities.Result;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -13,11 +11,10 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import service.factory.ShoppinatorFactory;
 import shoppinator.core.Shoppinator;
 import shoppinator.core.ShoppinatorCore;
-import stubs.ShoppinatorNonRefreshableFacadeTestImpl;
-import stubs.ShoppinatorRefreshableCoreTestImpl;
+import stubs.ShoppinatorRefreshableStub;
+import stubs.ShopsContainerStub;
 
 class US6 {
 
@@ -32,13 +29,13 @@ class US6 {
         productName = "a";
     }
 
-    public void CA1_setUp() throws FileNotFoundException {
+    public void CA1_setUp() {
         productsToRetrieve = getTestProducts("aa", "ab", "ac");
         productsRetrieved = getTestProducts("aa", "ab", "ac", "ad");
 
-        ShoppinatorCore shoppinatorCore = new ShoppinatorRefreshableCoreTestImpl(productName, productsToRetrieve,
+        ShoppinatorCore shoppinatorCore = new ShoppinatorRefreshableStub(productName, productsToRetrieve,
             productsRetrieved);
-        shoppinator = new Shoppinator(shoppinatorCore, Collections.emptySet());
+        shoppinator = new Shoppinator(shoppinatorCore, new ShopsContainerStub());
     }
 
     @Test
@@ -57,9 +54,9 @@ class US6 {
         productsToRetrieve = getTestProducts("aa", "ab", "ac");
         productsRetrieved = getTestProducts("aa", "ab", "ac");
 
-        ShoppinatorCore shoppinatorCore = new ShoppinatorRefreshableCoreTestImpl(productName, productsToRetrieve,
+        ShoppinatorCore shoppinatorCore = new ShoppinatorRefreshableStub(productName, productsToRetrieve,
             productsRetrieved);
-        shoppinator = new Shoppinator(shoppinatorCore, Collections.emptySet());
+        shoppinator = new Shoppinator(shoppinatorCore, new ShopsContainerStub());
     }
 
     @Test

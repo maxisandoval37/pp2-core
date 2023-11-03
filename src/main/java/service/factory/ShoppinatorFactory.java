@@ -13,6 +13,8 @@ import service.discovery.ShopsDiscoverer;
 import shoppinator.core.Shoppinator;
 import shoppinator.core.ShoppinatorCore;
 import shoppinator.core.ShoppinatorCoreImpl;
+import shoppinator.core.ShopsContainer;
+import shoppinator.core.ShopsContainerImpl;
 import utils.PropertiesHelper;
 
 public class ShoppinatorFactory {
@@ -33,13 +35,14 @@ public class ShoppinatorFactory {
 
     public Shoppinator create(String path) throws FileNotFoundException {
         Set<Shop> shops = shopsDiscoverer.discover(path);
+        ShopsContainer shopsContainer = new ShopsContainerImpl(shops);
         ShoppinatorCore core = new ShoppinatorCoreImpl(shops);
 
         // la app inicia con productos destacados
         SearchCriteria initialCriteria = getInitialCriteria(featuredProduct, shops);
         core.search(initialCriteria);
 
-        return new Shoppinator(core, shops);
+        return new Shoppinator(core, shopsContainer);
     }
 
     private SearchCriteria getInitialCriteria(String featuredProduct, Set<Shop> shops) {

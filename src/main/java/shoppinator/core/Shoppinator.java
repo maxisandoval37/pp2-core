@@ -2,8 +2,11 @@ package shoppinator.core;
 
 import entities.Result;
 import entities.criteria.ShopsSelectionCriteria;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Observer;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -14,16 +17,16 @@ import entities.criteria.SearchCriteria;
 public class Shoppinator {
 
     private final ShoppinatorCore core;
-    private final Set<Shop> shopsToLoad;
+    private final ShopsContainer shopsContainer;
 
     private final SearchCriteriaFactory searchCriteriaFactory;
     private SearchCriteria criteria;
     private SearchCriteria.Memento lastSearchCriteria;
 
-    public Shoppinator(ShoppinatorCore shoppinatorCore, Set<Shop> shops) {
-        searchCriteriaFactory = new SearchCriteriaFactory();
-        core = shoppinatorCore;
-        shopsToLoad = shops;
+    public Shoppinator(ShoppinatorCore shoppinatorCore, ShopsContainer shopsContainer) {
+        this.shopsContainer = shopsContainer;
+        this.searchCriteriaFactory = new SearchCriteriaFactory();
+        this.core = shoppinatorCore;
     }
 
     /**
@@ -86,18 +89,12 @@ public class Shoppinator {
     }
 
     private void loadShops(ShopsSelectionCriteria criteria) {
-        this.core.setShops(shopsToLoad.stream()
-                .filter(shop -> isOneOf(criteria.getSelectedShops(), shop.getName()))
-                .collect(Collectors.toSet()));
-    }
+        Set<Shop> selectedShops = Arrays.stream(criteria.getSelectedShops())
+                .map(shopsContainer::resolveShop)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
 
-    private boolean isOneOf(String[] selectedShops, String shopName) {
-        for (String shop : selectedShops) {
-            if (shop.equals(shopName)) {
-                return true;
-            }
-        }
-        return false;
+        core.setShops(selectedShops);
     }
 
 }

@@ -8,23 +8,22 @@ import java.util.Observer;
 import java.util.Set;
 import entities.Shop;
 import shoppinator.core.ShoppinatorCore;
-import entities.Product;
 import entities.criteria.SearchCriteria;
 
 /**
  * <ul>
- * <li>Test implementation of shoppinator facade, that only returns products
+ * <li>Test implementation of shoppinator, that only returns products
  * if the product name is the same as the one passed in the constructor.</li>
  * <li>The search method returns the same list of products if it is called
  * successively.</li>
  * <li>This implementation is used to test the refresh functionality.</li>
  */
-public class ShoppinatorNonRefreshableFacadeTestImpl implements ShoppinatorCore {
+public class ShoppinatorNonRefreshableStub implements ShoppinatorCore {
 
     private final List<Result> searchResult;
     private final String productToSearch;
 
-    public ShoppinatorNonRefreshableFacadeTestImpl(String aProduct) {
+    public ShoppinatorNonRefreshableStub(String aProduct) {
         this.productToSearch = aProduct;
         this.searchResult = new ArrayList<>();
         searchResult.add(new Result("aa", "", 0L, "", ""));

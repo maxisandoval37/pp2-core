@@ -1,8 +1,10 @@
 package shoppinator.core;
 
-// this class implements IoC for shops implementations
-public class ShopsContainer {
+import entities.Shop;
 
+public interface ShopsContainer {
 
+    void registerShop(String identifier, Shop implementation);
 
+    Shop resolveShop(String identifier);
 }
