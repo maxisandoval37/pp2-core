@@ -17,7 +17,7 @@ class US1 {
     private Shoppinator shoppinator;
 
     private void setUp(String path) throws FileNotFoundException {
-        ShoppinatorFactory shoppinatorFactory = new ShoppinatorFactory("a");
+        ShoppinatorFactory shoppinatorFactory = new ShoppinatorFactory();
         shoppinator = shoppinatorFactory.create(path);
     }
 
@@ -61,24 +61,13 @@ class US1 {
         assertEquals(expectedResult, actualResult);
     }
 
-    @Test
-    void CA5_shouldFindProductsOnShoppinatorCreation() throws FileNotFoundException {
-        this.setUp("src/test/resources/multiple-shops/");
-        List<Result> expectedResult = this.getExpectedResult("a");
-
-        List<Result> featuredSearchResult = shoppinator.getSearchResult();
-
-        assertFalse(featuredSearchResult.isEmpty());
-        assertEquals(expectedResult, featuredSearchResult);
-    }
-
     private List<Result> getExpectedResult(String productName) {
         List<Result> results = new ArrayList<>();
         String[] shopNames = {"F", "G"};
         Long initialPrice = 100L;
 
         for (String shopName : shopNames) {
-            Result result = new Result(productName, shopName, "https://example.com/", initialPrice,
+            Result result = new Result(productName, shopName, initialPrice, "https://example.com/",
                 "https://example.com/");
             results.add(result);
 

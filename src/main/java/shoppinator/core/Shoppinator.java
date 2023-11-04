@@ -15,7 +15,6 @@ import service.assembly.ResultAssembler;
 @SuppressWarnings("deprecation")
 public class Shoppinator extends Observable implements Observer {
 
-    @Getter
     List<Result> searchResult;
     @Getter
     Set<Shop> shops;
