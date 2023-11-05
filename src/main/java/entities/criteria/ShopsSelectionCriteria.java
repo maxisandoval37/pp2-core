@@ -19,7 +19,7 @@ public class ShopsSelectionCriteria extends Criteria {
 
     @Override
     public List<Result> search(String params) {
-        getCriteria(params);
+        setCriteria(params);
 
         params = removeHashTags(params);
         List<Result> result = next.search(params);
@@ -42,7 +42,7 @@ public class ShopsSelectionCriteria extends Criteria {
         return filteredResult;
     }
 
-    private void getCriteria(String params) {
+    private void setCriteria(String params) {
         this.criteria = extractHashTags(params);
     }
 

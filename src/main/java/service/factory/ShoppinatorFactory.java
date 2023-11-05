@@ -19,14 +19,13 @@ public class ShoppinatorFactory {
     }
 
     public Shoppinator create(String path) throws FileNotFoundException {
-        // TODO dejar esto mejor (crear un CriteriaFactory y toda la bola)
         Set<Shop> shops = shopsDiscoverer.discover(path);
         ShoppinatorCore core = new ShoppinatorCore(shops);
 
         Criteria shopsSelectionCriteria = new ShopsSelectionCriteria(core);
         Criteria priceCriteria = new PriceCriteria(shopsSelectionCriteria);
 
-        return new Shoppinator(priceCriteria);
+        return new Shoppinator(priceCriteria, core);
     }
 
 }

@@ -13,9 +13,8 @@ public class PriceCriteria extends Criteria {
     private static final Long DEFAULT_MIN_PRICE = 0L;
     private static final Long DEFAULT_MAX_PRICE = Long.MAX_VALUE;
 
-    @Setter
     private MutablePair<Long, Long> criteria;
-    private Searchable next;
+    private final Searchable next;
 
     public PriceCriteria(Searchable next) {
         this.criteria = new MutablePair<>();
@@ -24,7 +23,7 @@ public class PriceCriteria extends Criteria {
 
     @Override
     public List<Result> search(String params) {
-        getCriteria(params);
+        setCriteria(params);
 
         params = removeNumber(params, "[-+]\\\\d+");
         List<Result> result = next.search(params);
@@ -39,7 +38,7 @@ public class PriceCriteria extends Criteria {
                 .collect(Collectors.toList());
     }
 
-    private void getCriteria(String params) {
+    private void setCriteria(String params) {
         String priceMin = extractNumber(params, "-(\\d+)");
         String priceMax = extractNumber(params, "\\+(\\d+)");
 
@@ -61,7 +60,9 @@ public class PriceCriteria extends Criteria {
     }
 
     private String removeNumber(String params, String regex) {
-        return params.replaceFirst(regex, "");
+        params = params.replaceFirst("[+]\\d+", "");
+        params = params.replaceFirst("[-]\\d+", "");
+        return params;
     }
 
 }
