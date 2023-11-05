@@ -1,21 +1,67 @@
 package shoppinator.core;
 
 import entities.Result;
-import entities.Shop;
-import entities.criteria.SearchCriteria;
+import entities.criteria.Searchable;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
+import lombok.Getter;
+import entities.Shop;
+import entities.Product;
+import service.assembly.ResultAssembler;
 
-public interface ShoppinatorCore {
+@SuppressWarnings("deprecation")
+@Getter
+public class ShoppinatorCore extends Observable implements Searchable, Observer {
 
-    List<Result> search(SearchCriteria criteria);
+    List<Result> searchResult;
+    @Getter
+    Set<Shop> shops;
 
-    List<Result> getSearchResult();
+    private final ResultAssembler resultAssembler;
+    private Set<Product> domainProducts;
 
-    Set<Shop> getShops();
+    public ShoppinatorCore(Set<Shop> shops) {
+        this.setShops(shops);
+        this.domainProducts = new HashSet<>();
+        this.searchResult = new ArrayList<>();
+        this.resultAssembler = new ResultAssembler();
+    }
 
-    void setShops(Set<Shop> shops);
+    @Override
+    public List<Result> search(String params) {
+        this.domainProducts.clear();
+        this.searchResult.clear();
 
-    void addObserver(Observer observer);
+        for (Shop shop : this.shops) {
+            shop.search(params);
+        }
+
+        return this.searchResult;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void update(Observable o, Object products) {
+        this.domainProducts.addAll((Set<Product>) products);
+        this.searchResult = resultAssembler.assembly(domainProducts);
+
+        setChanged();
+        super.notifyObservers(this.searchResult);
+    }
+
+    public void setShops(Set<Shop> shops) {
+        this.shops = shops;
+        this.addObservers();
+    }
+
+    private void addObservers() {
+        for (Shop shop : this.shops) {
+            shop.addObserver(this);
+        }
+    }
+
 }

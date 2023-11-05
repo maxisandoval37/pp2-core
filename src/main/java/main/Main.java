@@ -16,10 +16,7 @@ public class Main {
         ShoppinatorFactory shoppinatorFactory = new ShoppinatorFactory();
         Shoppinator shoppinator = shoppinatorFactory.create("plugins/");
 
-        Map<String, Object> params = new HashMap<>();
-        params.put("productName", "iphone");
-        params.put("selectedShops", new String[]{"f"});
-        shoppinator.search(params);
+        shoppinator.search("webcam -50 +100");
     }
 
     public static void logAsciiArt() {

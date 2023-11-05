@@ -8,7 +8,7 @@ import java.util.Observer;
 import java.util.Set;
 import entities.Shop;
 import shoppinator.core.ShoppinatorCore;
-import entities.criteria.SearchCriteria;
+import entities.criteria.Criteria;
 
 /**
  * <ul>
@@ -32,7 +32,7 @@ public class ShoppinatorNonRefreshableStub implements ShoppinatorCore {
     }
 
     @Override
-    public List<Result> search(SearchCriteria criteria) {
+    public List<Result> search(Criteria criteria) {
         if (!criteria.getProductName().equals(productToSearch)) {
             return Collections.EMPTY_LIST;
         }
