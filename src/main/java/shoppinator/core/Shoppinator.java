@@ -32,7 +32,7 @@ public class Shoppinator {
 
     @SuppressWarnings("deprecation")
     public void addObserver(Observer observer) {
-        this.core.addObserver(observer);
+        this.searcher.addObserver(observer);
     }
 
 }

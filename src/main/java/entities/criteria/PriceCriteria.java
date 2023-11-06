@@ -2,23 +2,27 @@ package entities.criteria;
 
 import entities.Result;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import lombok.Setter;
 import org.apache.commons.lang3.tuple.MutablePair;
 
-public class PriceCriteria extends Criteria {
+@SuppressWarnings("deprecation")
+public class PriceCriteria extends Criteria implements Observer {
 
     private static final Long DEFAULT_MIN_PRICE = 0L;
     private static final Long DEFAULT_MAX_PRICE = Long.MAX_VALUE;
 
     private MutablePair<Long, Long> criteria;
+
     private final Searchable next;
 
     public PriceCriteria(Searchable next) {
         this.criteria = new MutablePair<>();
         this.next = next;
+        next.addObserver(this);
     }
 
     @Override
@@ -29,6 +33,14 @@ public class PriceCriteria extends Criteria {
         List<Result> result = next.search(params);
 
         return meetCriteria(result);
+    }
+
+    @Override
+    public void update(Observable o, Object result) {
+        setChanged();
+        List<Result> filteredResults = meetCriteria((List<Result>) result);
+
+        super.notifyObservers(filteredResults);
     }
 
     @Override

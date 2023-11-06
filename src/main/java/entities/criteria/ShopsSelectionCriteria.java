@@ -3,11 +3,14 @@ package entities.criteria;
 import entities.Result;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class ShopsSelectionCriteria extends Criteria {
+@SuppressWarnings("deprecation")
+public class ShopsSelectionCriteria extends Criteria implements Observer {
 
     private List<String> criteria;
     private final Searchable next;
@@ -15,6 +18,7 @@ public class ShopsSelectionCriteria extends Criteria {
     public ShopsSelectionCriteria(Searchable next) {
         this.criteria = new ArrayList<>();
         this.next = next;
+        next.addObserver(this);
     }
 
     @Override
@@ -25,6 +29,14 @@ public class ShopsSelectionCriteria extends Criteria {
         List<Result> result = next.search(params);
 
         return meetCriteria(result);
+    }
+
+    @Override
+    public void update(Observable o, Object result) {
+        setChanged();
+        List<Result> filteredResults = meetCriteria((List<Result>) result);
+
+        super.notifyObservers(filteredResults);
     }
 
     @Override
