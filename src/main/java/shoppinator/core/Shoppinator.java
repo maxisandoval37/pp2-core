@@ -11,21 +11,19 @@ import java.util.stream.Collectors;
 public class Shoppinator {
 
     private final Searchable searcher;
-    private final ShoppinatorCore core;
+    private final Set<Shop> shops;
 
-    public Shoppinator(Searchable searcher, ShoppinatorCore core) {
-        this.core = core;
+    public Shoppinator(Searchable searcher, Set<Shop> shops) {
+        this.shops = shops;
         this.searcher = searcher;
     }
 
     public List<Result> search(String params) throws IllegalArgumentException {
-        List<Result> results = searcher.search(params);
-        this.core.notifyObservers(results);
-        return results;
+        return searcher.search(params);
     }
 
     public Set<String> getShopNames() {
-        return this.core.getShops().stream()
+        return this.shops.stream()
             .map(Shop::getName)
             .collect(Collectors.toSet());
     }

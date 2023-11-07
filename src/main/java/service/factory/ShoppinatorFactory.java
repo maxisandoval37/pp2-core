@@ -25,7 +25,7 @@ public class ShoppinatorFactory {
         Criteria shopsSelectionCriteria = new ShopsSelectionCriteria(core);
         Criteria priceCriteria = new PriceCriteria(shopsSelectionCriteria);
 
-        return new Shoppinator(priceCriteria, core);
+        return new Shoppinator(priceCriteria, shops);
     }
 
 }
