@@ -6,5 +6,5 @@ import java.util.Observable;
 
 public abstract class Searchable extends Observable {
 
-    public abstract List<Result> search(String params);
+    public abstract List<Result> search(String query);
 }

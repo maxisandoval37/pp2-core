@@ -3,7 +3,6 @@ package service.factory;
 import entities.Shop;
 import entities.criteria.Criteria;
 import entities.criteria.PriceCriteria;
-import entities.criteria.ShopsSelectionCriteria;
 import java.io.FileNotFoundException;
 import java.util.Set;
 import service.discovery.ShopsDiscoverer;
@@ -21,11 +20,9 @@ public class ShoppinatorFactory {
     public Shoppinator create(String path) throws FileNotFoundException {
         Set<Shop> shops = shopsDiscoverer.discover(path);
         ShoppinatorCore core = new ShoppinatorCore(shops);
+        Criteria priceCriteria = new PriceCriteria(core);
 
-        Criteria shopsSelectionCriteria = new ShopsSelectionCriteria(core);
-        Criteria priceCriteria = new PriceCriteria(shopsSelectionCriteria);
-
-        return new Shoppinator(priceCriteria, shops);
+        return new Shoppinator(priceCriteria, core);
     }
 
 }

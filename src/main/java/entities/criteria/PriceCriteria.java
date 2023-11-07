@@ -26,11 +26,11 @@ public class PriceCriteria extends Criteria implements Observer {
     }
 
     @Override
-    public List<Result> search(String params) {
-        setCriteria(params);
+    public List<Result> search(String query) {
+        setCriteria(query);
 
-        params = removeNumber(params, "[-+]\\\\d+");
-        List<Result> result = next.search(params);
+        query = removeNumber(query, "[-+]\\\\d+");
+        List<Result> result = next.search(query);
 
         return meetCriteria(result);
     }
@@ -51,9 +51,9 @@ public class PriceCriteria extends Criteria implements Observer {
                 .collect(Collectors.toList());
     }
 
-    private void setCriteria(String params) {
-        String priceMin = extractNumber(params, "-(\\d+)");
-        String priceMax = extractNumber(params, "\\+(\\d+)");
+    private void setCriteria(String query) {
+        String priceMin = extractNumber(query, "-(\\d+)");
+        String priceMax = extractNumber(query, "\\+(\\d+)");
 
         this.criteria.setLeft((priceMin.isEmpty())
             ? DEFAULT_MIN_PRICE : Long.valueOf(priceMin));
@@ -72,10 +72,10 @@ public class PriceCriteria extends Criteria implements Observer {
         return "";
     }
 
-    private String removeNumber(String params, String regex) {
-        params = params.replaceFirst("[+]\\d+", "");
-        params = params.replaceFirst("[-]\\d+", "");
-        return params;
+    private String removeNumber(String query, String regex) {
+        query = query.replaceFirst("[+]\\d+", "");
+        query = query.replaceFirst("[-]\\d+", "");
+        return query;
     }
 
 }

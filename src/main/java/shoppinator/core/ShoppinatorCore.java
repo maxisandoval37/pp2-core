@@ -32,12 +32,12 @@ public class ShoppinatorCore extends Searchable implements Observer {
     }
 
     @Override
-    public List<Result> search(String params) {
+    public List<Result> search(String query) {
         this.domainProducts.clear();
         this.searchResult.clear();
 
         for (Shop shop : this.shops) {
-            shop.search(params);
+            shop.search(query);
         }
 
         return this.searchResult;
@@ -64,4 +64,13 @@ public class ShoppinatorCore extends Searchable implements Observer {
         }
     }
 
+    public void setShopsByNames(Set<String> shopNames) {
+        Set<Shop> shops = new HashSet<>();
+        for (Shop shop : this.shops) {
+            if (shopNames.contains(shop.getName())) {
+                shops.add(shop);
+            }
+        }
+        this.setShops(shops);
+    }
 }

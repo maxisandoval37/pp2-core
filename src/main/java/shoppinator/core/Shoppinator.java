@@ -11,21 +11,25 @@ import java.util.stream.Collectors;
 public class Shoppinator {
 
     private final Searchable searcher;
-    private final Set<Shop> shops;
+    private final ShoppinatorCore core;
 
-    public Shoppinator(Searchable searcher, Set<Shop> shops) {
-        this.shops = shops;
+    public Shoppinator(Searchable searcher, ShoppinatorCore core) {
+        this.core = core;
         this.searcher = searcher;
     }
 
-    public List<Result> search(String params) throws IllegalArgumentException {
-        return searcher.search(params);
+    public List<Result> search(String query) throws IllegalArgumentException {
+        return searcher.search(query);
     }
 
     public Set<String> getShopNames() {
-        return this.shops.stream()
+        return this.core.getShops().stream()
             .map(Shop::getName)
             .collect(Collectors.toSet());
+    }
+
+    public void setShops(Set<String> shopNames) {
+        this.core.setShopsByNames(shopNames);
     }
 
     @SuppressWarnings("deprecation")
