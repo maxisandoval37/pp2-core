@@ -41,7 +41,7 @@ public class ShopsSelectionCriteria extends Criteria implements Observer {
 
     @Override
     public List<Result> meetCriteria(List<Result> result) {
-        if (criteria == null) {
+        if (criteria.isEmpty()) {
             return result;
         }
 
