@@ -47,6 +47,7 @@ public class PriceCriteria extends Criteria implements Observer {
     public List<Result> meetCriteria(List<Result> result) {
         return result.stream().filter(r ->
                 r.getPrice() >= criteria.getLeft() && r.getPrice() <= criteria.getRight())
+                .sorted((r1, r2) -> (int) (r1.getPrice() - r2.getPrice()))
                 .collect(Collectors.toList());
     }
 
