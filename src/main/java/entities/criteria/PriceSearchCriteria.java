@@ -1,6 +1,8 @@
 package entities.criteria;
 
-import entities.Result;
+import entities.Article;
+import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -10,44 +12,44 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.tuple.MutablePair;
 
 @SuppressWarnings("deprecation")
-public class PriceCriteria extends Criteria implements Observer {
+public class PriceSearchCriteria extends Criteria implements Observer {
 
-    private static final Long DEFAULT_MIN_PRICE = 0L;
-    private static final Long DEFAULT_MAX_PRICE = Long.MAX_VALUE;
+    private static final BigDecimal DEFAULT_MIN_PRICE = BigDecimal.ZERO;
+    private static final BigDecimal DEFAULT_MAX_PRICE = BigDecimal.valueOf(Long.MAX_VALUE);
 
-    private MutablePair<Long, Long> criteria;
+    private MutablePair<BigDecimal, BigDecimal> criteria;
 
     private final Searchable next;
 
-    public PriceCriteria(Searchable next) {
+    public PriceSearchCriteria(Searchable next) {
         this.criteria = new MutablePair<>();
         this.next = next;
         next.addObserver(this);
     }
 
     @Override
-    public List<Result> search(String query) {
+    public List<Article> search(String query) {
         setCriteria(query);
 
         query = removeNumber(query, "[-+]\\\\d+");
-        List<Result> result = next.search(query);
+        List<Article> article = next.search(query);
 
-        return meetCriteria(result);
+        return meetCriteria(article);
     }
 
     @Override
     public void update(Observable o, Object result) {
         setChanged();
-        List<Result> filteredResults = meetCriteria((List<Result>) result);
+        List<Article> filteredArticles = meetCriteria((List<Article>) result);
 
-        super.notifyObservers(filteredResults);
+        super.notifyObservers(filteredArticles);
     }
 
     @Override
-    public List<Result> meetCriteria(List<Result> result) {
-        return result.stream().filter(r ->
-                r.getPrice() >= criteria.getLeft() && r.getPrice() <= criteria.getRight())
-                .sorted((r1, r2) -> (int) (r1.getPrice() - r2.getPrice()))
+    public List<Article> meetCriteria(List<Article> article) {
+        return article.stream().filter(r -> r.getPrice()
+                .compareTo(criteria.getLeft()) >= 0)
+                .sorted(Comparator.comparing(Article::getPrice))
                 .collect(Collectors.toList());
     }
 
@@ -56,9 +58,9 @@ public class PriceCriteria extends Criteria implements Observer {
         String priceMax = extractNumber(query, "\\+(\\d+)");
 
         this.criteria.setLeft((priceMin.isEmpty())
-            ? DEFAULT_MIN_PRICE : Long.valueOf(priceMin));
+            ? DEFAULT_MIN_PRICE : new BigDecimal(priceMin));
         this.criteria.setRight((priceMax.isEmpty())
-            ? DEFAULT_MAX_PRICE : Long.valueOf(priceMax));
+            ? DEFAULT_MAX_PRICE : new BigDecimal(priceMax));
     }
 
     private String extractNumber(String params, String regex) {

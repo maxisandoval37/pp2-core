@@ -1,6 +1,6 @@
 package shoppinator.core;
 
-import entities.Result;
+import entities.Article;
 import entities.criteria.Searchable;
 import java.util.List;
 import java.util.Observer;
@@ -18,7 +18,7 @@ public class Shoppinator {
         this.searcher = searcher;
     }
 
-    public List<Result> search(String query) throws IllegalArgumentException {
+    public List<Article> search(String query) throws IllegalArgumentException {
         return searcher.search(query);
     }
 

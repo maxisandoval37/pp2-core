@@ -1,5 +1,7 @@
 package entities;
 
+import java.math.BigDecimal;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Set;
 import lombok.Getter;
@@ -10,9 +12,9 @@ public abstract class Shop extends Observable {
 
     public String name;
 
-    public abstract Set<Product> search(String productName);
+    public abstract Set<Map<String, BigDecimal>> search(String productName);
 
-    protected void notifySearchResult(Set<Product> newProducts) {
+    protected void notifySearchResult(Set<Set<Map<String, BigDecimal>>> newProducts) {
         setChanged();
         super.notifyObservers(newProducts);
     }

@@ -1,56 +1,61 @@
 package shoppinator.core;
 
-import entities.Result;
+import entities.Article;
+import entities.Shop;
 import entities.criteria.Searchable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
 import lombok.Getter;
-import entities.Shop;
-import entities.Product;
-import service.assembly.ResultAssembler;
+import service.assembly.ArticlesAssembler;
 
 @SuppressWarnings("deprecation")
 @Getter
 public class ShoppinatorCore extends Searchable implements Observer {
 
-    List<Result> searchResult;
     @Getter
-    Set<Shop> shops;
+    private Set<Shop> shops;
 
-    private final ResultAssembler resultAssembler;
-    private Set<Product> domainProducts;
+    private Set<Shop> shopsToLoad;
+
+    private final ArticlesAssembler articlesAssembler;
+
+    private List<Article> articles;
+
+    private Set<Map<String, BigDecimal>> domainProducts;
 
     public ShoppinatorCore(Set<Shop> shops) {
         this.setShops(shops);
         this.domainProducts = new HashSet<>();
-        this.searchResult = new ArrayList<>();
-        this.resultAssembler = new ResultAssembler();
+        this.articles = new ArrayList<>();
+        this.articlesAssembler = new ArticlesAssembler();
     }
 
     @Override
-    public List<Result> search(String query) {
+    public List<Article> search(String query) {
         this.domainProducts.clear();
-        this.searchResult.clear();
+        this.articles.clear();
 
         for (Shop shop : this.shops) {
             shop.search(query);
         }
 
-        return this.searchResult;
+        return this.articles;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public void update(Observable o, Object products) {
-        this.domainProducts.addAll((Set<Product>) products);
-        this.searchResult = resultAssembler.assembly(domainProducts);
+        this.domainProducts.addAll((Set<Map<String, BigDecimal>>) products);
+        this.articles = articlesAssembler.assembly(domainProducts, "");
 
         setChanged();
-        super.notifyObservers(this.searchResult);
+        super.notifyObservers(this.articles);
     }
 
     public void setShops(Set<Shop> shops) {
@@ -65,12 +70,12 @@ public class ShoppinatorCore extends Searchable implements Observer {
     }
 
     public void setShopsByNames(Set<String> shopNames) {
-        Set<Shop> shops = new HashSet<>();
-        for (Shop shop : this.shops) {
+        Set<Shop> selectedShops = new HashSet<>();
+        for (Shop shop : shopsToLoad) {
             if (shopNames.contains(shop.getName())) {
-                shops.add(shop);
+                selectedShops.add(shop);
             }
         }
-        this.setShops(shops);
+        this.setShops(selectedShops);
     }
 }
