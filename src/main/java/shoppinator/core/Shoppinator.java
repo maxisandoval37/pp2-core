@@ -30,6 +30,10 @@ public class Shoppinator extends Observable implements Observer {
     public List<Article> search(String productName) {
         this.articles.clear();
 
+        if (shops.isEmpty()) {
+            super.notifyObservers(this.articles);
+        }
+
         for (Shop shop : this.shops) {
             shop.search(productName);
         }
