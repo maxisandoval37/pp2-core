@@ -35,7 +35,7 @@ class US2 {
 
     @Test
     void CA3_DiscoveryOnEmptyFolder_ShouldReturn_EmptySet() throws FileNotFoundException {
-        String emptyFolderPath = "src/test/resources/empty-folder";
+        String emptyFolderPath = "src/test/resources/no-shops";
 
         Set<Shop> result = shopsDiscoverer.discover(emptyFolderPath);
 
@@ -53,7 +53,7 @@ class US2 {
 
     @Test
     void CA5_DiscoveryOnFolderWithOneShopFile_ShouldReturn_SetWithONEShop() throws FileNotFoundException {
-        String simpleShopPath = "src/test/resources/simple-shop";
+        String simpleShopPath = "src/test/resources/single-shop";
 
         Set<Shop> result = shopsDiscoverer.discover(simpleShopPath);
 

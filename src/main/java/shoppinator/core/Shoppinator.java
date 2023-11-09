@@ -16,22 +16,18 @@ import service.assembly.ArticlesAssembler;
 @SuppressWarnings("deprecation")
 public class Shoppinator extends Observable implements Observer {
 
-    List<Article> articles;
     @Getter
-    Set<Shop> shops;
-
+    private Set<Shop> shops;
     private final ArticlesAssembler articlesAssembler;
-    private Set<Map<String, BigDecimal>> domainProducts;
+    private List<Article> articles;
 
     public Shoppinator(Set<Shop> shops) {
         this.setShops(shops);
-        this.domainProducts = new HashSet<>();
         this.articles = new ArrayList<>();
         this.articlesAssembler = new ArticlesAssembler();
     }
 
     public List<Article> search(String productName) {
-        this.domainProducts.clear();
         this.articles.clear();
 
         for (Shop shop : this.shops) {
@@ -45,14 +41,13 @@ public class Shoppinator extends Observable implements Observer {
     @SuppressWarnings("unchecked")
     public void update(Observable o, Object products) {
         Shop shop = (Shop) o;
-        this.domainProducts.addAll((Set<Map<String, BigDecimal>>) products);
-        this.articles.addAll(articlesAssembler.assembly(domainProducts, shop.getName()));
+        this.articles.addAll(articlesAssembler.assembly((Set<Map<String, BigDecimal>>) products, shop.getName()));
 
         setChanged();
         super.notifyObservers(this.articles);
     }
 
-    public void setShops(Set<Shop> shops) {
+    private void setShops(Set<Shop> shops) {
         this.shops = shops;
         this.addObservers();
     }

@@ -4,8 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import entities.Result;
+import entities.Article;
+import entities.Article;
 import java.io.FileNotFoundException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -22,80 +24,54 @@ class US1 {
     }
 
     @Test
-    void CA1_shouldReturnProductsOrderedByPriceOnSearch_WhenProductIsAvailableInShops() throws FileNotFoundException {
+    void CA1_shouldReturnProductsOrderedByPriceOnSearch_WithMultipleShops() throws FileNotFoundException {
         this.setUp("src/test/resources/multiple-shops/");
-        List<Result> expectedResult = this.getExpectedResult("a");
+        List<Article> expectedArticle = this.getExpectedArticle("a", "F", "G");
 
-        List<Result> actualResult = shoppinator.search("a");
+        List<Article> actualArticle = shoppinator.search("a");
 
-        assertFalse(actualResult.isEmpty());
-        assertEquals(expectedResult, actualResult);
-        assertTrue(isSortedByPrice(expectedResult));
+        assertEquals(expectedArticle, actualArticle);
     }
 
     @Test
-    void CA2_shouldNotFindProductsOnSearch_WhenProductIsNotAvailableInShops() throws FileNotFoundException {
-        this.setUp("src/test/resources/simple-shop/");
+    void CA2_shouldReturnProductsOrderedByPriceOnSearch_WithASingleShop() throws FileNotFoundException {
+        this.setUp("src/test/resources/single-shop/");
+        List<Article> expectedArticle = this.getExpectedArticle("a", "F");
 
-        List<Result> searchResult = shoppinator.search("e");
+        List<Article> actualArticle = shoppinator.search("a");
 
-        assertTrue(searchResult.isEmpty());
+        assertEquals(expectedArticle, actualArticle);
     }
 
     @Test
-    void CA3_shouldNotFindProductsOnSearch_WhenNoShopsAreLoaded() throws FileNotFoundException {
-        this.setUp("src/test/resources/empty-folder/");
+    void CA3_shouldNotReturnProductsOnSearch_WithNoShops() throws FileNotFoundException {
+        this.setUp("src/test/resources/no-shops/");
+        List<Article> actualArticle = shoppinator.search("a");
 
-        List<Result> searchResult = shoppinator.search("a");
-        assertTrue(searchResult.isEmpty());
+        assertTrue(actualArticle.isEmpty());
     }
 
     @Test
-    void CA4_shouldFindProductsOnSearch_WhenMultipleShopsAreLoaded_AndProductIsAvailableInShops() throws FileNotFoundException {
+    void CA2_shouldNotReturnProductsOnSearch_WhenProductIsNotAvailableInShops() throws FileNotFoundException {
         this.setUp("src/test/resources/multiple-shops/");
-        List<Result> expectedResult = this.getExpectedResult("a");
 
-        List<Result> actualResult = shoppinator.search("a");
+        List<Article> searchArticle = shoppinator.search("e");
 
-        assertFalse(actualResult.isEmpty());
-        assertEquals(expectedResult, actualResult);
+        assertTrue(searchArticle.isEmpty());
     }
 
-    private List<Result> getExpectedResult(String productName) {
-        List<Result> results = new ArrayList<>();
-        String[] shopNames = {"F", "G"};
-        Long initialPrice = 100L;
+    private List<Article> getExpectedArticle(String productName, String... shopNames) {
+        List<Article> Articles = new ArrayList<>();
+        BigDecimal initialPrice = new BigDecimal(100);
 
         for (String shopName : shopNames) {
-            Result result = new Result(productName, shopName, initialPrice, "https://example.com/",
-                "https://example.com/");
-            results.add(result);
+            Article Article = new Article(productName, shopName, initialPrice);
+            Articles.add(Article);
 
-            initialPrice += 100L;
+            initialPrice = initialPrice.add(new BigDecimal(100));
         }
 
-        return results;
+        return Articles;
     }
 
-    private boolean isSortedByPrice(List<Result> results) {
-        Long[] prices = getProductPrices(results);
-
-        for (int i = 0; i < prices.length - 1; i++) {
-            if (prices[i] > prices[i + 1]) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private Long[] getProductPrices(List<Result> result) {
-        Long[] prices = new Long[result.size()];
-
-        for (int i = 0; i < result.size(); i++) {
-            prices[i] = result.get(i).getPrice();
-        }
-
-        return prices;
-    }
 }
