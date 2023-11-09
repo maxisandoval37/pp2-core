@@ -1,57 +1,53 @@
 package shoppinator.core;
 
-import entities.Product;
-import entities.Result;
-import entities.Shop;
+import entities.Article;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
+import entities.Shop;
 import lombok.Getter;
-import service.assembly.ResultAssembler;
+import service.assembly.ArticlesAssembler;
 
 @SuppressWarnings("deprecation")
 public class Shoppinator extends Observable implements Observer {
 
     @Getter
-    List<Result> searchResult;
-    @Getter
-    Set<Shop> shops;
-
-    private final ResultAssembler resultAssembler;
-    private Set<Product> domainProducts;
+    private Set<Shop> shops;
+    private final ArticlesAssembler articlesAssembler;
+    private List<Article> articles;
 
     public Shoppinator(Set<Shop> shops) {
         this.setShops(shops);
-        this.domainProducts = new HashSet<>();
-        this.searchResult = new ArrayList<>();
-        this.resultAssembler = new ResultAssembler();
+        this.articles = new ArrayList<>();
+        this.articlesAssembler = new ArticlesAssembler();
     }
 
-    public List<Result> search(String productName) {
-        this.domainProducts.clear();
-        this.searchResult.clear();
+    public List<Article> search(String productName) {
+        this.articles.clear();
 
         for (Shop shop : this.shops) {
             shop.search(productName);
         }
 
-        return this.searchResult;
+        return this.articles;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public void update(Observable o, Object products) {
-        this.domainProducts.addAll((Set<Product>) products);
-        this.searchResult = resultAssembler.assembly(domainProducts);
+        Shop shop = (Shop) o;
+        this.articles.addAll(articlesAssembler.assembly((Set<Map<String, BigDecimal>>) products, shop.getName()));
 
         setChanged();
-        super.notifyObservers(this.searchResult);
+        super.notifyObservers(this.articles);
     }
 
-    public void setShops(Set<Shop> shops) {
+    private void setShops(Set<Shop> shops) {
         this.shops = shops;
         this.addObservers();
     }
