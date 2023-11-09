@@ -44,8 +44,9 @@ public class Shoppinator extends Observable implements Observer {
     @Override
     @SuppressWarnings("unchecked")
     public void update(Observable o, Object products) {
+        Shop shop = (Shop) o;
         this.domainProducts.addAll((Set<Map<String, BigDecimal>>) products);
-        this.articles = articlesAssembler.assembly(domainProducts, "");
+        this.articles.addAll(articlesAssembler.assembly(domainProducts, shop.getName()));
 
         setChanged();
         super.notifyObservers(this.articles);
