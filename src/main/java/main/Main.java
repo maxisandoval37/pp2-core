@@ -16,7 +16,7 @@ public class Main {
         ShoppinatorFactory shoppinatorFactory = new ShoppinatorFactory();
         Shoppinator shoppinator = shoppinatorFactory.create("plugins/");
 
-        shoppinator.search("webcam -50 +100 #F #G");
+        shoppinator.search("webcam -50 +100");
     }
 
     public static void logAsciiArt() {

@@ -1,27 +1,27 @@
 package utils;
 
-import java.util.Map;
+import entities.Article;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestUtils {
 
     public TestUtils() {
     }
 
-    public static String[] getTestParams(String path, String productsToSearch) {
-        return new String[]{path, productsToSearch, "0", "1000"};
-    }
+    public static List<Article> getExpectedArticles(String productName, String... shopNames) {
+        List<Article> Articles = new ArrayList<>();
+        BigDecimal initialPrice = new BigDecimal(100);
 
-    public static Map<String, Object> getTestSearchParams(String productName) {
-        return Map.of("productName", productName, "selectedShops", new String[]{"F", "G"});
-    }
+        for (String shopName : shopNames) {
+            Article Article = new Article(productName, shopName, initialPrice);
+            Articles.add(Article);
 
-    public static Map<String, Object> getTestSearchParams(String aProduct, Long minPrice, Long maxPrice) {
-        return Map.of("productName", aProduct, "minPrice", minPrice, "maxPrice", maxPrice, "selectedShops",
-            new String[]{"F", "G"});
-    }
+            initialPrice = initialPrice.add(new BigDecimal(100));
+        }
 
-    public static Map<String, Object> getTestSearchParams(String webcam, String[] selectedShops) {
-        return Map.of("productName", webcam, "selectedShops", selectedShops);
+        return Articles;
     }
 
 }

@@ -5,12 +5,14 @@ import entities.Shop;
 import entities.criteria.Searchable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import service.assembly.ArticlesAssembler;
 
@@ -51,8 +53,8 @@ public class ShoppinatorCore extends Searchable implements Observer {
     @Override
     @SuppressWarnings("unchecked")
     public void update(Observable o, Object products) {
-        this.domainProducts.addAll((Set<Map<String, BigDecimal>>) products);
-        this.articles = articlesAssembler.assembly(domainProducts, "");
+        Shop shop = (Shop) o;
+        this.articles.addAll(articlesAssembler.assembly((Set<Map<String, BigDecimal>>) products, shop.getName()));
 
         setChanged();
         super.notifyObservers(this.articles);
@@ -69,10 +71,17 @@ public class ShoppinatorCore extends Searchable implements Observer {
         }
     }
 
-    public void setShopsByNames(Set<String> shopNames) {
+    public Set<String> getShopNames() {
+        return this.shops.stream()
+            .map(Shop::getName)
+            .collect(Collectors.toSet());
+    }
+
+    public void setShops(String... shopNames) {
         Set<Shop> selectedShops = new HashSet<>();
+        List<String> shops = Arrays.asList(shopNames);
         for (Shop shop : shopsToLoad) {
-            if (shopNames.contains(shop.getName())) {
+            if (shops.contains(shop.getName())) {
                 selectedShops.add(shop);
             }
         }

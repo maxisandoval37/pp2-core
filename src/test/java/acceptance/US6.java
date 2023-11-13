@@ -1,84 +1,84 @@
 package acceptance;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static utils.TestUtils.getTestSearchParams;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static utils.TestUtils.getExpectedArticles;
 
-import entities.Result;
+import entities.Article;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import service.factory.ShoppinatorFactory;
 import shoppinator.core.Shoppinator;
-import shoppinator.core.ShoppinatorCore;
-import stubs.ShoppinatorRefreshableStub;
-import stubs.ShopsContainerStub;
+import utils.ProductsListener;
 
 class US6 {
 
     private Shoppinator shoppinator;
-    private List<Result> productsToRetrieve;
-    private List<Result> productsRetrieved;
-    private String productName;
+    private ProductsListener listener;
 
+    public void setUp(String path) throws FileNotFoundException {
+        listener = new ProductsListener();
 
-    @BeforeEach
-    public void setUp() {
-        productName = "a";
+        ShoppinatorFactory factory = new ShoppinatorFactory();
+        shoppinator = factory.create(path);
+        shoppinator.addObserver(listener);
     }
 
-    public void CA1_setUp() {
-        productsToRetrieve = getTestProducts("aa", "ab", "ac");
-        productsRetrieved = getTestProducts("aa", "ab", "ac", "ad");
+    public void tearDown() {
+        File triggerFile = new File("src/test/resources/refresh/trigger-refresh.txt");
 
-        ShoppinatorCore shoppinatorCore = new ShoppinatorRefreshableStub(productName, productsToRetrieve,
-            productsRetrieved);
-        shoppinator = new Shoppinator(shoppinatorCore, new ShopsContainerStub());
-    }
-
-    @Test
-    void CA1_shouldUpdateProductListWhenSearchIsRefreshed() throws FileNotFoundException {
-        CA1_setUp();
-
-        List<Result> productsBeforeUpdate = new ArrayList<>(shoppinator.search(getTestSearchParams(productName)));
-        List<Result> productsAfterUpdate = new ArrayList<>(shoppinator.refresh());
-
-        assertEquals(productsBeforeUpdate, productsToRetrieve);
-        assertEquals(productsAfterUpdate, productsRetrieved);
-        assertNotEquals(productsBeforeUpdate, productsAfterUpdate);
-    }
-
-    void CA2_setUp() {
-        productsToRetrieve = getTestProducts("aa", "ab", "ac");
-        productsRetrieved = getTestProducts("aa", "ab", "ac");
-
-        ShoppinatorCore shoppinatorCore = new ShoppinatorRefreshableStub(productName, productsToRetrieve,
-            productsRetrieved);
-        shoppinator = new Shoppinator(shoppinatorCore, new ShopsContainerStub());
+        if (triggerFile.exists()) {
+            triggerFile.delete();
+        }
     }
 
     @Test
-    void CA2_shouldNOTUpdateProductListWhenSearchIsRefreshed() {
-        CA2_setUp();
+    void CA1_shouldReceiveProductsWhenShopSendNotifications() throws IOException {
+        setUp("src/test/resources/refreshable-shop/");
+        List<Article> expected = getExpectedArticles("a", "R");
 
-        List<Result> productsBeforeUpdate = new ArrayList<>(shoppinator.search(getTestSearchParams(productName)));
-        List<Result> productsAfterUpdate = new ArrayList<>(shoppinator.refresh());
+        shoppinator.search("webcam");
+        assertEquals(new ArrayList<>(), listener.products);
 
-        assertEquals(productsBeforeUpdate, productsToRetrieve);
-        assertEquals(productsAfterUpdate, productsRetrieved);
-        assertEquals(productsBeforeUpdate, productsAfterUpdate);
-    }
+        File triggerFile = new File("src/test/resources/refresh/trigger-refresh-CA1.txt");
+        triggerFile.createNewFile();
 
-    private List<Result> getTestProducts(String... productNames) {
-        List<Result> products = new ArrayList<>();
-
-        for (String productName : productNames) {
-            products.add(new Result(productName, "Fake Shop", 1L, "http://example.com", "http://example.com"));
+        while (listener.products.isEmpty()) {
+            try {
+                triggerFile.setLastModified(System.currentTimeMillis());
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
-        return products;
+        assertEquals(expected, listener.products);
+        triggerFile.delete();
+    }
+
+
+
+    @Test
+    void CA2_shouldReceiveProductsWhenShopSendsNotifications() throws IOException {
+        setUp("src/test/resources/non-refreshable-shop/");
+
+        shoppinator.search("webcam");
+        assertEquals(new ArrayList<>(), listener.products);
+
+        File triggerFile = new File("src/test/resources/refresh/trigger-refresh-CA2.txt");
+        triggerFile.createNewFile();
+
+        assertEquals(new ArrayList<>(), listener.products);
+        triggerFile.delete();
+    }
+
+    private void assertEquals(List<Article> expected, List<Article> products) {
+        for(Article article : expected) {
+            assertTrue(products.contains(article));
+        }
     }
 
 }

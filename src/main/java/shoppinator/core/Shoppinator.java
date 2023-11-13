@@ -28,8 +28,8 @@ public class Shoppinator {
             .collect(Collectors.toSet());
     }
 
-    public void setShops(Set<String> shopNames) {
-        this.core.setShopsByNames(shopNames);
+    public void setShops(String... shopNames) {
+        this.core.setShops(shopNames);
     }
 
     @SuppressWarnings("deprecation")

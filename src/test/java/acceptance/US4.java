@@ -1,10 +1,10 @@
 package acceptance;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static utils.TestUtils.getTestSearchParams;
 
-import entities.Result;
+import entities.Article;
 import java.io.FileNotFoundException;
+import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,37 +20,39 @@ class US4 {
 
     @BeforeEach
     public void setUp() throws FileNotFoundException {
-        ShoppinatorFactory shoppinatorFactory = new ShoppinatorFactory("a");
+        ShoppinatorFactory shoppinatorFactory = new ShoppinatorFactory();
         shoppinator = shoppinatorFactory.create("src/test/resources/multiple-shops/");
     }
 
     @Test
     void CA1_filterProductsWithAPriceLessThanASpecifiedValue() {
-        List<Result> retrievedProducts = shoppinator.search(getTestSearchParams("webcam", 0L, 100L));
+        List<Article> retrievedProducts = shoppinator.search("webcam -0 -100");
 
-        assertTrue(retrievedProducts.stream().allMatch(x -> x.getPrice() <= 100L));
+        assertTrue(retrievedProducts.stream().allMatch(x -> x.getPrice().compareTo(new BigDecimal(100)) < 0));
     }
 
     @Test
     void CA2_filterProductsWithAPriceGreaterThanASpecifiedValue() {
-        List<Result> retrievedProducts = shoppinator.search(getTestSearchParams("Notebook", defaultMinPrice, 50L));
+        List<Article> retrievedProducts = shoppinator.search("Notebook +50");
 
-        assertTrue(retrievedProducts.stream().allMatch(x -> x.getPrice() >= 50L));
+        assertTrue(retrievedProducts.stream().allMatch(x -> x.getPrice().compareTo(new BigDecimal(50)) > 0));
     }
 
     @Test
     void CA3_filterProductsWithinAPriceRange() {
-        List<Result> retrievedProducts = shoppinator.search(getTestSearchParams("Notebook", 50L, 100L));
+        List<Article> retrievedProducts = shoppinator.search("Notebook -50 +100");
 
-        assertTrue(retrievedProducts.stream().allMatch(x -> x.getPrice() >= 50L && x.getPrice() <= 100L));
+        assertTrue(retrievedProducts.stream().allMatch(x -> x.getPrice().compareTo(new BigDecimal(50)) > 0
+            && x.getPrice().compareTo(new BigDecimal(100)) < 0));
     }
 
     @Test
     void CA3_filterProductsWithinDefaultPriceRange() {
-        List<Result> retrievedProducts = shoppinator.search(getTestSearchParams("Notebook"));
+        List<Article> retrievedProducts = shoppinator.search("Notebook");
 
         assertTrue(retrievedProducts.stream()
-            .allMatch(x -> x.getPrice() >= defaultMinPrice && x.getPrice() <= defaultMaxPrice));
+            .allMatch(x -> x.getPrice().compareTo(new BigDecimal(defaultMinPrice)) > 0
+                && x.getPrice().compareTo(new BigDecimal(defaultMaxPrice)) < 0));
     }
 
 }
