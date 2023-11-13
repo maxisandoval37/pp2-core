@@ -46,12 +46,15 @@ public class PriceSearchCriteria extends Criteria implements Observer {
     }
 
     @Override
-    public List<Article> meetCriteria(List<Article> article) {
-        return article.stream().filter(r -> r.getPrice()
-                .compareTo(criteria.getLeft()) >= 0)
-                .sorted(Comparator.comparing(Article::getPrice))
-                .collect(Collectors.toList());
+    public List<Article> meetCriteria(List<Article> articles) {
+        return articles.stream()
+            .filter(article ->
+                article.getPrice().compareTo(criteria.getLeft()) >= 0 &&
+                    article.getPrice().compareTo(criteria.getRight()) <= 0)
+            .sorted(Comparator.comparing(Article::getPrice))
+            .collect(Collectors.toList());
     }
+
 
     private void setCriteria(String query) {
         String priceMin = extractNumber(query, "-(\\d+)");
@@ -76,7 +79,7 @@ public class PriceSearchCriteria extends Criteria implements Observer {
 
     private String removeNumber(String query, String regex) {
         query = query.replaceFirst("[+]\\d+", "");
-        query = query.replaceFirst("[-]\\d+", "");
+        query = query.replaceFirst("-\\d+", "");
         return query;
     }
 

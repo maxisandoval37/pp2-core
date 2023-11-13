@@ -28,7 +28,7 @@ class US6 {
     }
 
     public void tearDown() {
-        File triggerFile = new File("src/test/resources/refresh/trigger-refresh.txt");
+        File triggerFile = new File("src/test/resources/US6/refresh/trigger-refresh.txt");
 
         if (triggerFile.exists()) {
             triggerFile.delete();
@@ -37,13 +37,13 @@ class US6 {
 
     @Test
     void CA1_shouldReceiveProductsWhenShopSendNotifications() throws IOException {
-        setUp("src/test/resources/refreshable-shop/");
+        setUp("src/test/resources/US6/refreshable-shop/");
         List<Article> expected = getExpectedArticles("a", "R");
 
         shoppinator.search("webcam");
         assertEquals(new ArrayList<>(), listener.products);
 
-        File triggerFile = new File("src/test/resources/refresh/trigger-refresh-CA1.txt");
+        File triggerFile = new File("src/test/resources/US6/refresh/trigger-refresh-CA1.txt");
         triggerFile.createNewFile();
 
         while (listener.products.isEmpty()) {
@@ -63,12 +63,12 @@ class US6 {
 
     @Test
     void CA2_shouldReceiveProductsWhenShopSendsNotifications() throws IOException {
-        setUp("src/test/resources/non-refreshable-shop/");
+        setUp("src/test/resources/US6/non-refreshable-shop/");
 
         shoppinator.search("webcam");
         assertEquals(new ArrayList<>(), listener.products);
 
-        File triggerFile = new File("src/test/resources/refresh/trigger-refresh-CA2.txt");
+        File triggerFile = new File("src/test/resources/US6/refresh/trigger-refresh-CA2.txt");
         triggerFile.createNewFile();
 
         assertEquals(new ArrayList<>(), listener.products);

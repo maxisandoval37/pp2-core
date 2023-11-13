@@ -21,29 +21,29 @@ class US4 {
     @BeforeEach
     public void setUp() throws FileNotFoundException {
         ShoppinatorFactory shoppinatorFactory = new ShoppinatorFactory();
-        shoppinator = shoppinatorFactory.create("src/test/resources/multiple-shops/");
+        shoppinator = shoppinatorFactory.create("src/test/resources/US4/");
     }
 
     @Test
     void CA1_filterProductsWithAPriceLessThanASpecifiedValue() {
-        List<Article> retrievedProducts = shoppinator.search("webcam -0 -100");
+        List<Article> retrievedProducts = shoppinator.search("webcam -0 +100");
 
-        assertTrue(retrievedProducts.stream().allMatch(x -> x.getPrice().compareTo(new BigDecimal(100)) < 0));
+        assertTrue(retrievedProducts.stream().allMatch(x -> x.getPrice().compareTo(new BigDecimal(100)) <= 0));
     }
 
     @Test
     void CA2_filterProductsWithAPriceGreaterThanASpecifiedValue() {
         List<Article> retrievedProducts = shoppinator.search("Notebook +50");
 
-        assertTrue(retrievedProducts.stream().allMatch(x -> x.getPrice().compareTo(new BigDecimal(50)) > 0));
+        assertTrue(retrievedProducts.stream().allMatch(x -> x.getPrice().compareTo(new BigDecimal(50)) >= 0));
     }
 
     @Test
     void CA3_filterProductsWithinAPriceRange() {
         List<Article> retrievedProducts = shoppinator.search("Notebook -50 +100");
 
-        assertTrue(retrievedProducts.stream().allMatch(x -> x.getPrice().compareTo(new BigDecimal(50)) > 0
-            && x.getPrice().compareTo(new BigDecimal(100)) < 0));
+        assertTrue(retrievedProducts.stream().allMatch(x -> x.getPrice().compareTo(new BigDecimal(50)) >= 0
+            && x.getPrice().compareTo(new BigDecimal(100)) <= 0));
     }
 
     @Test
@@ -51,8 +51,8 @@ class US4 {
         List<Article> retrievedProducts = shoppinator.search("Notebook");
 
         assertTrue(retrievedProducts.stream()
-            .allMatch(x -> x.getPrice().compareTo(new BigDecimal(defaultMinPrice)) > 0
-                && x.getPrice().compareTo(new BigDecimal(defaultMaxPrice)) < 0));
+            .allMatch(x -> x.getPrice().compareTo(new BigDecimal(defaultMinPrice)) >= 0
+                && x.getPrice().compareTo(new BigDecimal(defaultMaxPrice)) <= 0));
     }
 
 }

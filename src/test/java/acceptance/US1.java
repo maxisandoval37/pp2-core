@@ -32,7 +32,7 @@ class US1 {
 
     @Test
     void CA2_shouldReturnProductsOrderedByPriceOnSearch_WithASingleShop() throws FileNotFoundException {
-        this.setUp("src/test/resources/single-shop/");
+        this.setUp("src/test/resources/simple-shop/");
         List<Article> expectedArticle = getExpectedArticles("a", "F");
 
         List<Article> actualArticle = shoppinator.search("a");
