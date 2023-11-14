@@ -27,14 +27,6 @@ class US6 {
         shoppinator.addObserver(listener);
     }
 
-    public void tearDown() {
-        File triggerFile = new File("src/test/resources/US6/refresh/trigger-refresh.txt");
-
-        if (triggerFile.exists()) {
-            triggerFile.delete();
-        }
-    }
-
     @Test
     void CA1_shouldReceiveProductsWhenShopSendNotifications() throws IOException {
         setUp("src/test/resources/US6/refreshable-shop/");
@@ -58,8 +50,6 @@ class US6 {
         assertEquals(expected, listener.products);
         triggerFile.delete();
     }
-
-
 
     @Test
     void CA2_shouldReceiveProductsWhenShopSendsNotifications() throws IOException {
