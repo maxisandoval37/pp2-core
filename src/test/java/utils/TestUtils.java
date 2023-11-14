@@ -1,5 +1,7 @@
 package utils;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import entities.Article;
 import java.math.BigDecimal;
 import java.util.ArrayList;

@@ -5,6 +5,8 @@ import static utils.TestUtils.getExpectedArticles;
 
 import entities.Article;
 import java.io.FileNotFoundException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,41 +15,42 @@ import shoppinator.core.Shoppinator;
 
 class US5 {
 
+    private List<Article> expected;
     private Shoppinator shoppinator;
 
     @BeforeEach
     public void setUp() throws FileNotFoundException {
         ShoppinatorFactory shoppinatorFactory = new ShoppinatorFactory();
-        shoppinator = shoppinatorFactory.create("src/test/resources/multiple-shops/");
+        shoppinator = shoppinatorFactory.create("src/test/resources/US5/");
     }
 
     @Test
     void CA1_oneShopIsSelectedShouldSearchInOneShop() {
-        List<Article> retrievedProducts = getExpectedArticles("webcam", "F");
+        expected = new ArrayList<>();
+        expected.add(new Article("a", "F", new BigDecimal(100)));
 
         shoppinator.setShops("F");
-        shoppinator.search("webcam");
-
-        assertTrue(retrievedProducts.stream().allMatch(x -> x.getShop().equals("F")));
+        assertTrue(expected.equals(shoppinator.search("a")));
     }
 
     @Test
     void CA2_noShopsAreSelectedShouldSearchInAllAvailableShops() {
-        List<Article> retrievedProducts = getExpectedArticles("webcam", "F", "G");
+        expected = new ArrayList<>();
+        expected.add(new Article("a", "G", new BigDecimal(50)));
+        expected.add(new Article("a", "F", new BigDecimal(100)));
+        expected.add(new Article("a", "M", new BigDecimal(200)));
 
-        shoppinator.search("webcam");
-
-        assertTrue(retrievedProducts.stream().anyMatch(x -> x.getShop().equals("F") || x.getShop().equals("G")));
+        assertTrue(expected.equals(shoppinator.search("a")));
     }
 
     @Test
     void CA3_multipleShopsAreSelectedShouldSearchInMultipleShops() {
-        List<Article> retrievedProducts = getExpectedArticles("webcam", "F", "G");
+        expected = new ArrayList<>();
+        expected.add(new Article("a", "G", new BigDecimal(50)));
+        expected.add(new Article("a", "F", new BigDecimal(100)));
 
         shoppinator.setShops("F", "G");
-        shoppinator.search("webcam");
-
-        assertTrue(retrievedProducts.stream().anyMatch(x -> x.getShop().equals("F") || x.getShop().equals("G")));
+        assertTrue(expected.equals(shoppinator.search("a")));
     }
 
 }
