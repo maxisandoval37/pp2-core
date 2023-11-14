@@ -1,14 +1,11 @@
 package acceptance;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static utils.TestUtils.getExpectedArticles;
 
 import entities.Article;
-import entities.Article;
 import java.io.FileNotFoundException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import service.factory.ShoppinatorFactory;
@@ -26,7 +23,7 @@ class US1 {
     @Test
     void CA1_shouldReturnProductsOrderedByPriceOnSearch_WithMultipleShops() throws FileNotFoundException {
         this.setUp("src/test/resources/multiple-shops/");
-        List<Article> expectedArticle = this.getExpectedArticle("a", "F", "G");
+        List<Article> expectedArticle = getExpectedArticles("a", "F", "G");
 
         List<Article> actualArticle = shoppinator.search("a");
 
@@ -35,8 +32,8 @@ class US1 {
 
     @Test
     void CA2_shouldReturnProductsOrderedByPriceOnSearch_WithASingleShop() throws FileNotFoundException {
-        this.setUp("src/test/resources/single-shop/");
-        List<Article> expectedArticle = this.getExpectedArticle("a", "F");
+        this.setUp("src/test/resources/simple-shop/");
+        List<Article> expectedArticle = getExpectedArticles("a", "F");
 
         List<Article> actualArticle = shoppinator.search("a");
 
@@ -58,20 +55,6 @@ class US1 {
         List<Article> searchArticle = shoppinator.search("e");
 
         assertTrue(searchArticle.isEmpty());
-    }
-
-    private List<Article> getExpectedArticle(String productName, String... shopNames) {
-        List<Article> Articles = new ArrayList<>();
-        BigDecimal initialPrice = new BigDecimal(100);
-
-        for (String shopName : shopNames) {
-            Article Article = new Article(productName, shopName, initialPrice);
-            Articles.add(Article);
-
-            initialPrice = initialPrice.add(new BigDecimal(100));
-        }
-
-        return Articles;
     }
 
 }

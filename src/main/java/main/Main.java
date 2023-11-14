@@ -1,6 +1,8 @@
 package main;
 
 import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import service.factory.ShoppinatorFactory;
 import shoppinator.core.Shoppinator;
@@ -14,7 +16,7 @@ public class Main {
         ShoppinatorFactory shoppinatorFactory = new ShoppinatorFactory();
         Shoppinator shoppinator = shoppinatorFactory.create("plugins/");
 
-        shoppinator.search("iphone");
+        shoppinator.search("webcam -50 +100");
     }
 
     public static void logAsciiArt() {

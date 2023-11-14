@@ -1,60 +1,40 @@
 package shoppinator.core;
 
 import entities.Article;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashSet;
+import entities.criteria.Searchable;
 import java.util.List;
-import java.util.Map;
-import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
 import entities.Shop;
-import lombok.Getter;
-import service.assembly.ArticlesAssembler;
+import java.util.stream.Collectors;
 
-@SuppressWarnings("deprecation")
-public class Shoppinator extends Observable implements Observer {
+public class Shoppinator {
 
-    @Getter
-    private Set<Shop> shops;
-    private final ArticlesAssembler articlesAssembler;
-    private List<Article> articles;
+    private final Searchable searcher;
+    private final ShoppinatorCore core;
 
-    public Shoppinator(Set<Shop> shops) {
-        this.setShops(shops);
-        this.articles = new ArrayList<>();
-        this.articlesAssembler = new ArticlesAssembler();
+    public Shoppinator(Searchable searcher, ShoppinatorCore core) {
+        this.core = core;
+        this.searcher = searcher;
     }
 
-    public List<Article> search(String productName) {
-        this.articles.clear();
-
-        for (Shop shop : this.shops) {
-            shop.search(productName);
-        }
-
-        return this.articles;
+    public List<Article> search(String query) throws IllegalArgumentException {
+        return searcher.search(query);
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public void update(Observable o, Object products) {
-        Shop shop = (Shop) o;
-        this.articles.addAll(articlesAssembler.assembly((Set<Map<String, BigDecimal>>) products, shop.getName()));
-
-        setChanged();
-        super.notifyObservers(this.articles);
+    public Set<String> getShopNames() {
+        return this.core.getShopsForSearching().stream()
+            .map(Shop::getName)
+            .collect(Collectors.toSet());
     }
 
-    private void setShops(Set<Shop> shops) {
-        this.shops = shops;
-        this.addObservers();
+    public void setShops(String... shopNames) {
+        this.core.setShops(shopNames);
     }
 
-    private void addObservers() {
-        for (Shop shop : this.shops) {
-            shop.addObserver(this);
-        }
+    @SuppressWarnings("deprecation")
+    public void addObserver(Observer observer) {
+        this.searcher.addObserver(observer);
     }
+
 }
