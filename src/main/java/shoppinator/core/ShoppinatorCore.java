@@ -21,9 +21,9 @@ import service.assembly.ArticlesAssembler;
 public class ShoppinatorCore extends Searchable implements Observer {
 
     @Getter
-    private Set<Shop> shops;
+    private Set<Shop> shopsForSearching;
 
-    private Set<Shop> shopsToLoad;
+    private Map<String, Shop> shopsToLoad;
 
     private final ArticlesAssembler articlesAssembler;
 
@@ -43,7 +43,7 @@ public class ShoppinatorCore extends Searchable implements Observer {
         this.domainProducts.clear();
         this.articles.clear();
 
-        for (Shop shop : this.shops) {
+        for (Shop shop : this.shopsForSearching) {
             shop.search(query);
         }
 
@@ -61,30 +61,29 @@ public class ShoppinatorCore extends Searchable implements Observer {
     }
 
     public void setShops(Set<Shop> shops) {
-        this.shops = shops;
+        this.shopsForSearching = shops;
+        this.shopsToLoad = shops.stream()
+            .collect(Collectors.toMap(Shop::getName, shop -> shop));
         this.addObservers();
     }
 
     private void addObservers() {
-        for (Shop shop : this.shops) {
+        for (Shop shop : this.shopsForSearching) {
             shop.addObserver(this);
         }
     }
 
     public Set<String> getShopNames() {
-        return this.shops.stream()
+        return this.shopsToLoad.values().stream()
             .map(Shop::getName)
             .collect(Collectors.toSet());
     }
 
     public void setShops(String... shopNames) {
         Set<Shop> selectedShops = new HashSet<>();
-        List<String> shops = Arrays.asList(shopNames);
-        for (Shop shop : shopsToLoad) {
-            if (shops.contains(shop.getName())) {
-                selectedShops.add(shop);
-            }
+        for (String shopName : shopNames) {
+            selectedShops.add(this.shopsToLoad.get(shopName));
         }
-        this.setShops(selectedShops);
+        this.shopsForSearching = selectedShops;
     }
 }

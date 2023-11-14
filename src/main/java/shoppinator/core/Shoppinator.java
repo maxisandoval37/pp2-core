@@ -23,7 +23,7 @@ public class Shoppinator {
     }
 
     public Set<String> getShopNames() {
-        return this.core.getShops().stream()
+        return this.core.getShopsForSearching().stream()
             .map(Shop::getName)
             .collect(Collectors.toSet());
     }
