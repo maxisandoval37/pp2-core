@@ -26,21 +26,21 @@ class US4 {
 
     @Test
     void CA1_filterProductsWithAPriceLessThanASpecifiedValue() {
-        List<Article> retrievedProducts = shoppinator.search("webcam -0 +100");
+        List<Article> retrievedProducts = shoppinator.search("webcam +100");
 
         assertTrue(retrievedProducts.stream().allMatch(x -> x.getPrice().compareTo(new BigDecimal(100)) <= 0));
     }
 
     @Test
     void CA2_filterProductsWithAPriceGreaterThanASpecifiedValue() {
-        List<Article> retrievedProducts = shoppinator.search("Notebook +50");
+        List<Article> retrievedProducts = shoppinator.search("webcam +50");
 
         assertTrue(retrievedProducts.stream().allMatch(x -> x.getPrice().compareTo(new BigDecimal(50)) >= 0));
     }
 
     @Test
     void CA3_filterProductsWithinAPriceRange() {
-        List<Article> retrievedProducts = shoppinator.search("Notebook -50 +100");
+        List<Article> retrievedProducts = shoppinator.search("webcam -50 +100");
 
         assertTrue(retrievedProducts.stream().allMatch(x -> x.getPrice().compareTo(new BigDecimal(50)) >= 0
             && x.getPrice().compareTo(new BigDecimal(100)) <= 0));
@@ -48,7 +48,7 @@ class US4 {
 
     @Test
     void CA3_filterProductsWithinDefaultPriceRange() {
-        List<Article> retrievedProducts = shoppinator.search("Notebook");
+        List<Article> retrievedProducts = shoppinator.search("webcam");
 
         assertTrue(retrievedProducts.stream()
             .allMatch(x -> x.getPrice().compareTo(new BigDecimal(defaultMinPrice)) >= 0
