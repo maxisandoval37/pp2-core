@@ -32,7 +32,7 @@ public class Article {
             return false;
         }
 
-        if ((this.price == null) ? (other.price != null) : !this.price.equals(other.price)) {
+        if ((this.price == null) ? (other.price != null) : !(this.price.compareTo(other.price) == 0)) {
             return false;
         }
 

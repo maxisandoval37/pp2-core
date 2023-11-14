@@ -68,11 +68,10 @@ class US2 {
         Set<Shop> shops = shopsDiscoverer.discover(multipleShopPath);
 
         Iterator<Shop> iterator = shops.iterator();
-        if (iterator.hasNext()) {
-            assertEquals("G", iterator.next().name);
-        }
-        if (iterator.hasNext()) {
-            assertEquals("F", iterator.next().name);
+        while (iterator.hasNext()) {
+            Shop firstShop = iterator.next();
+            assertTrue("F".equals(firstShop.name) || "G".equals(firstShop.name));
         }
     }
+
 }
