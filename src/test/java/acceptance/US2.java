@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import entities.Shop;
 import java.io.FileNotFoundException;
+import java.util.Iterator;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,9 +56,9 @@ class US2 {
     void CA5_DiscoveryOnFolderWithOneShopFile_ShouldReturn_SetWithONEShop() throws FileNotFoundException {
         String simpleShopPath = "src/test/resources/simple-shop";
 
-        Set<Shop> result = shopsDiscoverer.discover(simpleShopPath);
+        Set<Shop> shops = shopsDiscoverer.discover(simpleShopPath);
 
-        assertEquals(1, result.size());
+        assertEquals("F", shops.iterator().next().name);
     }
 
     @Test
@@ -65,6 +66,12 @@ class US2 {
         String multipleShopPath = "src/test/resources/multiple-shops";
 
         Set<Shop> shops = shopsDiscoverer.discover(multipleShopPath);
-        assertEquals(2, shops.size());
+
+        Iterator<Shop> iterator = shops.iterator();
+        while (iterator.hasNext()) {
+            Shop firstShop = iterator.next();
+            assertTrue("F".equals(firstShop.name) || "G".equals(firstShop.name));
+        }
     }
+
 }

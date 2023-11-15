@@ -49,7 +49,7 @@ class US1 {
     }
 
     @Test
-    void CA2_shouldNotReturnProductsOnSearch_WhenProductIsNotAvailableInShops() throws FileNotFoundException {
+    void CA4_shouldNotReturnProductsOnSearch_WhenProductIsNotAvailableInShops() throws FileNotFoundException {
         this.setUp("src/test/resources/multiple-shops/");
 
         List<Article> searchArticle = shoppinator.search("e");

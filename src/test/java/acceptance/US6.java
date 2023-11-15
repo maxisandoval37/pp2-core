@@ -7,7 +7,6 @@ import entities.Article;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import service.factory.ShoppinatorFactory;
@@ -33,7 +32,7 @@ class US6 {
         List<Article> expected = getExpectedArticles("a", "R");
 
         shoppinator.search("webcam");
-        assertEquals(new ArrayList<>(), listener.products);
+        assertTrue(listener.products.isEmpty());
 
         File triggerFile = new File("src/test/resources/US6/refresh/trigger-refresh-CA1.txt");
         triggerFile.createNewFile();
@@ -47,7 +46,7 @@ class US6 {
             }
         }
 
-        assertEquals(expected, listener.products);
+        assertTrue(listener.products.equals(expected));
         triggerFile.delete();
     }
 
@@ -56,19 +55,13 @@ class US6 {
         setUp("src/test/resources/US6/non-refreshable-shop/");
 
         shoppinator.search("webcam");
-        assertEquals(new ArrayList<>(), listener.products);
+        assertTrue(listener.products.isEmpty());
 
         File triggerFile = new File("src/test/resources/US6/refresh/trigger-refresh-CA2.txt");
         triggerFile.createNewFile();
 
-        assertEquals(new ArrayList<>(), listener.products);
+        assertTrue(listener.products.isEmpty());
         triggerFile.delete();
-    }
-
-    private void assertEquals(List<Article> expected, List<Article> products) {
-        for(Article article : expected) {
-            assertTrue(products.contains(article));
-        }
     }
 
 }
