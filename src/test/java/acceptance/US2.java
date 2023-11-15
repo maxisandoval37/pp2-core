@@ -36,7 +36,7 @@ class US2 {
 
     @Test
     void CA3_DiscoveryOnEmptyFolder_ShouldReturn_EmptySet() throws FileNotFoundException {
-        String emptyFolderPath = "src/test/resources/no-shops";
+        String emptyFolderPath = "src/test/resources/not-shops";
 
         Set<Shop> result = shopsDiscoverer.discover(emptyFolderPath);
 

@@ -42,7 +42,7 @@ class US1 {
 
     @Test
     void CA3_shouldNotReturnProductsOnSearch_WithNoShops() throws FileNotFoundException {
-        this.setUp("src/test/resources/no-shops/");
+        this.setUp("src/test/resources/not-shops/");
         List<Article> actualArticle = shoppinator.search("a");
 
         assertTrue(actualArticle.isEmpty());
