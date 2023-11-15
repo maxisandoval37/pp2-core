@@ -59,7 +59,7 @@ class US4 {
     }
 
     @Test
-    void CA3_filterProductsWithinDefaultPriceRange() {
+    void CA4_filterProductsWithinDefaultPriceRange() {
         expected = new ArrayList<>();
         expected.add(new Article("a", "F",
             new BigDecimal(50)));
