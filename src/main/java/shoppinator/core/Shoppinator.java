@@ -3,6 +3,7 @@ package shoppinator.core;
 import entities.Article;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -14,16 +15,14 @@ import lombok.Getter;
 import service.assembly.ArticlesAssembler;
 
 @SuppressWarnings("deprecation")
-public class Shoppinator extends Observable implements Observer {
+public class Shoppinator extends Observable {
 
     @Getter
     private Set<Shop> shops;
     private final ArticlesAssembler articlesAssembler;
-    private List<Article> articles;
 
     public Shoppinator(Set<Shop> shops) {
         this.shops = shops;
-        this.articles = new ArrayList<>();
         this.articlesAssembler = new ArticlesAssembler();
     }
 
@@ -39,17 +38,8 @@ public class Shoppinator extends Observable implements Observer {
             articles.addAll(articlesAssembler.assembly(products, shop.getName()));
         }
 
-        return this.articles;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public void update(Observable o, Object products) {
-        Shop shop = (Shop) o;
-        this.articles.addAll(articlesAssembler.assembly((Set<Map<String, BigDecimal>>) products, shop.getName()));
-
-        setChanged();
-        super.notifyObservers(this.articles);
+        articles.sort(Comparator.comparing(Article::getPrice));
+        return articles;
     }
 
 }
