@@ -22,20 +22,21 @@ public class Shoppinator extends Observable implements Observer {
     private List<Article> articles;
 
     public Shoppinator(Set<Shop> shops) {
-        this.setShops(shops);
+        this.shops = shops;
         this.articles = new ArrayList<>();
         this.articlesAssembler = new ArticlesAssembler();
     }
 
     public List<Article> search(String productName) {
-        this.articles.clear();
+        List<Article> articles = new ArrayList<>();
 
         if (shops.isEmpty()) {
-            super.notifyObservers(this.articles);
+            return articles;
         }
 
         for (Shop shop : this.shops) {
-            shop.search(productName);
+            Set<Map<String, BigDecimal>> products = shop.search(productName);
+            articles.addAll(articlesAssembler.assembly(products, shop.getName()));
         }
 
         return this.articles;
@@ -51,14 +52,4 @@ public class Shoppinator extends Observable implements Observer {
         super.notifyObservers(this.articles);
     }
 
-    private void setShops(Set<Shop> shops) {
-        this.shops = shops;
-        this.addObservers();
-    }
-
-    private void addObservers() {
-        for (Shop shop : this.shops) {
-            shop.addObserver(this);
-        }
-    }
 }
