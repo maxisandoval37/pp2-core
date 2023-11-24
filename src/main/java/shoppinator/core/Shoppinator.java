@@ -3,6 +3,7 @@ package shoppinator.core;
 import entities.Article;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -14,51 +15,31 @@ import lombok.Getter;
 import service.assembly.ArticlesAssembler;
 
 @SuppressWarnings("deprecation")
-public class Shoppinator extends Observable implements Observer {
+public class Shoppinator extends Observable {
 
     @Getter
     private Set<Shop> shops;
     private final ArticlesAssembler articlesAssembler;
-    private List<Article> articles;
 
     public Shoppinator(Set<Shop> shops) {
-        this.setShops(shops);
-        this.articles = new ArrayList<>();
+        this.shops = shops;
         this.articlesAssembler = new ArticlesAssembler();
     }
 
     public List<Article> search(String productName) {
-        this.articles.clear();
+        List<Article> articles = new ArrayList<>();
 
         if (shops.isEmpty()) {
-            super.notifyObservers(this.articles);
+            return articles;
         }
 
         for (Shop shop : this.shops) {
-            shop.search(productName);
+            Set<Map<String, BigDecimal>> products = shop.search(productName);
+            articles.addAll(articlesAssembler.assembly(products, shop.getName()));
         }
 
-        return this.articles;
+        articles.sort(Comparator.comparing(Article::getPrice));
+        return articles;
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public void update(Observable o, Object products) {
-        Shop shop = (Shop) o;
-        this.articles.addAll(articlesAssembler.assembly((Set<Map<String, BigDecimal>>) products, shop.getName()));
-
-        setChanged();
-        super.notifyObservers(this.articles);
-    }
-
-    private void setShops(Set<Shop> shops) {
-        this.shops = shops;
-        this.addObservers();
-    }
-
-    private void addObservers() {
-        for (Shop shop : this.shops) {
-            shop.addObserver(this);
-        }
-    }
 }

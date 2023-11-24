@@ -2,20 +2,12 @@ package entities;
 
 import java.math.BigDecimal;
 import java.util.Map;
-import java.util.Observable;
 import java.util.Set;
-import lombok.Getter;
 
-@Getter
-@SuppressWarnings("deprecation")
-public abstract class Shop extends Observable {
+public interface Shop {
 
-    public String name;
+    Set<Map<String, BigDecimal>> search(String productName);
 
-    public abstract Set<Map<String, BigDecimal>> search(String productName);
-
-    protected void notifySearchResult(Set<Map<String, BigDecimal>> newProducts) {
-        setChanged();
-        super.notifyObservers(newProducts);
-    }
+    // INB4 https://stackoverflow.com/questions/1130294/java-interface-usage-guidelines-are-getters-and-setters-in-an-interface-bad
+    String getName();
 }
