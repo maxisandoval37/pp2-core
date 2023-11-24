@@ -5,7 +5,7 @@ import entities.Shop;
 import entities.criteria.Searchable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -27,37 +27,39 @@ public class ShoppinatorCore extends Searchable implements Observer {
 
     private final ArticlesAssembler articlesAssembler;
 
-    private List<Article> articles;
-
-    private Set<Map<String, BigDecimal>> domainProducts;
 
     public ShoppinatorCore(Set<Shop> shops) {
         this.setShops(shops);
-        this.domainProducts = new HashSet<>();
-        this.articles = new ArrayList<>();
         this.articlesAssembler = new ArticlesAssembler();
     }
 
     @Override
-    public List<Article> search(String query) {
-        this.domainProducts.clear();
-        this.articles.clear();
+    public List<Article> search(String productName) {
+        List<Article> articles = new ArrayList<>();
 
-        for (Shop shop : this.shopsForSearching) {
-            shop.search(query);
+        if (this.shopsForSearching.isEmpty()) {
+            return articles;
         }
 
-        return this.articles;
+        for (Shop shop : this.shopsForSearching) {
+            Set<Map<String, BigDecimal>> products = shop.search(productName);
+            articles.addAll(articlesAssembler.assembly(products, shop.getName()));
+        }
+
+        articles.sort(Comparator.comparing(Article::getPrice));
+        return articles;
     }
+
 
     @Override
     @SuppressWarnings("unchecked")
     public void update(Observable o, Object products) {
         Shop shop = (Shop) o;
-        this.articles.addAll(articlesAssembler.assembly((Set<Map<String, BigDecimal>>) products, shop.getName()));
+        List<Article> articles = new ArrayList<>(
+            articlesAssembler.assembly((Set<Map<String, BigDecimal>>) products, shop.getName()));
 
         setChanged();
-        super.notifyObservers(this.articles);
+        super.notifyObservers(articles);
     }
 
     public void setShops(Set<Shop> shops) {

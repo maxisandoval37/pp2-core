@@ -2,10 +2,11 @@ package acceptance;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static utils.TestUtils.getExpectedArticles;
 
 import entities.Article;
 import java.io.FileNotFoundException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import service.factory.ShoppinatorFactory;
@@ -22,18 +23,27 @@ class US1 {
 
     @Test
     void CA1_shouldReturnProductsOrderedByPriceOnSearch_WithMultipleShops() throws FileNotFoundException {
-        this.setUp("src/test/resources/multiple-shops/");
-        List<Article> expectedArticle = getExpectedArticles("a", "F", "G");
+        this.setUp("src/test/resources/US1/");
+        List<Article> expectedArticles = new ArrayList<>();
+        expectedArticles.add(new Article("a", "F", new BigDecimal(100)));
+        expectedArticles.add(new Article("a", "G", new BigDecimal(200)));
+        expectedArticles.add(new Article("a", "H", new BigDecimal(200)));
+
+        List<Article> anotherExpectedArticles = new ArrayList<>();
+        anotherExpectedArticles.add(new Article("a", "F", new BigDecimal(100)));
+        anotherExpectedArticles.add(new Article("a", "H", new BigDecimal(200)));
+        anotherExpectedArticles.add(new Article("a", "G", new BigDecimal(200)));
 
         List<Article> actualArticle = shoppinator.search("a");
 
-        assertEquals(expectedArticle, actualArticle);
+        assertTrue(expectedArticles.equals(actualArticle) || anotherExpectedArticles.equals(actualArticle));
     }
 
     @Test
     void CA2_shouldReturnProductsOrderedByPriceOnSearch_WithASingleShop() throws FileNotFoundException {
         this.setUp("src/test/resources/simple-shop/");
-        List<Article> expectedArticle = getExpectedArticles("a", "F");
+        List<Article> expectedArticle = new ArrayList<>();
+        expectedArticle.add(new Article("a", "F", new BigDecimal(100)));
 
         List<Article> actualArticle = shoppinator.search("a");
 
@@ -50,11 +60,22 @@ class US1 {
 
     @Test
     void CA4_shouldNotReturnProductsOnSearch_WhenProductIsNotAvailableInShops() throws FileNotFoundException {
-        this.setUp("src/test/resources/multiple-shops/");
+        this.setUp("src/test/resources/US1/");
 
         List<Article> searchArticle = shoppinator.search("e");
 
         assertTrue(searchArticle.isEmpty());
+    }
+
+    @Test
+    void CA5_shouldReturnOneProductOnSearch_WhenProductIsOnlyAvailableInOneShop() throws FileNotFoundException {
+        this.setUp("src/test/resources/US1/");
+        List<Article> expectedArticle = new ArrayList<>();
+        expectedArticle.add(new Article("b", "I", new BigDecimal(300)));
+
+        List<Article> searchArticle = shoppinator.search("b");
+
+        assertEquals(expectedArticle, searchArticle);
     }
 
 }
