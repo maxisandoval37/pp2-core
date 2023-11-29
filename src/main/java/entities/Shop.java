@@ -12,9 +12,9 @@ public abstract class Shop extends Observable {
 
     public String name;
 
-    public abstract Set<Map<String, BigDecimal>> search(String productName);
+    public abstract Map<String, BigDecimal> search(String productName);
 
-    protected void notifySearchResult(Set<Set<Map<String, BigDecimal>>> newProducts) {
+    protected void notifySearchResult(Map<String, BigDecimal> newProducts) {
         setChanged();
         super.notifyObservers(newProducts);
     }

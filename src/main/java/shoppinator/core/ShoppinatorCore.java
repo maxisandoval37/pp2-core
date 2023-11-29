@@ -42,7 +42,7 @@ public class ShoppinatorCore extends Searchable implements Observer {
         }
 
         for (Shop shop : this.shopsForSearching) {
-            Set<Map<String, BigDecimal>> products = shop.search(productName);
+            Map<String, BigDecimal> products = shop.search(productName);
             articles.addAll(articlesAssembler.assembly(products, shop.getName()));
         }
 
@@ -56,7 +56,7 @@ public class ShoppinatorCore extends Searchable implements Observer {
     public void update(Observable o, Object products) {
         Shop shop = (Shop) o;
         List<Article> articles = new ArrayList<>(
-            articlesAssembler.assembly((Set<Map<String, BigDecimal>>) products, shop.getName()));
+            articlesAssembler.assembly((Map<String, BigDecimal>) products, shop.getName()));
 
         setChanged();
         super.notifyObservers(articles);

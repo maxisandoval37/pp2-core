@@ -28,7 +28,7 @@ class US4 {
         expected = new ArrayList<>();
         expected.add(new Article("a ", "F",
             new BigDecimal(50)));
-        expected.add(new Article("a ", "F",
+        expected.add(new Article("a ", "G",
             new BigDecimal(100)));
 
         assertTrue(expected.equals(shoppinator.search("a +100")));
@@ -39,9 +39,9 @@ class US4 {
         expected = new ArrayList<>();
         expected.add(new Article("a ", "F",
             new BigDecimal(50)));
-        expected.add(new Article("a ", "F",
+        expected.add(new Article("a ", "G",
             new BigDecimal(100)));
-        expected.add(new Article("a ", "F",
+        expected.add(new Article("a ", "H",
             new BigDecimal(150)));
 
         assertTrue(expected.equals(shoppinator.search("a -50")));
@@ -52,7 +52,7 @@ class US4 {
         expected = new ArrayList<>();
         expected.add(new Article("a  ", "F",
             new BigDecimal(50)));
-        expected.add(new Article("a  ", "F",
+        expected.add(new Article("a  ", "G",
             new BigDecimal(100)));
 
         assertTrue(expected.equals(shoppinator.search("a -50 +100")));
@@ -63,9 +63,9 @@ class US4 {
         expected = new ArrayList<>();
         expected.add(new Article("a", "F",
             new BigDecimal(50)));
-        expected.add(new Article("a", "F",
+        expected.add(new Article("a", "G",
             new BigDecimal(100)));
-        expected.add(new Article("a", "F",
+        expected.add(new Article("a", "H",
             new BigDecimal(150)));
 
         assertTrue(expected.equals(shoppinator.search("a")));
