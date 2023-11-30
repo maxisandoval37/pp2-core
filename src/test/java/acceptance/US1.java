@@ -1,10 +1,8 @@
 package acceptance;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import entities.Article;
 import entities.Article;
 import java.io.FileNotFoundException;
 import java.math.BigDecimal;
@@ -43,7 +41,7 @@ class US1 {
 
     @Test
     void CA2_shouldReturnProductsOrderedByPriceOnSearch_WithASingleShop() throws FileNotFoundException {
-        this.setUp("src/test/resources/single-shop/");
+        this.setUp("src/test/resources/simple-shop/");
         List<Article> expectedArticle = new ArrayList<>();
         expectedArticle.add(new Article("a", "F", new BigDecimal(100)));
 

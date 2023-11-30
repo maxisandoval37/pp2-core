@@ -34,8 +34,8 @@ public class Shoppinator extends Observable {
         }
 
         for (Shop shop : this.shops) {
-            Set<Map<String, BigDecimal>> products = shop.search(productName);
-            articles.addAll(articlesAssembler.assembly(products, shop.getName()));
+            Map<String, BigDecimal> product = shop.search(productName);
+            articles.addAll(articlesAssembler.assembly(product, shop.getName()));
         }
 
         articles.sort(Comparator.comparing(Article::getPrice));

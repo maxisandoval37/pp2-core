@@ -5,20 +5,20 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class ArticlesAssembler {
 
-    public List<Article> assembly(Set<Map<String, BigDecimal>> products, String shopName) {
+    public List<Article> assembly(Map<String, BigDecimal> products, String shopName) {
         List<Article> articles = new ArrayList<>();
 
-        for (Map<String, BigDecimal> product : products) {
-            for (Map.Entry<String, BigDecimal> entry : product.entrySet()) {
-                articles.add(new Article(entry.getKey(), shopName, entry.getValue()));
-            }
+        for (Map.Entry<String, BigDecimal> product : products.entrySet()) {
+            Article article = new Article();
+            article.setName(product.getKey());
+            article.setPrice(product.getValue());
+            article.setShop(shopName);
+            articles.add(article);
         }
 
         return articles;
     }
 }
-
