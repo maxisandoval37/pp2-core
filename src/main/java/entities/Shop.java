@@ -3,7 +3,6 @@ package entities;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Observable;
-import java.util.Set;
 import lombok.Getter;
 
 @Getter
