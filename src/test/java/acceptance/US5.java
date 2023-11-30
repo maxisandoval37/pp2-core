@@ -1,7 +1,6 @@
 package acceptance;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static utils.TestUtils.getExpectedArticles;
 
 import entities.Article;
 import java.io.FileNotFoundException;
@@ -50,6 +49,14 @@ class US5 {
         expected.add(new Article("a", "F", new BigDecimal(100)));
 
         shoppinator.setShops("F", "G");
+        assertTrue(expected.equals(shoppinator.search("a")));
+    }
+
+    @Test
+    void CA4_invalidShopsIsSelectedShouldSearchInDefaultShops() {
+        expected = new ArrayList<>();
+
+        shoppinator.setShops("J");
         assertTrue(expected.equals(shoppinator.search("a")));
     }
 
