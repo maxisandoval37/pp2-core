@@ -23,8 +23,8 @@ class US3 {
 
     @Test
     void CA1_searchExistingProductInFravegaShop() {
-        Article expected = new Article("Mouse Gamer Boca Gamepro Rgb 6200dpi Usb 7 Botones", "fravega",
-            new BigDecimal(5349.0));
+        Article expected = new Article("Mouse Optico Usb Noga Ng-611u Pc Notebook 3 Botones Compacto", "Fravega",
+            new BigDecimal(1319.0));
 
         List<Article> retrieved = shoppinator.search("mouse");
 
