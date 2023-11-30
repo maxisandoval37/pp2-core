@@ -41,6 +41,7 @@ public class ShoppinatorCore extends Searchable implements Observer {
             return articles;
         }
 
+        productName = productName.trim();
         for (Shop shop : this.shopsForSearching) {
             Map<String, BigDecimal> products = shop.search(productName);
             articles.addAll(articlesAssembler.assembly(products, shop.getName()));
@@ -84,6 +85,9 @@ public class ShoppinatorCore extends Searchable implements Observer {
     public void setShops(String... shopNames) {
         Set<Shop> selectedShops = new HashSet<>();
         for (String shopName : shopNames) {
+            if (!this.shopsToLoad.containsKey(shopName)) {
+                continue;
+            }
             selectedShops.add(this.shopsToLoad.get(shopName));
         }
         this.shopsForSearching = selectedShops;

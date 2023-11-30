@@ -26,9 +26,9 @@ class US4 {
     @Test
     void CA1_filterProductsWithAPriceLessThanASpecifiedValue() {
         expected = new ArrayList<>();
-        expected.add(new Article("a ", "F",
+        expected.add(new Article("a", "F",
             new BigDecimal(50)));
-        expected.add(new Article("a ", "G",
+        expected.add(new Article("a", "G",
             new BigDecimal(100)));
 
         assertTrue(expected.equals(shoppinator.search("a +100")));
@@ -37,11 +37,11 @@ class US4 {
     @Test
     void CA2_filterProductsWithAPriceGreaterThanASpecifiedValue() {
         expected = new ArrayList<>();
-        expected.add(new Article("a ", "F",
+        expected.add(new Article("a", "F",
             new BigDecimal(50)));
-        expected.add(new Article("a ", "G",
+        expected.add(new Article("a", "G",
             new BigDecimal(100)));
-        expected.add(new Article("a ", "H",
+        expected.add(new Article("a", "H",
             new BigDecimal(150)));
 
         assertTrue(expected.equals(shoppinator.search("a -50")));
@@ -50,9 +50,9 @@ class US4 {
     @Test
     void CA3_filterProductsWithinAPriceRange() {
         expected = new ArrayList<>();
-        expected.add(new Article("a  ", "F",
+        expected.add(new Article("a", "F",
             new BigDecimal(50)));
-        expected.add(new Article("a  ", "G",
+        expected.add(new Article("a", "G",
             new BigDecimal(100)));
 
         assertTrue(expected.equals(shoppinator.search("a -50 +100")));
@@ -69,6 +69,13 @@ class US4 {
             new BigDecimal(150)));
 
         assertTrue(expected.equals(shoppinator.search("a")));
+    }
+
+    @Test
+    void CA5_filterProductsWithinInvalidFilters() {
+        expected = new ArrayList<>();
+
+        assertTrue(expected.equals(shoppinator.search("a $500 &100")));
     }
 
 }
