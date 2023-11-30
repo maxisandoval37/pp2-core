@@ -33,6 +33,7 @@ public class Shoppinator extends Observable {
             return articles;
         }
 
+        productName = productName.trim();
         for (Shop shop : this.shops) {
             Map<String, BigDecimal> product = shop.search(productName);
             articles.addAll(articlesAssembler.assembly(product, shop.getName()));
